@@ -1,0 +1,60 @@
+/* Mobile CSS */
+
+body {
+  font-size: 4vmax;
+}
+
+nav, main, label[for=show-menu] {
+  flex-direction: column;
+  flex: 100%;
+}
+
+nav a {
+  padding-left: 2vw;
+  font-size: 2rem;
+}
+
+aside, article {
+  padding: 1vh 3vw;
+  flex: 100%;
+}
+
+h1, h1 > a {
+  font-size: 2.1rem;
+}
+
+body > header {
+  height: auto;
+  padding: 2rem;
+}
+
+iframe {
+  height: 54vw;
+}
+
+/* Navigation elements */
+
+nav, aside {
+  display: none;
+}
+
+input[type=checkbox]:checked ~ nav {
+  display: flex;
+  border-top: 0;
+}
+
+.fa-bars {
+  display: block;
+  padding-left: 2vw;
+  font-size: 2rem;
+}
+
+label[for=show-menu] {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  background-color: rgb(21, 29, 76);
+  border-top: 1px solid rgb(254, 250, 159);
+  border-bottom: 1px solid rgb(254, 250, 159);
+}
+

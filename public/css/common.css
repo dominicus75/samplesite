@@ -1,0 +1,343 @@
+
+/* Begin of reset */
+html, body, div, span,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins,
+strong, sub, sup, var,
+b, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  vertical-align:baseline;
+  background:transparent;
+  box-sizing: border-box;
+}
+
+body {
+  line-height:1;
+}
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section,
+form,input,label {
+  display:block;
+}
+
+nav ul {
+  list-style:none;
+}
+
+blockquote, q {
+  quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content:'';
+  content:none;
+}
+
+a {
+  margin:0;
+  padding:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+  text-decoration: none;
+}
+
+abbr[title], dfn[title] {
+  border-bottom:1px dotted;
+  cursor:help;
+}
+
+table {
+  border-collapse:collapse;
+  border-spacing:0;
+}
+
+input, select {
+  vertical-align:middle;
+}
+/* End of reset */
+
+
+/*  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome */
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/fonts/fontawesome-webfont.eot');
+  src: url('/fonts/fontawesome-webfont.eot') format('embedded-opentype'),
+  url('/fonts/fontawesome-webfont.woff2') format('woff2'),
+  url('/fonts/fontawesome-webfont.woff') format('woff'),
+  url('/fonts/fontawesome-webfont.ttf') format('truetype'),
+  url('/fonts/fontawesome-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fa {
+  display: inline-block;
+  text-align: center;
+  font-family: 'FontAwesome';
+  font-variant: normal;
+  font-style: normal;
+  width: 25px;
+  font-size: 1em;
+}
+
+.fa-envelope:before { content: "\f0e0"; }
+.fa-lock:before { content: "\f023"; }
+.fa-repeat:before { content: "\f01e"; }
+.fa-user:before { content: "\f007"; }
+.fa-users:before { content: "\f0c0"; }
+.fa-tachometer:before { content: "\f0e4"; }
+.fa-sign-out:before { content: "\f08b"; }
+.fa-bars:before { content: "\f0c9"; }
+.fa-file:before { content: "\f15b"; }
+.fa-home:before { content: "\f015"; }
+.fa-money:before { content: "\f0d6"; }
+.fa-globe:before { content: "\f0ac"; }
+.fa-globe {
+  display: inline;
+}
+
+/* Alignments */
+
+.textRight { text-align: right; }
+.textCenter { text-align: center; }
+.textJustify { text-align: justify; }
+
+.floatRight { float: right; }
+.floatLeft { float: left; }
+
+
+/* Layout */
+
+
+nav, label[for=show-menu] {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(21, 29, 76);
+  border-top: 1px solid rgb(254, 250, 159);
+  border-bottom: 1px solid rgb(254, 250, 159);
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+aside {
+  flex: 30%;
+  padding: 3vh 1.5vw 3vh 3vw;
+}
+
+article {
+  flex: 70%;
+  padding: 3vh 3vw 3vh 1.5vw;
+}
+
+footer {
+  background-color: rgb(21, 29, 76);
+  border-top: 1px solid rgb(254, 250, 159);
+  height: 25vh;
+  padding: 3rem;
+}
+
+
+body {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 3vmax;
+  background-color: rgb(5, 153, 253);
+}
+
+
+/* Headings and paragraphs */
+
+h1, h1 > a {
+  color: rgb(254, 250, 159);
+  font-size: 4rem;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: uppercase;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+}
+
+h1 > a:hover,
+footer > p > a:hover {
+  color: red;
+}
+
+nav > a:hover {
+  color: rgb(21, 29, 76);
+  background-color: rgb(254, 250, 159);
+}
+
+h2, h3, h4, h5 { color: rgb(21, 29, 76); }
+
+h2 {
+  font-size: 3rem;
+  margin: 1rem auto 1.5rem 0;
+}
+
+h3 {
+  font-size: 2.6rem;
+  margin: 1rem 1rem 1rem 0;
+}
+
+h4 {
+  font-size: 2.2rem;
+  margin: 1rem 1rem 1rem 0;
+}
+
+h5 {
+  font-size: 1.8rem;
+  margin: 1rem 1rem 1rem 0;
+}
+
+p.site_slogan, footer > p {
+  color: rgb(254, 250, 159);
+  font-size: 1.6rem;
+  text-align: center;
+  font-style: italic;
+  vertical-align: middle;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+}
+
+p {
+  text-align: justify;
+  font-size: 1.4rem;
+}
+
+pre {
+  font-size: 1rem;
+}
+
+body > header {
+  width: 100%;
+  height: 25vh;
+  padding: 3rem 0;
+  background-image: url('/images/background.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  text-align: center;
+}
+
+
+/* Navigation elements */
+input[type=checkbox]#show-menu, label[for=show-menu], .fa-bars {
+  display: none;
+  color: rgb(254, 250, 159);
+}
+
+nav a {
+  color: rgb(254, 250, 159);
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 1vh 1vw;
+}
+
+footer > p > a {
+  color: rgb(254, 250, 159);
+}
+
+
+/* Images */
+
+figure {
+  margin: 1rem 0;
+}
+
+figcaption {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgb(254, 250, 159);
+}
+
+img {
+  border: 1px solid rgb(254, 250, 159);
+}
+
+aside img, img.landscape {
+  width: 100%;
+}
+
+img.left {
+  float: left;
+  margin: 0.5rem 1rem 1rem 0;
+}
+
+img.right {
+  float: right;
+  margin: 0.5rem 0 1rem 1rem;
+}
+
+img.landscape {
+  margin: 1rem 0;
+}
+
+img.portrait {
+  width: 40%;
+}
+
+iframe {
+  width: 100%;
+  height: 39vw;
+  margin: 1rem 0;
+  border: 1px solid rgb(254, 250, 159);
+}
+
+
+/*Form elements */
+
+label[for=email], label[for=message] {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 3vh 0 1vh 0;
+}
+
+input[type=text] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid black;
+}
+
+textarea {
+  font-size: 2rem;
+  width: 100%;
+  height: 20vh;
+  padding: 0.5rem;
+  border: 1px solid black;
+}
+
+input[type=submit] {
+  font-weight: bold;
+  cursor: pointer;
+  color: whitesmoke;
+  border: 1px solid blue;
+  border-right-color: darkblue;
+  border-bottom-color: darkblue;
+  background: linear-gradient(lightblue, rgb(21, 29, 76));
+  margin-top: 3vh;
+  padding: 0.5em 1em;
+}
+
+input[type=submit]:active {
+  color: rgb(254, 250, 159);
+  background: linear-gradient(rgb(21, 29, 76), lightblue);
+  border-color: blue;
+  border-top-color: darkblue;
+  border-left-color: darkblue;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
