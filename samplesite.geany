@@ -20,6 +20,7 @@ indent_mode=1
 [project]
 name=samplesite
 base_path=/opt/lampp/htdocs/samplesite
+description=
 
 [long line marker]
 long_line_behaviour=1
@@ -27,6 +28,7 @@ long_line_column=80
 
 [files]
 current_page=0
+FILE_NAME_0=0;Java;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdocuments%2Ftutorials%2Fnje-gamf%2Fjava%2Ftelepulesek%2Fsrc%2Ftelepulesek%2FTelepulesek.java;0;2
 
 [VTE]
-last_dir=/opt/lampp/htdocs/amdg/public
+last_dir=/home/domi/data/documents/tutorials/nje-gamf/java/telepulesek/src/telepulesek

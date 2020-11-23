@@ -8,6 +8,8 @@
 
 namespace Dominicus75\VariousTools;
 
+use \Dominicus75\Exceptions\{FileNotFoundException, DirectoryNotFoundException};
+
 class Config
 {
 
@@ -25,10 +27,10 @@ class Config
       if(file_exists($dir.DIRECTORY_SEPARATOR.$className.".php")){
         $this->config = require_once $dir.DIRECTORY_SEPARATOR.$className.".php";
       } else {
-        throw new \InvalidArgumentException($dir.DIRECTORY_SEPARATOR.$className.".php nem létezik");
+        throw new FileNotFoundException("Filename: ".$dir.DIRECTORY_SEPARATOR.$className.".php");
       }
     } else {
-      throw new \InvalidArgumentException("A megadott $dir nem létezik, vagy nem könyvtár");
+      throw new DirectoryNotFoundException("Directory name: ".$dir);
     }
 
   }

@@ -20,8 +20,9 @@ class Pattern
   const PHP    = "/(<+\?(php|\=).*?\?>+)/iu";
   const EMAIL  = "/^[-a-z0-9\.]{1,30}@[-a-z0-9\.]{3,30}\.[a-z]{2,6}$/i";
 
-  const ALLOWED_TAGS = "<span><h2><h3><h4><h5><h6><p><blockquote><cite><br>
-  <strong><b><em><i><underline><u><strike><s><del><sub><sup><ol><ul><li><dl><dt><dd>
-  <figure><figcaption><img><meta><embed><iframe><a><table><thead><caption><tr><td>";
+  const ALLOWED_TAGS = ['span', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'blockquote',
+  'cite', 'br', 'strong', 'b', 'em', 'i', 'underline', 'u', 'strike', 's', 'del',
+  'sub', 'sup', 'ol', 'ul', 'li', 'dl', 'dt', 'dd', 'figure', 'figcaption', 'img',
+  'meta', 'embed', 'iframe', 'a', 'table', 'thead', 'caption', 'tr', 'td'];
 
 }
