@@ -30,6 +30,7 @@ class PDO extends \PDO
           $config['password'],
           self::setOptions($config['options'])
         );
+        self::$instance->exec('set names utf8');
       } catch(\PDOException $pdoe) {
         echo $pdoe->getMessage();
       }

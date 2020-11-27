@@ -12,19 +12,20 @@ interface ModelInterface {
 
   public function __construct(
     \PDO $connection,
-    string $contentId,
-    string $tableName
+    string $tableName,
+    ?string $contentId = null,
+    ?array $content = null
   );
 
   public function getTableName(): string;
 
-  public function getContentId(): string;
+  public function getContentId();
 
-  public function set(string $id, array $content): void;
+  public function setContent(?array $content = null): void;
 
-  public function get(string $id);
+  public function getContent(): ?array;
 
-  public function insert(string $id, array $content array $content): bool;
+  public function insert(string $id, array $content): bool;
 
   public function select(string $id, array $params): array;
 
