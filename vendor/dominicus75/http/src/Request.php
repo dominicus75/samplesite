@@ -70,6 +70,11 @@ class Request
   }
 
 
+  public function isXmlHttpRequest(): bool {
+    return array_key_exists("X-Requested-With", $this->headers);
+  }
+
+
   public function getMethod():string {
     return preg_match("/^(get|post)$/i", $_SERVER['REQUEST_METHOD'])
                       ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET' ;
