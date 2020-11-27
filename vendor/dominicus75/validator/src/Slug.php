@@ -67,7 +67,8 @@ class Slug
   public static function generate(string $string):string {
 
     $translated = str_replace(array_keys(self::$characterMap), self::$characterMap, trim($string));
-    return strtolower(preg_replace("/[^\p{L}\p{Nd}]+/iu", "-", $translated));
+    $result = strtolower(preg_replace("/[^\p{L}\p{Nd}]+/iu", "-", $translated));
+    return trim($result, "_-\t\n\r\x0B");
 
   }
 

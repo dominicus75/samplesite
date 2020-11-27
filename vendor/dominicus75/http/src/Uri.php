@@ -15,13 +15,6 @@ class Uri
 {
 
 
-  public static function isValid():bool {
-
-    return !is_null(self::getPath());
-
-  }
-
-
   public static function getScheme():string {
     return preg_match("/^(http|https)$/i", $_SERVER['REQUEST_SCHEME'])
             ? strtolower($_SERVER['REQUEST_SCHEME'])
@@ -36,27 +29,27 @@ class Uri
   }
 
 
-  public static function getPort():?int {
+  public static function getPort(): int {
     return preg_match("/^(80|443)$/", $_SERVER['SERVER_PORT'])
-            ? $_SERVER['SERVER_PORT'] : null;
+            ? $_SERVER['SERVER_PORT'] : 80;
   }
 
 
-  public static function getPath():?string {
+  public static function getPath(): string {
 
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    return  preg_match("/^\/([\/a-zA-Z0-9_\-\.~]{1,128})?$/i", $path) ? $path : null;
+    return  preg_match("/^\/([\/a-zA-Z0-9_\-\.~]{1,128})?$/i", $path) ? $path : '/';
 
   }
 
 
   public static function getQuery():string {
 
-    $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-
-    return preg_match("/^([a-zA-Z0-9_\-\&\=\.\/]{10,128})$/i", $query)
-            ? $query : '';
+    if(isset($_SERVER['QUERY_STRING'])) {
+      return preg_match("/^([a-zA-Z0-9_\-\&\=\.\/]{10,128})$/i", $_SERVER['QUERY_STRING'])
+             ? $_SERVER['QUERY_STRING'] : '';
+    } else { return ''; }
 
   }
 

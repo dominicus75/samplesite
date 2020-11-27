@@ -18,13 +18,25 @@ class Input
     return (bool)preg_match(Pattern::EMAIL, $email);
   }
 
-  public static function validatePlainText(string $text, int $min = 1, int $max = 10240):bool {
-    return (bool)preg_match("/^(".Pattern::TEXT."{".$min.",".$max."})$/iu", $text);
+  public static function validatePlainText(
+    string $text,
+    string $pattern = null,
+    int $min = 1,
+    int $max = 10240
+  ):bool {
+    $pattern = is_null($pattern) ? Pattern::TEXT : $pattern;
+    return (bool)preg_match($pattern, $text);
   }
+
 
   public static function sanitizeHtml(string $html, $allowedTags = null):string {
     $tags = is_null($allowedTags) ? '' : $allowedTags;
-    return trim(strip_tags(preg_replace(Pattern::SCRIPT, "", preg_replace(Pattern::PHP, "", $html)), $tags));
+    return trim(
+              strip_tags(
+                preg_replace(Pattern::SCRIPT, "", preg_replace(Pattern::PHP, "", $html)),
+                $tags
+              )
+           );
   }
 
 }

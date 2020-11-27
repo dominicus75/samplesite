@@ -11,48 +11,49 @@
 
 namespace Dominicus75\Router;
 
+use \Dominicus75\Http\{Request, Response};
+
 class Router
 {
 
   const DEFAULT_CONTROLLER  = 'page';
   const DEFAULT_ACTION      = 'read';
 
-  private $method;      //Request method
-  private $controller;  //Controller name
-  private $action;      //Controller method name
-  private $uri;         //Content identifier
+  private string $controller;  //Controller name
+  private string $action;      //Controller method name
+  private string $content;     //Content identifier
 
   private $routes = [
-    'category' => '\Application\Controller\Category',
-    'page'     => '\Application\Controller\Page',
-    'error'    => '\Application\Controller\Error',
+    'category'  => '\Application\Controller\Category',
+    'page'      => '\Application\Controller\Page',
+    'error'     => '\Application\Controller\Error',
     'guestbook' => '\Application\Controller\Guestbook'
   ];
 
+  private Request $request;
 
-  /**
-   *
-   * @param string $requestTarget return of Dominicus75\Http\Request::getUri()
-   * @return instance
-   *
-   */
-  public function __construct(string $method, string $requestUri) {
+
+  public function __construct(Request $request) {
+
+    $this->request  = $request;
 
     $updel  = "\/(?P<action>update|delete)";
     $create = "\/(?P<action>create)";
     $type   = "\/(?P<type>[a-zA-Z]{4,20})";
     $cid    = "\/(?P<cid>[a-zA-Z0-9_\-]{1,128}(\.html|\/))";
 
+    $requestUri = $this->request->getUri();
+
     if(preg_match("/^(\/?|index\.(php|html?))$/", $requestUri)) {
 
       $controller = self::DEFAULT_CONTROLLER;
-      $uri        = 'index';
+      $content    = 'index';
 
     } elseif(preg_match("/^".$updel.$type.$cid."$/i", $requestUri, $matches)) {
 
       $controller = $matches['type'];
       $action     = $matches['action'];
-      $uri        = $matches['cid'];
+      $content    = $matches['cid'];
 
     } elseif(preg_match("/^".$create.$type."$/i", $requestUri, $matches)) {
 
@@ -62,7 +63,7 @@ class Router
     } elseif(preg_match("/^".$type.$cid."$/i", $requestUri, $matches)) {
 
       $controller = $matches['type'];
-      $uri        = $matches['cid'];
+      $content    = $matches['cid'];
 
     } elseif(preg_match("/^".$cid."$/i", $requestUri, $matches)) {
 
@@ -71,7 +72,7 @@ class Router
       } else {
         $controller = preg_match("/\/$/", $matches['cid']) ? 'category' : 'page';
       }
-      $uri = $matches['cid'];
+      $content = $matches['cid'];
 
     } else { throw new InvalidUriException(); }
 
@@ -79,15 +80,14 @@ class Router
       throw new InvalidUriException();
     }
 
-    if(isset($uri)) {
-      if(preg_match("/\/$/", $uri)) { $controller = 'category'; }
-      $uri = preg_replace("/(\.html|\/)$/", "", $uri);
+    if(isset($content)) {
+      if(preg_match("/\/$/", $content)) { $controller = 'category'; }
+      $content = preg_replace("/(\.html|\/)$/", "", $content);
     }
 
-    $this->method     = $method;
     $this->controller = isset($controller) ? $controller : self::DEFAULT_CONTROLLER;
     $this->action     = isset($action) ? $action : self::DEFAULT_ACTION;
-    $this->uri        = isset($uri) ? $uri : null;
+    $this->content    = isset($content) ? $content : null;
 
   }
 
@@ -107,9 +107,13 @@ class Router
   }
 
 
-  public function dispatch(string $method = null, string $action = null, string $uri = null):Object {
+  public function dispatch(): \Dominicus75\MVC\ControllerInterface {
     if($this->hasRoute($this->controller)) {
-      return new $this->routes[$this->controller]($this->method, $this->action, $this->uri);
+      return new $this->routes[$this->controller](
+                   $this->request,
+                   $this->action,
+                   $this->content
+                 );
     } else { throw new ControllerNotFoundException($this->controller); }
   }
 

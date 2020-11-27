@@ -27,8 +27,13 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=0
-FILE_NAME_0=0;Java;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdocuments%2Ftutorials%2Fnje-gamf%2Fjava%2Ftelepulesek%2Fsrc%2Ftelepulesek%2FTelepulesek.java;0;2
+current_page=5
+FILE_NAME_0=271;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
+FILE_NAME_1=293;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FControllerInterface.php;0;2
+FILE_NAME_2=234;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FModelInterface.php;0;2
+FILE_NAME_3=0;PHP;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdevel%2Fhtdocs%2Fhomework%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FControllerTrait.php;0;2
+FILE_NAME_4=1111;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Frouter%2Fsrc%2FRouter.php;0;2
+FILE_NAME_5=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FViewInterface.php;0;2
 
 [VTE]
-last_dir=/home/domi/data/documents/tutorials/nje-gamf/java/telepulesek/src/telepulesek
+last_dir=/opt/lampp/htdocs/samplesite/vendor/dominicus75/mvc/src

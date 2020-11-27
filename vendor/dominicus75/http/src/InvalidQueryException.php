@@ -11,4 +11,4 @@
 
 namespace Dominicus75\Http;
 
-class InvalidUriException extends \InvalidArgumentException {}
+class InvalidQueryException extends \InvalidArgumentException {}

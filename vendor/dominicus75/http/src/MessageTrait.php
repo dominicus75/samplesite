@@ -11,8 +11,7 @@ namespace Dominicus75\Http;
 trait MessageTrait
 {
 
-  private array $headers;
-  private $body;
+  private $headers = [];
 
 
   public function getProtocolVersion():string {
@@ -20,35 +19,51 @@ trait MessageTrait
   }
 
 
-  public function getHeaders():array {
+  private function setHeaders(array $headers):void {
 
-    $result = [];
-
-    foreach($this->headers as $name => $value) { $result[$name] = $this->getHeader($name); }
-
-    return $result;
+    foreach($headers as $key => $value){
+      if(!$this->addHeader($key, $value)){
+        throw new \InvalidArgumentException("The $key header is already exists.");
+      }
+    }
 
   }
 
 
-  public function hasHeader(string $name):bool {
+  private function sanitizeHeaderName(string $name):string {
+    return trim(preg_replace("/^[^\w_\-]*$/i", "", $name));
+  }
+
+
+  private function sanitizeHeaderValue(string $value):string {
+    return trim(preg_replace("/^[^\w\s\-\?\!\:\.\,\;\/\"\'\^\*\+=@&\{\}\(\)\[\]]*$/i", "", $value));
+  }
+
+
+  public function getHeaders(): array { return $this->headers; }
+
+
+  public function hasHeader(string $name): bool {
     return array_key_exists($name, $this->headers);
   }
 
 
-  public function getHeader(string $name):array {
+  public function addHeader(string $name, string $value): bool {
 
-    $result = [];
+    if($this->hasHeader($name)) { return false; }
 
-    if($this->hasHeader($name)) {
-      foreach(explode(',', $this->headers[$name]) as $value){ $result[$name][] = $value; }
-    }
+    $name  = $this->sanitizeHeaderName($name);
+    $value = $this->sanitizeHeaderValue($value);
+    $this->headers[$name] = $value;
 
-    return $result;
+    return true;
 
   }
 
 
-  public function getBody() { return $this->body; }
+  public function getHeader(string $name): ?string {
+    return $this->hasHeader($name) ? $this->headers[$name] : null;
+  }
+
 
 }

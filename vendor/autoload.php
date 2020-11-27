@@ -16,28 +16,30 @@ spl_autoload_register(function ($class_name) {
   $VEN = $PRD."vendor".$DSR;      // VENdor root directory
 
   $fully_qualified_name = explode("\\", $class_name);
+
   $vendor = strtolower(array_shift($fully_qualified_name)).$DSR;
+  $class  = array_pop($fully_qualified_name);
+  $file   = (preg_match("/^Applic/i", $vendor)) ? $APP : $VEN.$vendor ;
 
   $numberOfItems = count($fully_qualified_name);
 
-  if($numberOfItems == 1) {
-    $class = $fully_qualified_name[0];
-    $file = (preg_match("/^Applic/i", $vendor))
-    ? $APP.$class.".php"
-    : $VEN.$vendor.$class.".php" ;
-  } elseif($numberOfItems == 2){
+  if($numberOfItems == 0) {
+    $file .= $class.".php";
+  } elseif($numberOfItems == 1){
     $namespace = strtolower($fully_qualified_name[0]).$DSR;
-    $class = $fully_qualified_name[1];
-    $file = (preg_match("/^applic/i", $vendor))
-    ? $APP.$namespace.$class.".php"
-    : $VEN.$vendor.$namespace."src".$DSR.$class.".php";
+    $file .= (preg_match("/^applic/i", $vendor))
+    ? $namespace.$class.".php"
+    : $namespace."src".$DSR.$class.".php";
   } else {
-    $namespace = strtolower(array_shift($fully_qualified_name)).$DSR;
-    $class = array_pop($fully_qualified_name);
-    $subNamespace = $DSR.implode($DSR, $fully_qualified_name).$DSR;
-    $file = (preg_match("/^applic/i", $vendor))
-    ? $APP.$namespace.$subNamespace.$class.".php"
-    : $VEN.$vendor.$namespace."src".$subNamespace.$class.".php";
+    $namespace = strtolower(array_shift($fully_qualified_name));
+    $subNamespace = implode($DSR, $fully_qualified_name).$DSR;
+    if($vendor == 'psr' && $namespace = 'http') {
+      $file .= $namespace."-".$subNamespace."src".$DSR.$class.".php";
+    } else {
+      $file .= (preg_match("/^applic/i", $vendor))
+      ? $namespace.$DSR.$subNamespace.$class.".php"
+      : $namespace.$DSR."src".$subNamespace.$class.".php";
+    }
   }
 
   if (file_exists($file)) { require $file; }

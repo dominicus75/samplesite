@@ -20,32 +20,52 @@ class Request
   use MessageTrait;
 
   protected string $uri;
+  protected array $query = [];
+  protected array $files = [];
+  protected array $body  = [];
 
-  public function __construct() {
+  public function __construct(
+    $get = null,
+    $post = null,
+    $files = null
+  ) {
 
-    if(Uri::isValid()) {
+    $this->uri = Uri::getPath();
 
-      $this->uri = Uri::getPath();
+    try {
 
-      foreach(apache_request_headers() as $name => $value) {
+      $this->setHeaders(apache_request_headers());
 
-        $this->headers[$name] = preg_match("/^([a-zA-Z0-9 _\-\.~:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]{1,128})$/", $value)
-                                ? $value : '' ;
+      if(!is_null($post)) {
 
-      }
-
-      if($post = file_get_contents('php://input')) {
-
-        foreach(explode("&", $post) as $item) {
-          $array = explode("=", urldecode($item));
-          $key   = Input::sanitizeHtml($array[0], null);
-          $value = Input::sanitizeHtml($array[1], Pattern::ALLOWED_TAGS);
+        foreach($post as $key => $value) {
+          $value = urldecode($value);
+          $key   = Input::sanitizeHtml($key, null);
+          $value = Input::sanitizeHtml($value, Pattern::ALLOWED_TAGS);
           $this->body[$key] = $value;
         }
 
       }
 
-    } else { throw new InvalidUriException(); }
+
+      if(!is_null($get)) {
+
+        foreach($get as $key => $value) {
+          $key   = Input::sanitizeHtml($key, null);
+          $value = Input::sanitizeHtml($value, null);
+          $this->query[$key] = $value;
+        }
+
+      }
+
+      if(!is_null($files)) {
+        try {
+          $this->files = UploadedFileFactory::createFromGlobals($files);
+        } catch(\InvalidArgumentException $e){ throw $e; }
+      }
+
+
+    } catch(\InvalidArgumentException $e) { throw $e; }
 
   }
 
@@ -55,9 +75,12 @@ class Request
                       ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET' ;
   }
 
-  public function getUri():string {
-    return $this->uri;
-  }
+  public function getUri(): string { return $this->uri; }
 
+  public function getUploadedFiles(): array { return $this->files; }
+
+  public function getParsedBody(): array { return $this->body; }
+
+  public function getQueryParams(): array { return $this->query; }
 
 }
