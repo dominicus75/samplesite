@@ -10,10 +10,10 @@ namespace Dominicus75\VariousTools;
 
 use \Dominicus75\Exceptions\{FileNotFoundException, DirectoryNotFoundException};
 
-class Config
+class Config implements \ArrayAccess
 {
 
-  private $config;
+  private $container;
 
   public function __construct(string $className, string $configDirectory = null){
 
@@ -25,7 +25,7 @@ class Config
 
     if(is_dir($dir)) {
       if(file_exists($dir.DIRECTORY_SEPARATOR.$className.".php")){
-        $this->config = require_once $dir.DIRECTORY_SEPARATOR.$className.".php";
+        $this->container = require_once $dir.DIRECTORY_SEPARATOR.$className.".php";
       } else {
         throw new FileNotFoundException("Filename: ".$dir.DIRECTORY_SEPARATOR.$className.".php");
       }
@@ -35,20 +35,28 @@ class Config
 
   }
 
-  public function has(string $key):bool {
-    return array_key_exists($key, $this->config);
+
+  public function offsetExists($offset): bool {
+      return array_key_exists($offset, $this->container);
   }
 
-  public function get(string $key) {
-    return $this->has($key) ? $this->config[$key] : null;
+
+  public function offsetGet($offset) {
+    return ($this->offsetExists($offset)) ? $this->container[$offset] : null;
   }
 
-  public function getKeys():array {
-    return array_keys($this->config);
+
+  public function offsetSet($offset, $value): void {
+    if (is_null($offset)) {
+      $this->container[] = $value;
+    } else {
+      $this->container[$offset] = $value;
+    }
   }
 
-  public function getConfig():array {
-    return $this->config;
+
+  public function offsetUnset($offset): void {
+    unset($this->container[$offset]);
   }
 
 }

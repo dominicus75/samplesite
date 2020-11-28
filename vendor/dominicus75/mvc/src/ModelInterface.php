@@ -11,9 +11,9 @@ namespace Dominicus75\MVC;
 interface ModelInterface {
 
   public function __construct(
-    \PDO $connection,
+    \ArrayAccess $pdoConfig,
     string $tableName,
-    ?string $contentId = null,
+    $contentId = null,
     ?array $content = null
   );
 
@@ -25,12 +25,12 @@ interface ModelInterface {
 
   public function getContent(): ?array;
 
-  public function insert(string $id, array $content): bool;
+  public function insert(?string $idName = null): bool;
 
-  public function select(string $id, array $params): array;
+  public function select(string $idName, array $params): array;
 
-  public function update(string $id, array $params): bool;
+  public function update(string $idName, array $params): bool;
 
-  public function delete(string $id): bool;
+  public function delete(string $idName): bool;
 
 }
