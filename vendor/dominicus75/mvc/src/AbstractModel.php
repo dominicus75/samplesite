@@ -200,12 +200,7 @@ abstract class AbstractModel implements ModelInterface
                           $this->content[$this->primaryKey],
                           $this->columns[$this->primaryKey][1]);
 
-    if($statement->execute()){
-      $this->content = [];
-      return true;
-    }
-
-    return false;
+    return $statement->execute();
 
   }
 
