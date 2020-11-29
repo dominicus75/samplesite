@@ -12,25 +12,31 @@ interface ModelInterface {
 
   public function __construct(
     \ArrayAccess $pdoConfig,
-    string $tableName,
-    $contentId = null,
-    ?array $content = null
+    $contentID = ''
   );
 
   public function getTableName(): string;
 
-  public function getContentId();
+  public function hasPrimaryKey(): bool;
 
-  public function setContent(?array $content = null): void;
+  public function getPrimaryKey();
 
-  public function getContent(): ?array;
+  public function setContent(array $content = []): void;
 
-  public function insert(?string $idName = null): bool;
+  public function updateContent(array $content = []): void;
 
-  public function select(string $idName, array $params): array;
+  public function getContent(): array;
 
-  public function update(string $idName, array $params): bool;
+  public function setField($field, $value): void;
 
-  public function delete(string $idName): bool;
+  public function updateField($field, $value): void;
+
+  public function insert(): bool;
+
+  public function select(array $params = []): ?array;
+
+  public function update(): bool;
+
+  public function delete(): bool;
 
 }

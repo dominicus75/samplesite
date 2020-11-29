@@ -29,9 +29,6 @@ class PDO extends \PDO
           self::setOptions($config->offsetGet('options'))
         );
 
-        self::$instance->exec('set names utf8');
-        self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
       } catch(\PDOException $e) { throw $e; }
 
   }
@@ -43,10 +40,15 @@ class PDO extends \PDO
   public static function getInstance(\ArrayAccess $config):self {
 
     if (is_null(self::$instance)) {
+
       try {
         self::$instance = new self($config);
+        self::$instance->exec('set names utf8');
+        self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       } catch(\PDOException $e) { throw $e; }
+
     }
+
     return self::$instance;
 
   }

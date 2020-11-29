@@ -27,12 +27,11 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=3
-FILE_NAME_0=563;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FControllerInterface.php;0;2
-FILE_NAME_1=342;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FViewInterface.php;0;2
-FILE_NAME_2=811;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FModelInterface.php;0;2
-FILE_NAME_3=1832;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FAbstractModel.php;0;2
-FILE_NAME_4=934;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FPDO.php;0;2
+current_page=1
+FILE_NAME_0=325;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FModelInterface.php;0;2
+FILE_NAME_1=3680;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmvc%2Fsrc%2FAbstractModel.php;0;2
+FILE_NAME_2=354;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fmodel%2FPage.php;0;2
+FILE_NAME_3=1875;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
 
 [VTE]
 last_dir=/opt/lampp/htdocs/samplesite/vendor/dominicus75/mvc/src

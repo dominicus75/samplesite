@@ -8,129 +8,206 @@
 
 namespace Dominicus75\MVC;
 
-use \Dominicus75\VariousTools\Config;
-
 abstract class AbstractModel implements ModelInterface
 {
 
   protected PDO $pdo;
   protected string $table;
-  protected ?string $contentId;
-  protected ?array $content;
-  protected ?array $columns;
+  protected string $primaryKey;
+  protected $contentID;
+  protected array $content = [];
+  protected array $columns = [];
+  protected array $updated = [];
 
 
   public function __construct(
     \ArrayAccess $pdoConfig,
-    string $tableName,
-    $contentId = null,
-    ?array $content = null
+    $contentID = ''
   ){
 
     try {
-      $this->pdo       = PDO::getInstance($pdoConfig);
-      $this->table     = $tableName;
-      $this->contentId = $contentId;
-      $this->setContent();
+
+      $this->pdo = PDO::getInstance($pdoConfig);
+      $this->contentID = $contentID;
+
     } catch(\PDOException $pdoe) { throw $pdoe; }
 
   }
 
   public function getTableName(): string { return $this->table; }
 
-  public function getContentId() {
-    return $this->contentId;
+  public function hasPrimaryKey(): bool {
+    return array_key_exists($this->primaryKey, $this->content);
   }
 
-  protected function setColumnTypes(?array $content = null): ?array {
+  public function getPrimaryKey() {
+    return (array_key_exists($this->primaryKey, $this->content))
+            ? $this->content[$this->primaryKey]
+            : null ;
+  }
 
-    if(is_null($content)) { return null; }
 
-    $result = [];
+  public function setContent(array $content = []): void {
 
-    foreach($content as $key => $value){
-
-      $columnName = ":".$key;
-
-      switch(gettype($value)){
-        case: 'boolean': $columnType = \PDO::PARAM_BOOL;
-        break;
-        case: 'integer': $columnType = \PDO::PARAM_INT;
-        break;
-        case: 'string': $columnType = \PDO::PARAM_STR;
-        break;
-        case: 'double': $columnType = \PDO::PARAM_INT;
-        break;
-        default: $columnType = \PDO::PARAM_NULL;
-        break;
+    if(!empty($content)) {
+      foreach($content as $fieldName => $value) {
+        try {
+          $this->setField($fieldName, $value);
+        } catch(InvalidFieldNameException $e) { throw $e; }
       }
+    } else if(!empty($this->contentID)) {
+      $result = $this->select();
+      if(!is_null($result)) {
+        try {
+         $this->setContent($result);
+        } catch(InvalidFieldNameException $e) { throw $e; }
+      } else { $this->content = []; }
+    }
 
-      $result[$columnName] = (int)$columnType;
+  }
+
+
+  public function updateContent(array $content = []): void {
+
+    if(!empty($content)) {
+
+      foreach($content as $field => $value) {
+
+        try {
+          $this->updateField($field, $value);
+        } catch (InvalidFieldNameException $e) { throw $e; }
+
+      }
 
     }
 
-    return $result;
+  }
+
+  public function getContent(): array { return $this->content; }
+
+
+  public function setField($field, $value): void {
+
+    if(array_key_exists($field, $this->columns)) {
+
+      if(!isset($this->content[$field])) {
+        $this->content[$field] = $value;
+      } else { throw new InvalidFieldNameException("The $field is already set"); }
+
+    } else { throw new InvalidFieldNameException("The $field field name is not valid"); }
 
   }
 
 
-  public function setContent(?array $content = null): void {
+  public function updateField($field, $value): void {
 
-     if(is_null($this->content) && !is_null($content)) {
-        $this->content = $content;
-        $this->columns = $this->setColumnTypes($content);
-     } else { $this->content = null; }
+    if(array_key_exists($field, $this->content)) {
+
+      if($field === $this->primaryKey) {
+        throw new InvalidFieldNameException("The primary key is immutable!");;
+      }
+
+      $this->updated[$field] = $value;
+
+    } else { throw new InvalidFieldNameException("The $field field is not exists"); }
 
   }
 
-  public function getContent(): ?array { return $this->content; }
 
-  public function insert(?string $idName = null): bool {
+  public function insert(): bool {
 
-    if(is_null($this->content)) { return false; }
+    if(empty($this->content)) { return false; }
 
-    $table = $this->table;
-    $fields = (is_null($idName)) ? '' : $idName.', ' ;
-    $fields .= implode(", ", array_keys($this->content));
-    $variables = (is_null($idName)) ? '' : ':'.$idName.', ' ;
-    $variables .= implode(", ", array_keys($this->columns));
-    $idType = (is_int($this->contentId)) ? \PDO::PARAM_INT : \PDO::PARAM_STR ;
+    $fields = '';
+    $variables = '';
 
-    $statement = $this->pdo->prepare("INSERT INTO $table ($fields) VALUES ($variables)");
+    foreach($this->columns as $name => $properties) {
+      //If there is no contentID, in that case AUTO INCREMENT
+      if(empty($this->contentID) && $name == $this->primaryKey) { continue; }
+      $fields .= $name.', ';
+      $variables .= $properties[0].', ';
+    }
+    $fields = rtrim($fields, ', ');
+    $variables = rtrim($variables, ', ');
 
-    if(!is_null($idName)) { $statement->bindParam(':'.$idName, $this->contentId, $idType); }
+    $sql= "INSERT INTO ".$this->table." ($fields) VALUES ($variables)"; echo $this->contentID;
 
-    foreach($this->columns as $columnName => $columnType) {
-      $index = ltrim($columnName, ":");
-      $statement->bindParam($columnName, $this->content[$index], $columnType);
+    $statement = $this->pdo->prepare($sql);
+
+    foreach($this->columns as $name => $properties) {
+      if(empty($this->contentID) && $name == $this->primaryKey) { continue; }
+      $statement->bindParam($properties[0], $this->content[$name], $properties[1]);
     }
 
     return $statement->execute();
 
   }
 
-  public function select(
-    $idName = null,
-    ?array $fields = null,
-    ?string $where = null,
-    ?array $keywords = null
-  ): array {
 
-    $table = $this->table;
-    $fields = (is_null($fields)) ? '*' : implode(", ", array_keys($fields));
+  public function select(array $params = []): ?array {
 
-    $statement = $this->pdo->prepare("SELECT $fields FROM $table ");
-
-    foreach($this->columns as $columnName => $columnType) {
-      $index = ltrim($columnName, ":");
-      $statement->bindParam($columnName, $this->content[$index], $columnType);
+    if(empty($params)){
+      $sql  = "SELECT * FROM `".$this->table;
+      $sql .= "` WHERE ".$this->primaryKey."=".$this->columns[$this->primaryKey][0];
+      $statement = $this->pdo->prepare($sql);
+      $statement->bindParam($this->columns[$this->primaryKey][0],
+                            $this->contentID,
+                            $this->columns[$this->primaryKey][1]);
+      $statement->execute();
+      $result = $statement->fetch(PDO::FETCH_ASSOC);
+      if($result) {
+        return $result;
+      } else { return null; }
     }
 
   }
 
-  public function update(string $id, array $params): bool;
+  public function update(): bool {
 
-  public function delete(string $id): bool;
+    if(empty($this->updated)) { return false; }
+
+    $sql  = "UPDATE `".$this->table."` SET ";
+
+    foreach($this->updated as $name => $value) {
+      $sql .= "`".$name."` = ".$this->columns[$name][0].", ";
+    }
+
+    $sql = rtrim($sql, ', ');
+    $sql .= " WHERE ".$this->primaryKey." = ".$this->columns[$this->primaryKey][0];
+
+    $statement = $this->pdo->prepare($sql);
+
+    foreach($this->updated as $name => $value) {
+      $statement->bindParam($this->columns[$name][0], $value, $this->columns[$name][1]);
+    }
+
+    $statement->bindParam($this->columns[$this->primaryKey][0],
+                          $this->content[$this->primaryKey],
+                          $this->columns[$this->primaryKey][1]);
+
+    return $statement->execute();
+
+  }
+
+  public function delete(): bool {
+
+    if(empty($this->contentID)) { return false; }
+
+    $sql  = "DELETE FROM `".$this->table;
+    $sql .= "` WHERE ".$this->primaryKey."=".$this->columns[$this->primaryKey][0];
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindParam($this->columns[$this->primaryKey][0],
+                          $this->content[$this->primaryKey],
+                          $this->columns[$this->primaryKey][1]);
+
+    if($statement->execute()){
+      $this->content = [];
+      return true;
+    }
+
+    return false;
+
+  }
 
 
 }
