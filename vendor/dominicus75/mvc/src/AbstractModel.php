@@ -130,7 +130,7 @@ abstract class AbstractModel implements ModelInterface
     $fields = rtrim($fields, ', ');
     $variables = rtrim($variables, ', ');
 
-    $sql= "INSERT INTO ".$this->table." ($fields) VALUES ($variables)"; echo $this->contentID;
+    $sql= "INSERT INTO ".$this->table." ($fields) VALUES ($variables)";
 
     $statement = $this->pdo->prepare($sql);
 
