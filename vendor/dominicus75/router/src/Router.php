@@ -107,7 +107,7 @@ class Router
   }
 
 
-  public function dispatch(): \Dominicus75\MVC\ControllerInterface {
+  public function dispatch(): \Dominicus75\MVC\AbstractController {
     if($this->hasRoute($this->controller)) {
       return new $this->routes[$this->controller](
                    $this->request,

@@ -8,8 +8,16 @@
 
 namespace Dominicus75\MVC;
 
-abstract class AbstractController implements ControllerInterface
+
+abstract class AbstractController
 {
+
+  protected string $name;
+  protected string $action;
+  protected string $contentID;
+  protected Object $request;
+  protected AbstractModel $model;
+  protected AbstractView $view;
 
 
   public function __construct(
@@ -21,20 +29,19 @@ abstract class AbstractController implements ControllerInterface
     $this->action = $action;
     $this->contentID = $contentID;
 
+
   }
 
-  public function getName(): string;
+  abstract public function getName(): string;
 
-  public function getRequest(): Object;
+  abstract public function getRequest(): Object;
 
-  public function getAction(): string;
+  abstract public function getAction(): string;
 
-  public function getContentId(): string;
+  abstract public function getContentId(): string;
 
-  public function getView(): ViewInterface;
+  abstract public function getView(): AbstractView;
 
-  public function getModel(): ModelInterface;
-
-
+  abstract public function getModel(): AbstractModel;
 
 }

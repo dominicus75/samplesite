@@ -8,7 +8,7 @@
 
 namespace Dominicus75\MVC;
 
-abstract class AbstractModel implements ModelInterface
+abstract class AbstractModel
 {
 
   protected PDO $pdo;
