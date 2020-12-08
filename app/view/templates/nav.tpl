@@ -3,5 +3,4 @@
   <input type="checkbox" id="show-menu">
 
   <nav>
-    &&menu&&
-  </nav>
+&&nav&&  </nav>

@@ -1,8 +1,8 @@
 
   <head>
-    <title>:{title}: | Globetrotter</title>
+    <title>{{title}} | Globetrotter</title>
     <meta charset="utf-8" />
-    <meta name="description" content=":{description}:">
+    <meta name="description" content="{{description}}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="/css/common.css" />
     <link rel="stylesheet" type="text/css" media="screen and (min-width: 1281px)" href="/css/desktop.css" />

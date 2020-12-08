@@ -8,8 +8,6 @@
 
 namespace Dominicus75\VariousTools;
 
-use \Dominicus75\Exceptions\{FileNotFoundException, DirectoryNotFoundException};
-
 class Config implements \ArrayAccess
 {
 

@@ -28,12 +28,41 @@ class FrontController
       $router   = new Router($request);
       $controller = $router->dispatch();
 
-      echo "<pre>";
-      //var_dump($layout);
-      //echo "<br><br>\n";
-      var_dump($controller);
-      //echo "<br><br>\n";
-      echo "</pre>";
+      $dom = new \Dominicus75\Templater\Skeleton(__DIR__.'/view/templates', 'skeleton.html');
+      $dom->assignTemplate('@@head@@', 'head.tpl');
+      $dom->assignTemplate('@@header@@', 'header.tpl');
+      $dom->assignTemplateLooper(
+        'nav.tpl',
+        'navItem.tpl',
+        '@@nav@@',
+        [
+          ['{{url}}' => '/', '{{target}}' => 'Kezdőlap'],
+          ['{{url}}' => '/rolunk.html', '{{target}}' => 'Rólunk'],
+          ['{{url}}' => '/kapcsolat.html', '{{target}}' => 'Kapcsolat'],
+          ['{{url}}' => '/vendegkonyv.html', '{{target}}' => 'Vendégkönyv']
+        ]
+      );
+      $dom->assignTemplate('@@aside@@', 'aside.tpl');
+      $dom->assignTemplate('@@main@@', 'page/read.tpl');
+      $dom->assignTemplate('@@footer@@', 'footer.tpl');
+      $dom->buildLayout();
+      $dom->setVariables([
+        '{{title}}' => 'Kezdőlap',
+        '{{description}}' => 'A Globetrotter utazási iroda oldala',
+        '{{body}}' => '<p class="textCenter site_slogan">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'
+      ]);
+      echo $dom->render();
+
+      //echo $nav->render();
+      //$dom->render();
+//var_dump($layout->isRenderable());
+//echo "<pre>";
+//var_dump($dom);
+//echo "<br><br>\n";
+//var_dump($controller);
+//echo "<br><br>\n";
+//echo "</pre>";
+
 
 
     } catch(\Dominicus75\Router\InvalidUriException | \Dominicus75\Router\ControllerNotFoundException $e) {

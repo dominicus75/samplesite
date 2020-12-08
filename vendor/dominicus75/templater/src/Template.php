@@ -8,58 +8,42 @@
 
 namespace Dominicus75\Templater;
 
-use \Dominicus75\Exceptions\{DirectoryNotFoundException, FileNotFoundException};
-
 
 class Template
 {
 
-  public const VAR_MARKER = "/:{[a-zA-Z0-9_-]+}:/is";
+  /**
+   *
+   *  @var string Fully qualified path name
+   *
+   */
+  protected string $url;
 
-  protected string $templateDir;
-  protected string $tplFile;
-  protected array $content;
-  protected string $template;
-  protected bool $renderable =  false;
+  /**
+   *
+   * @var string parsed content of the template file
+   *
+   */
+  protected string $source;
 
-  public function __construct(
-    string $templateDir,
-    string $tplFile,
-    array $content
-  ){
+  /**
+   *
+   * @param string $url Fully qualified path name of template file (tpl|html)
+   *
+   * @throws \Dominicus75\Templater\FileNotFoundException if the template
+   * file does not exists
+   *
+   */
+  public function __construct(string $url) {
 
-    if(is_dir($templateDir)) {
-      $this->templateDir = $templateDir;
-    } else {
-      throw new DirectoryNotFoundException($templateDir.' is not a directory.');
-    }
-
-    if(is_file($this->templateDir.DIRECTORY_SEPARATOR.$tplFile)) {
-      $this->tplFile = $tplFile;
-      $this->layout = file_get_contents($this->templateDir.DIRECTORY_SEPARATOR.$tplFile);
-    } else { throw new FileNotFoundException($tplFile.' does not exists.'); }
-
-    if(!empty($content)) {
-      foreach($content as $key => $value) { $this->content[':{'.$key.'}:'] = $value; }
-    } else { throw new \DomainException('$content array is very empty.'); }
-
-    $this->renderable = true;
+    if(is_file($url)) {
+      $this->url = $url;
+      $this->source = file_get_contents($this->url);
+    } else { throw new FileNotFoundException($url.' does not exists.'); }
 
   }
 
-
-  public function render(): string {
-
-    if($this->renderable) {
-      foreach($this->content as $marker => $content) {
-        $this->layout = str_replace($marker, $content, $this->layout);
-      }
-      return $this->layout;
-    } else {
-      throw new \RuntimeException('This template is not renderable yet');
-    }
-
-  }
+  public function render(): string { return $this->source; }
 
 
 }
