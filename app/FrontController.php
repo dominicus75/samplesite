@@ -26,7 +26,7 @@ class FrontController
       $request  = new Request($get, $post, $files);
       $response = new Response();
       $router   = new Router($request);
-      $controller = $router->dispatch();
+      //$controller = $router->dispatch();
 
       $dom = new \Dominicus75\Templater\Skeleton(__DIR__.'/view/templates', 'skeleton.html');
       $dom->assignTemplate('@@head@@', 'head.tpl');
@@ -52,6 +52,8 @@ class FrontController
         '{{body}}' => '<p class="textCenter site_slogan">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'
       ]);
       echo $dom->render();
+
+
 
       //echo $nav->render();
       //$dom->render();

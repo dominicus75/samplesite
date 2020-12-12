@@ -28,14 +28,14 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=1
-FILE_NAME_0=837;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FTemplate.php;0;2
-FILE_NAME_1=1983;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
-FILE_NAME_2=6911;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FSkeleton.php;0;2
-FILE_NAME_3=2518;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FTemplateLooper.php;0;2
-FILE_NAME_4=545;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FItemTemplate.php;0;2
-FILE_NAME_5=81;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Ftemplates%2Fpage%2Fread.tpl;0;2
-FILE_NAME_6=185;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Ftemplates%2Fheader.tpl;0;2
+current_page=6
+FILE_NAME_0=374;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
+FILE_NAME_1=0;PHP;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdevel%2Fhtdocs%2Flotto-sql%2Fcommon%2Ffunctions%2Fbasic.php;0;2
+FILE_NAME_2=2734;SQL;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Famdg.sql;0;2
+FILE_NAME_3=1035;PHP;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdevel%2Fhtdocs%2Flotto-sql%2Fadmins%2Fmodules%2Fmembers%2Fcreate.php;0;2
+FILE_NAME_4=749;PHP;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdevel%2Fhtdocs%2Fcocogreen%2Fsystem%2Ftheme%2Fcocogreen%2Ftemplates%2Fhead.tpl.php;0;2
+FILE_NAME_5=790;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Ftemplates%2Fhead.tpl;0;2
+FILE_NAME_6=1480;SQL;0;EUTF-8;0;1;0;%2Fhome%2Fdomi%2Fdata%2Fdevel%2Fphp%2Fsql%2Fcategories.sql;0;2
 
 [VTE]
-last_dir=/opt/lampp/htdocs/samplesite/app
+last_dir=/home/domi/data/devel/php/sql
