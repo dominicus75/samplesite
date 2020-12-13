@@ -1,6 +1,20 @@
 /* Tablet CSS */
 
+html { font-size: 2vmax; }
+
+h1, h2, h3, h4, h5 { text-align: center; }
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+article {
+  flex: 60%;
+  padding: 3vh;
+}
 
 aside {
-  display: none;
+  flex: 40%;
+  padding: 3vh;
 }

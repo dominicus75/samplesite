@@ -1,8 +1,6 @@
 /* Mobile CSS */
 
-body {
-  font-size: 4vmax;
-}
+html { font-size: 2.5vmax; }
 
 nav, main, label[for=show-menu] {
   flex-direction: column;
@@ -14,6 +12,11 @@ nav a {
   font-size: 2rem;
 }
 
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 aside, article {
   padding: 1vh 3vw;
   flex: 100%;
@@ -22,6 +25,8 @@ aside, article {
 h1, h1 > a {
   font-size: 2.1rem;
 }
+
+h1, h2, h3, h4, h5 { text-align: center; }
 
 body > header {
   height: auto;
@@ -34,7 +39,7 @@ iframe {
 
 /* Navigation elements */
 
-nav, aside {
+nav {
   display: none;
 }
 

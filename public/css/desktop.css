@@ -1,2 +1,19 @@
 /* Desktop CSS */
 
+html { font-size: 1vmax; }
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+article {
+  flex: 70%;
+  padding: 3vh;
+}
+
+aside {
+  flex: 30%;
+  padding: 3vh;
+}
+
