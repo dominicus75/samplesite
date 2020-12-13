@@ -129,6 +129,25 @@ class Skeleton {
 
   /**
    *
+   * @parem string $marker in form '@@marker@@'
+   * @param string $renderedTemplate a rendered template
+   * @throws \InvalidArgumentException if marker is not found
+   * @throws \InvalidArgumentException if marker already exists
+   *
+   */
+  public function assignRenderedTemplate(string $marker, string $renderedTemplate): void {
+
+    if(array_key_exists($marker, $this->templates)){
+      $this->templates[$marker] = $renderedTemplate;
+    } else {
+      throw new \InvalidArgumentException($marker.' is not found in this skeleton file');
+    }
+
+  }
+
+
+  /**
+   *
    * @param string $outerTemplateFile name of template (tpl) file, for example 'nav.tpl'
    * @param string $itemTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
    * @param string $marker in form '@@marker@@'

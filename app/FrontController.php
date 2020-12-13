@@ -42,7 +42,8 @@ class FrontController
           ['{{url}}' => '/vendegkonyv.html', '{{target}}' => 'Vendégkönyv']
         ]
       );
-      $dom->assignTemplate('@@aside@@', 'aside.tpl');
+      $aside = new \Application\Controller\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
+      $dom->assignRenderedTemplate('@@aside@@', $aside->renderView());
       $dom->assignTemplate('@@main@@', 'page/read.tpl');
       $dom->assignTemplate('@@footer@@', 'footer.tpl');
       $dom->buildLayout();

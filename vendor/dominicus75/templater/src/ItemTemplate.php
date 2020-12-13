@@ -60,11 +60,12 @@ class ItemTemplate extends Template
    * @throws \InvalidArgumentException if marker has already value
    *
    */
-  private function bindValue(string $marker, string $value): void {
+  private function bindValue(string $marker, string $value): self {
 
     if(array_key_exists($marker, $this->variables)){
       if(is_null($this->variables[$marker])) {
         $this->variables[$marker] = $value;
+        return $this;
       } else {
         throw new \InvalidArgumentException($marker.' has already value');
       }

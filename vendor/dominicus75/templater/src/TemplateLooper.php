@@ -79,7 +79,7 @@ class TemplateLooper extends Template
         $this->itemTemplateUrl = $itemTemplateUrl;
       } else { throw new FileNotFoundException($itemTemplateUrl.' does not exists.'); }
 
-      foreach($content as $id => $item) {
+      foreach($content as $item) {
 
         if(!is_array($item)) {
           throw new \InvalidArgumentException(
@@ -123,7 +123,7 @@ class TemplateLooper extends Template
       );
 
     } else {
-      throw new \RuntimeException('This ItemTemplate is not renderable yet.');
+      throw new \RuntimeException('This TemplateLooper is not renderable yet.');
     }
 
   }
