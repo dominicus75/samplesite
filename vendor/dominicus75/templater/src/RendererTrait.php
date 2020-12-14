@@ -1,6 +1,6 @@
 <?php
 /*
- * @file ItemTemplate.php
+ * @file RendererTrait.php
  * @package samplesite
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
@@ -8,13 +8,12 @@
 
 namespace Dominicus75\Templater;
 
-
-class ItemTemplate extends Template
+trait RendererTrait
 {
 
   /**
    *
-   * @var array The string variables belongs to this Template
+   * @var array The string variables belongs to this Renderable Template
    * in string $marker => string $value form
    *
    */
@@ -30,20 +29,15 @@ class ItemTemplate extends Template
 
   /**
    *
-   * @param string $url Fully qualified path name of iterative template file (tpl|html)
+   * This method extracts markers from source
    *
-   * @throws \Dominicus75\Templater\FileNotFoundException if the template
-   * file does not exists
+   * @param void
+   * @return void
    *
    */
-  public function __construct(string $itemTemplateUrl){
+  private function extractVariableMarkers(): void {
 
-    try {
-      parent::__construct($itemTemplateUrl);
-    } catch(FileNotFoundException $e) { throw $e; }
-
-
-    if(preg_match_all(Skeleton::MARKERS['variable'], $this->source, $matches)) {
+    if(preg_match_all(Templater::MARKERS['variable'], $this->source, $matches)) {
       foreach($matches[0] as $marker){ $this->variables[$marker] = null; }
     } else {
       throw new \RuntimeException('No variable markers found in this template file');
@@ -78,7 +72,7 @@ class ItemTemplate extends Template
 
   /**
    *
-   * @param array $variables The string variables belongs to this ItemTemplate
+   * @param array $variables The string variables belongs to this IterativeTemplate
    * in string $marker => string $value form
    * @return void
    * @throws \InvalidArgumentException if marker is not found
@@ -97,16 +91,26 @@ class ItemTemplate extends Template
 
   }
 
+
+  /**
+   *
+   * @param void
+   * @return bool
+   *
+   */
+  abstract public function isRenderable(): bool;
+
+
   /**
    *
    * @param void
    * @return string
-   * @throws \RuntimeException if this ItemTemplate is not renderable
+   * @throws \RuntimeException if this Renderable Template is not renderable
    *
    */
   public function render(): string {
 
-    if($this->renderable) {
+    if($this->isRenderable()) {
 
       return str_replace(
         array_keys($this->variables),
@@ -115,7 +119,7 @@ class ItemTemplate extends Template
       );
 
     } else {
-      throw new \RuntimeException('This ItemTemplate is not renderable yet.');
+      throw new \RuntimeException('This template is not renderable yet.');
     }
 
   }

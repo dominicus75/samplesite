@@ -9,19 +9,9 @@
 namespace Dominicus75\Templater;
 
 
-class Skeleton {
+class Skeleton extends Template {
 
-  /**
-   *
-   * @static string A regular expression to validate
-   * the template file markers
-   *
-   */
-  const MARKERS = [
-    'template' => '/@@[a-zA-Z0-9_-]+@@/is',
-    'variable' => '/{{[a-zA-Z0-9_-]+}}/is',
-    'foreach'  => '/&&[a-zA-Z0-9_-]+&&/is'
-  ];
+  use RendererTrait;
 
   /**
    *
@@ -29,13 +19,6 @@ class Skeleton {
    *
    */
   private string $templateDirectory;
-
-  /**
-   *
-   * @var string parsed content of the skeleton file
-   *
-   */
-  private string $skeleton;
 
   /**
    *
@@ -47,26 +30,12 @@ class Skeleton {
 
   /**
    *
-   * @var array The string variables belongs to this skeleton
-   * in string {{marker}} => string $variable form
-   *
-   */
-  protected array $variables = [];
-
-  /**
-   *
    * @var bool if $this->skeleton includes all template sources, value of
    * this property true, false otherwise
    *
    */
   private bool $buildedUp = false;
 
-  /**
-   *
-   * @var bool This Skeleton is rendereble or not
-   *
-   */
-  protected bool $renderable = false;
 
   /**
    *
@@ -83,17 +52,14 @@ class Skeleton {
 
     if(is_dir($templateDirectory)) {
       $this->templateDirectory = $templateDirectory.DIRECTORY_SEPARATOR;
+      try {
+        parent::__construct($this->templateDirectory.$skeletonFile);
+      } catch(FileNotFoundException $e) { throw $e; }
     } else {
       throw new DirectoryNotFoundException($templateDirectory.' does not exists.');
     }
 
-    if(is_file($this->templateDirectory.$skeletonFile)) {
-      $this->skeleton = file_get_contents($this->templateDirectory.$skeletonFile);
-    } else {
-      throw new FileNotFoundException($skeletonFile.' does not exists.');
-    }
-
-    if(preg_match_all(self::MARKERS['template'], $this->skeleton, $matches)) {
+    if(preg_match_all(Templater::MARKERS['template'], $this->source, $matches)) {
       foreach($matches[0] as $marker){ $this->templates[$marker] = null; }
     } else {
       throw new \InvalidArgumentException(
@@ -118,7 +84,7 @@ class Skeleton {
     if(array_key_exists($marker, $this->templates)){
       try {
         $template = new Template($this->templateDirectory.$templateFile);
-        $this->templates[$marker] = $template->render();
+        $this->templates[$marker] = $template->getSource();
       } catch(FileNotFoundException $e) { throw $e; }
     } else {
       throw new \InvalidArgumentException($marker.' is not found in this skeleton file');
@@ -168,7 +134,7 @@ class Skeleton {
 
     if(array_key_exists($marker, $this->templates)){
       try {
-        $looper = new TemplateLooper(
+        $looper = new TemplateIterator(
           $this->templateDirectory.$outerTemplateFile,
           $this->templateDirectory.$itemTemplateFile,
           str_replace('@@', '&&', $marker),
@@ -190,23 +156,19 @@ class Skeleton {
    *
    * @param void
    * @return void
-   * @throws \RuntimeException, if any template is missing
+   * @throws \RuntimeException, if any template or variable is missing
    *
    */
   public function buildLayout(): void {
 
     foreach($this->templates as $marker => $template){
       if(is_null($template)) { throw new \RuntimeException($marker.' template is missing'); }
-      $this->skeleton = str_replace($marker, $template, $this->skeleton);
+      $this->source = str_replace($marker, $template, $this->source);
     }
 
-    if(preg_match_all(self::MARKERS['variable'], $this->skeleton, $matches)) {
-      foreach($matches[0] as $marker){ $this->variables[$marker] = null; }
-    } else {
-      throw new \RuntimeException(
-        'No variable markers found in this skeleton file'
-      );
-    }
+    try {
+      $this->extractVariableMarkers();
+    } catch(\RuntimeException $e) { throw $e; }
 
     $this->buildedUp = true;
 
@@ -215,74 +177,12 @@ class Skeleton {
 
   /**
    *
-   * @param string $marker in form '{{marker}}'
-   * @param string $value
-   * @throws \InvalidArgumentException if marker is not found
-   * @throws \InvalidArgumentException if marker has already value
-   *
-   */
-  private function bindValue(string $marker, string $value): void {
-
-    if(array_key_exists($marker, $this->variables)){
-      if(is_null($this->variables[$marker])) {
-        $this->variables[$marker] = $value;
-      } else {
-        throw new \InvalidArgumentException($marker.' has already value');
-      }
-    } else {
-      throw new \InvalidArgumentException($marker.' is not found in this template file');
-    }
-
-  }
-
-
-  /**
-   *
-   * @param array $variables The string variables belongs to this Skeleton
-   * in string $marker => string $value form
-   * @return void
-   * @throws \InvalidArgumentException if marker is not found
-   * @throws \InvalidArgumentException if marker has already value
-   *
-   */
-  public function setVariables(array $variables): void {
-
-    foreach($variables as $marker => $value) {
-      try {
-        $this->bindValue($marker, $value);
-      } catch(\InvalidArgumentException $e) { throw $e; }
-    }
-
-    $this->renderable = true;
-
-  }
-
-
-  /**
-   *
    * @param void
-   * @return string
-   * @throws \RuntimeException if this skeleton or any template is not renderable
+   * @return bool
    *
    */
-  public function render(): string {
-
-    if($this->buildedUp){
-
-      if(!$this->renderable){
-        throw new \RuntimeException('This skeleton is not renderable yet.');
-      }
-
-      return str_replace(
-              array_keys($this->variables),
-              array_values($this->variables),
-              $this->skeleton
-             );
-
-    } else {
-      throw new \RuntimeException('This skeleton is not renderable yet.');
-    }
-
+  public function isRenderable(): bool {
+    return ($this->buildedUp && $this->renderable) ? true : false;
   }
 
 

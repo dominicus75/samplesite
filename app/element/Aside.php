@@ -6,7 +6,7 @@
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Application\Controller;
+namespace Application\Element;
 
 use \Dominicus75\MNB\Currencies;
 use \Dominicus75\Templater\{TemplateLooper, ItemTemplate};

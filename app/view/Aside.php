@@ -9,7 +9,7 @@
 namespace Application\View;
 
 use \Dominicus75\MNB\Currencies;
-use \Dominicus75\Templater\TemplateLooper;
+use \Dominicus75\Templater\TemplateIterator;
 
 class Aside
 {
@@ -44,10 +44,10 @@ class Aside
 
   /**
    *
-   * @var \Dominicus75\Templater\TemplateLooper
+   * @var \Dominicus75\Templater\TemplateIterator
    *
    */
-  private \Dominicus75\Templater\TemplateLooper $looper;
+  private \Dominicus75\Templater\TemplateIterator $iterator;
 
 
   /**
@@ -62,7 +62,7 @@ class Aside
   public function __construct(array $content)
   {
     try {
-      $this->looper = new TemplateLooper(
+      $this->iterator = new TemplateIterator(
         $this->templateDirectory.$this->tableTemplateUrl,
         $this->templateDirectory.$this->rowTemplateUrl,
         $this->marker,
@@ -72,7 +72,7 @@ class Aside
             \InvalidArgumentException $e) { echo $e->getMessage(); }
   }
 
-  public function renderTemplate(): string { return $this->looper->render(); }
+  public function renderTemplate(): string { return $this->iterator->render(); }
 
 
 }

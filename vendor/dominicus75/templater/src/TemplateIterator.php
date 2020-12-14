@@ -1,7 +1,7 @@
 <?php
 /*
- * @file TemplateLooper.php
- * @package samplesite
+ * @file TemplateIterator.php
+ * @package Templater
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
@@ -9,7 +9,7 @@
 namespace Dominicus75\Templater;
 
 
-class TemplateLooper extends Template
+class TemplateIterator extends Template
 {
 
   /**
@@ -17,7 +17,7 @@ class TemplateLooper extends Template
    * @var string Fully qualified path name of iterative template file (tpl)
    *
    */
-  protected string $itemTemplateUrl;
+  protected string $iterativeTemplateUrl;
 
   /**
    *
@@ -27,7 +27,7 @@ class TemplateLooper extends Template
   protected string $marker;
 
   /**
-   * @var string result of foreach
+   * @var string result of iteration
    *
    */
   protected string $result = '';
@@ -42,7 +42,7 @@ class TemplateLooper extends Template
   /**
    *
    * @param string $outerTemplateUrl Fully qualified path name of template file (tpl)
-   * @param string $itemTemplateUrl Fully qualified path name of iterative template file (tpl)
+   * @param string $iterativeTemplateUrl Fully qualified path name of iterative template file (tpl)
    * @param string $marker in form '&&marker&&'
    * @param array $content
    *
@@ -53,17 +53,17 @@ class TemplateLooper extends Template
    *
    */
   public function __construct(
-    string $outerTemplateUrl,
-    string $itemTemplateUrl,
+    string $inclusiveTemplateUrl,
+    string $iterativeTemplateUrl,
     string $marker,
     array $content
   ){
 
     try {
 
-      parent::__construct($outerTemplateUrl);
+      parent::__construct($inclusiveTemplateUrl);
 
-      if(preg_match(Skeleton::MARKERS['foreach'], $this->source, $matches)) {
+      if(preg_match(Templater::MARKERS['foreach'], $this->source, $matches)) {
         if($matches[0] == $marker) {
           $this->marker = $marker;
         } else {
@@ -75,9 +75,9 @@ class TemplateLooper extends Template
         );
       }
 
-      if(is_file($itemTemplateUrl)) {
-        $this->itemTemplateUrl = $itemTemplateUrl;
-      } else { throw new FileNotFoundException($itemTemplateUrl.' does not exists.'); }
+      if(is_file($iterativeTemplateUrl)) {
+        $this->iterativeTemplateUrl = $iterativeTemplateUrl;
+      } else { throw new FileNotFoundException($iterativeTemplateUrl.' does not exists.'); }
 
       foreach($content as $item) {
 
@@ -88,9 +88,9 @@ class TemplateLooper extends Template
         }
 
         try {
-          $itemTemplate = new ItemTemplate($this->itemTemplateUrl);
-          $itemTemplate->setVariables($item);
-          $this->result .= $itemTemplate->render().PHP_EOL;
+          $iterativeTemplate = new IterativeTemplate($this->iterativeTemplateUrl);
+          $iterativeTemplate->setVariables($item);
+          $this->result .= $iterativeTemplate->render().PHP_EOL;
         } catch(\InvalidArgumentException |
                 \RuntimeException |
                 \FileNotFoundException $e) { throw $e; }
@@ -123,7 +123,7 @@ class TemplateLooper extends Template
       );
 
     } else {
-      throw new \RuntimeException('This TemplateLooper is not renderable yet.');
+      throw new \RuntimeException('This TemplateIterator is not renderable yet.');
     }
 
   }

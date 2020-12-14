@@ -28,11 +28,8 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=3
-FILE_NAME_0=828;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
-FILE_NAME_1=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FItemTemplate.php;0;2
-FILE_NAME_2=793;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmnb%2Fsrc%2FClient.php;0;2
-FILE_NAME_3=882;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fmnb%2Fsrc%2FCurrency.php;0;2
+current_page=0
+FILE_NAME_0=1315;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
 
 [VTE]
-last_dir=/opt/lampp/htdocs/samplesite/vendor/dominicus75/mnb/src
+last_dir=/opt/lampp/htdocs/samplesite/app

@@ -14,14 +14,7 @@ class Template
 
   /**
    *
-   *  @var string Fully qualified path name
-   *
-   */
-  protected string $url;
-
-  /**
-   *
-   * @var string parsed content of the template file
+   * @var string source of the template file
    *
    */
   protected string $source;
@@ -37,13 +30,18 @@ class Template
   public function __construct(string $url) {
 
     if(is_file($url)) {
-      $this->url = $url;
-      $this->source = file_get_contents($this->url);
+      $this->source = file_get_contents($url);
     } else { throw new FileNotFoundException($url.' does not exists.'); }
 
   }
 
-  public function render(): string { return $this->source; }
+  /**
+   *
+   * @param void
+   * @return string
+   *
+   */
+  public function getSource(): string { return $this->source; }
 
 
 }
