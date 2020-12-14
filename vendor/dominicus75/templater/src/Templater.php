@@ -19,8 +19,7 @@ class Templater
    */
   const MARKERS = [
     'template' => '/@@[a-zA-Z0-9_-]+@@/is',
-    'variable' => '/{{[a-zA-Z0-9_-]+}}/is',
-    'foreach'  => '/&&[a-zA-Z0-9_-]+&&/is'
+    'variable' => '/{{[a-zA-Z0-9_-]+}}/is'
   ];
 
 }

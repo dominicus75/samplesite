@@ -9,7 +9,7 @@
 namespace Dominicus75\Templater;
 
 
-class TemplateIterator extends Template
+class TemplateIterator
 {
 
   /**
@@ -41,7 +41,7 @@ class TemplateIterator extends Template
 
   /**
    *
-   * @param string $outerTemplateUrl Fully qualified path name of template file (tpl)
+   * @param string $inclusiveTemplateUrl Fully qualified path name of template file (tpl)
    * @param string $iterativeTemplateUrl Fully qualified path name of iterative template file (tpl)
    * @param string $marker in form '&&marker&&'
    * @param array $content
@@ -52,55 +52,33 @@ class TemplateIterator extends Template
    * @throws \InvalidArgumentException if either $content item is not an array
    *
    */
-  public function __construct(
-    string $inclusiveTemplateUrl,
-    string $iterativeTemplateUrl,
-    string $marker,
-    array $content
-  ){
-
-    try {
-
-      parent::__construct($inclusiveTemplateUrl);
-
-      if(preg_match(Templater::MARKERS['foreach'], $this->source, $matches)) {
-        if($matches[0] == $marker) {
-          $this->marker = $marker;
-        } else {
-          throw new \InvalidArgumentException('Invalid forech marker');
-        }
-      } else {
-        throw new \InvalidArgumentException(
-          'No forech marker found in this template file'
-        );
-      }
+  public function __construct(string $iterativeTemplateUrl, array $content){
 
       if(is_file($iterativeTemplateUrl)) {
+
         $this->iterativeTemplateUrl = $iterativeTemplateUrl;
-      } else { throw new FileNotFoundException($iterativeTemplateUrl.' does not exists.'); }
 
-      foreach($content as $item) {
+        foreach($content as $item) {
 
-        if(!is_array($item)) {
-          throw new \InvalidArgumentException(
-            'All items of this array must be an array'
-          );
+          if(!is_array($item)) {
+            throw new \InvalidArgumentException(
+              'All items of this array must be an array'
+            );
+          }
+
+          try {
+            $iterativeTemplate = new IterativeTemplate($this->iterativeTemplateUrl);
+            $iterativeTemplate->setVariables($item);
+            $this->result .= $iterativeTemplate->render().PHP_EOL;
+          } catch(\InvalidArgumentException |
+                  \RuntimeException |
+                  \FileNotFoundException $e) { throw $e; }
+
         }
 
-        try {
-          $iterativeTemplate = new IterativeTemplate($this->iterativeTemplateUrl);
-          $iterativeTemplate->setVariables($item);
-          $this->result .= $iterativeTemplate->render().PHP_EOL;
-        } catch(\InvalidArgumentException |
-                \RuntimeException |
-                \FileNotFoundException $e) { throw $e; }
+        $this->renderable = true;
 
-      }
-
-      $this->renderable = true;
-
-
-    } catch(FileNotFoundException $e) { throw $e; }
+      } else { throw new FileNotFoundException($iterativeTemplateUrl.' does not exists.'); }
 
   }
 
@@ -109,19 +87,13 @@ class TemplateIterator extends Template
    *
    * @param void
    * @return string
-   * @throws \RuntimeException if this Looper is not renderable
+   * @throws \RuntimeException if this TemplateIterator is not renderable
    *
    */
   public function render(): string {
 
     if($this->renderable) {
-
-      return str_replace(
-        $this->marker,
-        $this->result,
-        $this->source
-      );
-
+      return $this->result;
     } else {
       throw new \RuntimeException('This TemplateIterator is not renderable yet.');
     }

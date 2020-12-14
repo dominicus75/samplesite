@@ -79,12 +79,13 @@ class Skeleton extends Template {
    * @throws \InvalidArgumentException if marker already exists
    *
    */
-  public function assignTemplate(string $marker, string $templateFile): void {
+  public function assignTemplateSource(string $marker, string $templateFile): self {
 
     if(array_key_exists($marker, $this->templates)){
       try {
         $template = new Template($this->templateDirectory.$templateFile);
         $this->templates[$marker] = $template->getSource();
+        return $this;
       } catch(FileNotFoundException $e) { throw $e; }
     } else {
       throw new \InvalidArgumentException($marker.' is not found in this skeleton file');
@@ -95,58 +96,35 @@ class Skeleton extends Template {
 
   /**
    *
-   * @parem string $marker in form '@@marker@@'
-   * @param string $renderedTemplate a rendered template
-   * @throws \InvalidArgumentException if marker is not found
-   * @throws \InvalidArgumentException if marker already exists
-   *
-   */
-  public function assignRenderedTemplate(string $marker, string $renderedTemplate): void {
-
-    if(array_key_exists($marker, $this->templates)){
-      $this->templates[$marker] = $renderedTemplate;
-    } else {
-      throw new \InvalidArgumentException($marker.' is not found in this skeleton file');
-    }
-
-  }
-
-
-  /**
-   *
-   * @param string $outerTemplateFile name of template (tpl) file, for example 'nav.tpl'
-   * @param string $itemTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
-   * @param string $marker in form '@@marker@@'
+   * @param string $iterativeTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
+   * @param string $marker in form '{{marker}}'
    * @param array $content
    *
-   * @throws \Dominicus75\Templater\FileNotFoundException if the Looper or Item
+   * @throws \Dominicus75\Templater\FileNotFoundException if the $iterativeTemplateFile
    * template file does not exists
-   * @throws \InvalidArgumentException if foreach marker is invalid or missing
+   * @throws \InvalidArgumentException if marker is invalid or missing
    * @throws \InvalidArgumentException if either $content item is not an array
    *
    */
-  public function assignTemplateLooper(
-    string $outerTemplateFile,
-    string $itemTemplateFile,
+  public function assignTemplateIterator(
+    string $iterativeTemplateFile,
     string $marker,
     array $content
-  ): void {
+  ): self {
 
-    if(array_key_exists($marker, $this->templates)){
-      try {
-        $looper = new TemplateIterator(
-          $this->templateDirectory.$outerTemplateFile,
-          $this->templateDirectory.$itemTemplateFile,
-          str_replace('@@', '&&', $marker),
-          $content
-        );
-        $this->templates[$marker] = $looper->render();
-      } catch(\InvalidArgumentException |
-              \RuntimeException |
-              \FileNotFoundException $e) { $e->getMessage(); }
-    } else {
-      throw new \InvalidArgumentException($marker.' is not found in this skeleton file');
-    }
+    try {
+
+      $iterator = new TemplateIterator(
+        $this->templateDirectory.$iterativeTemplateFile,
+        $content
+      );
+
+      $this->bindValue($marker, $iterator->render());
+      return $this;
+
+    } catch(\InvalidArgumentException |
+            \RuntimeException |
+            \FileNotFoundException $e) { $e->getMessage(); }
 
   }
 
@@ -155,11 +133,11 @@ class Skeleton extends Template {
    * It change markers to template source in the skeleton
    *
    * @param void
-   * @return void
+   * @return self
    * @throws \RuntimeException, if any template or variable is missing
    *
    */
-  public function buildLayout(): void {
+  public function buildLayout(): self {
 
     foreach($this->templates as $marker => $template){
       if(is_null($template)) { throw new \RuntimeException($marker.' template is missing'); }
@@ -171,6 +149,7 @@ class Skeleton extends Template {
     } catch(\RuntimeException $e) { throw $e; }
 
     $this->buildedUp = true;
+    return $this;
 
   }
 

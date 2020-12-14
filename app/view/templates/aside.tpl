@@ -6,5 +6,5 @@
           <th>Egyég</th>
           <th>Árfolyam</th>
         </tr>
-&&row&&      </table>
+{{row}}      </table>
     </aside>

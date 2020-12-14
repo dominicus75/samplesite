@@ -56,15 +56,11 @@ trait RendererTrait
    */
   private function bindValue(string $marker, string $value): self {
 
-    if(array_key_exists($marker, $this->variables)){
-      if(is_null($this->variables[$marker])) {
-        $this->variables[$marker] = $value;
-        return $this;
-      } else {
-        throw new \InvalidArgumentException($marker.' has already value');
-      }
+    if(!isset($this->variables[$marker])) {
+      $this->variables[$marker] = $value;
+      return $this;
     } else {
-      throw new \InvalidArgumentException($marker.' is not found in this template file');
+      throw new \InvalidArgumentException($marker.' has already value');
     }
 
   }
@@ -75,7 +71,6 @@ trait RendererTrait
    * @param array $variables The string variables belongs to this IterativeTemplate
    * in string $marker => string $value form
    * @return void
-   * @throws \InvalidArgumentException if marker is not found
    * @throws \InvalidArgumentException if marker has already value
    *
    */

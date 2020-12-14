@@ -29,12 +29,18 @@ class FrontController
       //$controller = $router->dispatch();
 
       $dom = new \Dominicus75\Templater\Skeleton(__DIR__.'/view/templates', 'skeleton.html');
-      $dom->assignTemplate('@@head@@', 'head.tpl');
-      $dom->assignTemplate('@@header@@', 'header.tpl');
-      $dom->assignTemplateLooper(
-        'nav.tpl',
+
+      $dom->assignTemplateSource('@@head@@', 'head.tpl');
+      $dom->assignTemplateSource('@@header@@', 'header.tpl');
+      $dom->assignTemplateSource('@@nav@@', 'nav.tpl');
+      $dom->assignTemplateSource('@@aside@@', 'aside.tpl');
+      $dom->assignTemplateSource('@@main@@', 'page/read.tpl');
+      $dom->assignTemplateSource('@@footer@@', 'footer.tpl');
+      $dom->buildLayout();
+
+      $dom->assignTemplateIterator(
         'navItem.tpl',
-        '@@nav@@',
+        '{{nav}}',
         [
           ['{{url}}' => '/', '{{target}}' => 'Kezdőlap'],
           ['{{url}}' => '/rolunk.html', '{{target}}' => 'Rólunk'],
@@ -42,22 +48,22 @@ class FrontController
           ['{{url}}' => '/vendegkonyv.html', '{{target}}' => 'Vendégkönyv']
         ]
       );
+
       $aside = new \Application\Element\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
-      $dom->assignRenderedTemplate('@@aside@@', $aside->renderView());
-      $dom->assignTemplate('@@main@@', 'page/read.tpl');
-      $dom->assignTemplate('@@footer@@', 'footer.tpl');
-      $dom->buildLayout();
+
+
       $dom->setVariables([
         '{{title}}' => 'Kezdőlap',
         '{{description}}' => 'A Globetrotter utazási iroda oldala',
+        '{{row}}' => $aside->renderView(),
         '{{body}}' => '<p class="textCenter site_slogan">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'
       ]);
       echo $dom->render();
 
 
 
-      //echo $nav->render();
-      //$dom->render();
+//echo $nav->render();
+//$dom->render();
 //var_dump($layout->isRenderable());
 //echo "<pre>";
 //var_dump($dom);

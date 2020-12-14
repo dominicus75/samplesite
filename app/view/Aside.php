@@ -19,7 +19,7 @@ class Aside
    * @var string Fully qualified path name of template directory
    *
    */
-  private string $templateDirectory = TPL.'aside'.DSR;
+  private string $templateDirectory = TPL.DSR;
 
   /**
    *
@@ -63,9 +63,7 @@ class Aside
   {
     try {
       $this->iterator = new TemplateIterator(
-        $this->templateDirectory.$this->tableTemplateUrl,
         $this->templateDirectory.$this->rowTemplateUrl,
-        $this->marker,
         $content
       );
     } catch(\Dominicus75\Templater\FileNotFoundException|
