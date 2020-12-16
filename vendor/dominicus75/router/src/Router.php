@@ -26,8 +26,7 @@ class Router
   private $routes = [
     'category'  => '\Application\Controller\Category',
     'page'      => '\Application\Controller\Page',
-    'error'     => '\Application\Controller\Error',
-    'guestbook' => '\Application\Controller\Guestbook'
+    'error'     => '\Application\Controller\Error'
   ];
 
   private Request $request;
@@ -87,7 +86,7 @@ class Router
 
     $this->controller = isset($controller) ? $controller : self::DEFAULT_CONTROLLER;
     $this->action     = isset($action) ? $action : self::DEFAULT_ACTION;
-    $this->content    = isset($content) ? $content : null;
+    $this->content    = isset($content) ? $content : 'index';
 
   }
 
@@ -107,13 +106,13 @@ class Router
   }
 
 
-  public function dispatch(): \Dominicus75\MVC\AbstractController {
+  public function dispatch(): array {
     if($this->hasRoute($this->controller)) {
-      return new $this->routes[$this->controller](
-                   $this->request,
-                   $this->action,
-                   $this->content
-                 );
+      return [
+        'controller' => ucfirst($this->controller),
+        'action' => $this->action,
+        'url' => $this->content
+      ];
     } else { throw new ControllerNotFoundException($this->controller); }
   }
 

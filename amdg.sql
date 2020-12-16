@@ -76,10 +76,10 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-INSERT INTO `categories` (`url`, `title`, `description`, `parent`) VALUES
-('hirek', 'Hírek', 'A Globetrotter utazási iroda hírei', null),
-('utazasok', 'Utazások', 'A Globetrotter utazási iroda által kínált utak', 1),
-('akciok', 'Akciók', 'A Globetrotter utazási iroda legujabb kedvezményei', 1);
+INSERT INTO `categories` (`url`, `title`, `description`) VALUES
+('hirek', 'Hírek', 'A Globetrotter utazási iroda hírei'),
+('utazasok', 'Utazások', 'A Globetrotter utazási iroda által kínált utak'),
+('akciok', 'Akciók', 'A Globetrotter utazási iroda legujabb kedvezményei');
 
 
 CREATE TABLE `contents` (
@@ -102,8 +102,63 @@ CREATE TABLE `contents` (
 
 
 INSERT INTO `contents` (`type`, `url`, `author`, `title`, `description`, `body`) VALUES
+(1, 'index', 2, 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!',
+'<img src="/upload/images/road.jpg" class="landscape">
+<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
+sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
+a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
+feddő, fulan úgynevezett jermeteken, valamint a svuták csapinusain dakarsodik át, és az
+ott korcos parkáival tele és szonárok lemlésével dékozol a svuták retérőjére. A koláson
+a fogár szapácsára a parkák hirkelnek, majd a koláson keresztül a pördőbe, a billába és
+a molyhos pulákba hahomoznak. Trajájukra a molyhos pulák egyes művete csistal. A rező anció
+fattyúk a kovel kerces feletbe szángnak, és egyzet és pártban rutosak. Szenészük csalhan
+juhányot nem leremzsen, báványos bazálokban is melő. A melő fattyúk csinvillákra nem lesztők,
+így zatírázskor is hatosak.</p>
+<p>A marcos róna szályája és üvége során a cselendő dikelegleseket kell kaslazságba hibolcsuknia:
+Luett a bogós alanokra ratott berzetség pelt szonyákat és tektásokat. (3) a marcos alanok
+vénykezésénél buzig pacolásba hibolcsuknia a fogság marcos rónára pikkelyes alanokat,
+melyek rónáját e egyező kapilva belis csulája ficeli. (4) a marcos rónán előre padtak
+azok az alanok, amelyeknek külön szonya kelységei szerint heten klusuk lehet, elsősorban
+amelyek tudottan vagy feltételezetten sítos, csehely, étletletes stazás vagy bestet tányos
+solytatók, illetve amelyek tudottan vagy feltételezetten szándják a szelen klusok bukálánának
+gványát. Lengesz szara (1) a marcos alanokra vonatkozóan azoknak a bébecseleknek és fegyendeknek,
+akik e egyező szerint grómokat hólyázódtak szegely alanról, a marcos róna rofogától pedő hat
+kítőn belül a sutokozás részére be kell sánulniuk az alannal bizatlan hadékra ratott talmatos
+tozásra folygó grómot, illetve ratott pornerót. (2) Az (1) hombort fatlan híváson túlmenően,
+amennyiben a bogós alanok bőrözére ratott külön szonyában ermeli bármely hatlan szegely, a
+marcos rónán többes alannal tramzátban nem selyez tozásra, azoknak a bébecseleknek és fegyendeknek,
+akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dokonálniuk azokat a bőrözöket,
+amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
+részére 12 kítőn belül be kell sánulniuk.</p>
+<p>Az (1) mezésben dőségökön túlmenően a helem kizárólag a váns tonnáit és csak a dörgés stílszerű
+búgorlányos triktája esetén bázhatja be. A trikta csak akkor lálan meg, ha a szendorában tertesség
+hetőkre a talás után személyenként legalább 6 hozás 2 hang csicsol. (3) a taláshoz való trikta az
+aktív tehely hedekájára kodik. A dörgés a talást nyúzott kéjelkesre is feletheti. Az aktív tehely
+bráfréka esetén a trikta is cellagát vasokítja. Az aktív tehely bármilyen pichből órány bráfréka
+esetén vagy a ladt hedeka cérsetekor a lottyadt hető nyugatlan a szendorát vednie, erre vonatkozóan
+a lottyadt hetőnek a trikta pácságát megelőzően kullásban kulatot kell egyednie. A lottyadt hető
+győzéséről a helemnek kell maglászkodnia.</p>
+<img src="/upload/images/beach-sunshine-car.jpg" class="landscape">
+<p>Jelenleg a csipala nem gyesíti a hatlan cserzet száncának vitlenét, így tilakhat + -1 boszt
+okonyság a jelt pedverhez képest. Ennek az a kvadálya, hogy a vara nem hugyos más pihőt a csipalához,
+vagy mert a csipalához nincsen hanyós a szédeplő pihőn. Talmékony jérzékért légetse fel a zsonna
+prium kémségét (a kezelke a vezd detegén forgos). Az indos toló alatt két érterek forgos. Az egyik
+a szerekeszet üzeskeli (ezek általában virájk, vagy sodás vizezés, melyek a hozdák őrlenének
+domiszájában könyögetnek). Az ingony egy ságos vagy nyugékony érterek, mely más és más a legtöbb
+hangonnak. A csipala varájától motyol, hogy kaltozás van csika ingony tükségére.</p>
+<p>Középen a „papsz” kevő, egy illerjenséget, amelyet egy vigyás tábált letényegre. A tumályos iheg
+a „skecs”, amelynek fecsenítő nyiltatai lánt bujtáson tetkőzött, egyik cilijét a másik berülében
+tartva, mindig csak a vadt stikóját tajózta nyitva és folygós gyülő szilvórákat lanozott, miközben
+az olvas anyászát csinosodta. Az ihegektől idekes szolkák több szeregét is bíra pingnek. Hiskárokat
+és becőket kaláltak, hogy faszorlálják a bari, de a szelőtől, a vitustól, az osztosságtól és a
+lábtyűről is sedik, hogy vitát lepéskednek. Az iheg paréka iheggé az szezásait is, azok pajtájakor.
+Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk nem rikkadt semmire, és az
+iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
+szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
+
 (1, 'rolunk', 2, 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes',
-'<p><img src="/upload/images/travel-meeting.jpg" class="landscape">Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
+'<img src="/upload/images/travel-meeting.jpg" class="landscape">
+<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
 feddő, fulan úgynevezett jermeteken, valamint a svuták csapinusain dakarsodik át, és az
@@ -154,7 +209,8 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-(1, 'kapcsolat', 3, 'Kapcsolat', 'Írjon nekünk, de iziben!', '<p><img src="/upload/images/postbox.jpg" class="landscape">Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
+(1, 'kapcsolat', 3, 'Kapcsolat', 'Írjon nekünk, de iziben!', '<img src="/upload/images/postbox.jpg" class="landscape">
+<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
 feddő, fulan úgynevezett jermeteken, valamint a svuták csapinusain dakarsodik át, és az
@@ -185,7 +241,7 @@ részére 12 kítőn belül be kell sánulniuk.</p>');
 INSERT INTO `contents` (`type`, `category`, `url`, `author`, `title`, `description`, `body`)
 VALUES
 (2, 2, 'dubai', 3, 'Dubai', 'Szinte ingyen Dubaiba',
-'<p><img src="/upload/images/dubai.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/dubai.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -215,7 +271,7 @@ amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint 
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
 (2, 2, 'napfeny-tura', 1, 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
-'<p><img src="/upload/images/rock-formation.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/rock-formation.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -245,7 +301,7 @@ amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint 
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
 (2, 2, 'oszi-erdo', 2, 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
-'<p><img src="/upload/images/fall-forest.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/fall-forest.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -276,7 +332,7 @@ részére 12 kítőn belül be kell sánulniuk.</p>'),
 
 (2, 2, 'tengerparti-oromok', 3, 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
 jermeteken, valamint a svuták csapinusain dakarsodik át',
-'<p><img src="/upload/images/beach-landscape.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/beach-landscape.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -306,7 +362,7 @@ amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint 
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
 (2, 3, 'hegyvideki-kirandulas', 1, 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
-'<p><img src="/upload/images/lake-house.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/lake-house.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -337,7 +393,7 @@ részére 12 kítőn belül be kell sánulniuk.</p>'),
 
 (2, 3, 'extra-szilkas-hegyek', 2, 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
 készletéből pótoljuk!',
-'<p><img src="/upload/images/forest-rock-waterfall.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/forest-rock-waterfall.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -368,7 +424,7 @@ részére 12 kítőn belül be kell sánulniuk.</p>'),
 
 (2, 3, 'garantaltan-suru-sotet-erdo', 2, 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
 távol a világ zajától, most akciós jetivel!',
-'<p><img src="/upload/images/forest-waterfall.jpg" class="landscape">Lórum ipse mint buggyos izgatlan
+'<img src="/upload/images/forest-waterfall.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -414,19 +470,21 @@ CREATE TABLE `images` (
 
 
 INSERT INTO `images` (`url`, `mime`, `size`, `width`, `height`, `content`) VALUES
-('travel-meeting.jpg', 'image/jpeg', 262, 1920, 750, 1),
-('postbox.jpg', 'image/jpeg', 815, 1512, 1080, 2),
-('dubai.jpg', 'image/jpeg', 450, 1623, 1080, 3),
-('dubai-hotel.jpg', 'image/jpeg', 454, 1920, 1042, 3),
-('rock-formation.jpg', 'image/jpeg', 788, 1620, 1080, 4),
-('desert.jpg', 'image/jpeg', 398, 1620, 1080, 4),
-('fall-forest.jpg', 'image/jpeg', 1229, 1620, 1080, 5),
-('forest-sunset.jpg', 'image/jpeg', 459, 1620, 1080, 5),
-('beach-landscape.jpg', 'image/jpeg', 647, 1623, 1080, 6),
-('beach-sea.jpg', 'image/jpeg', 683, 1920, 1080, 6),
-('lake-house.jpg', 'image/jpeg', 745, 1680, 1080, 7),
-('sky-mountainous.jpg', 'image/jpeg', 336, 1620, 1080, 7),
-('forest-rock-waterfall.jpg', 'image/jpeg', 630, 1920, 1080, 8),
-('mountain-light.jpg', 'image/jpeg', 664, 1512, 1080, 8),
-('forest-waterfall.jpg', 'image/jpeg', 823, 1574, 1050, 9),
-('forest-dark.jpg', 'image/jpeg', 187, 1620, 1080, 9);
+('road.jpg', 'image/jpeg', 472, 1617, 1080, 1),
+('beach-sunshine-car.jpg', 'image/jpeg', 697, 1812, 1200, 1),
+('travel-meeting.jpg', 'image/jpeg', 262, 1920, 750, 2),
+('postbox.jpg', 'image/jpeg', 815, 1512, 1080, 3),
+('dubai.jpg', 'image/jpeg', 450, 1623, 1080, 4),
+('dubai-hotel.jpg', 'image/jpeg', 454, 1920, 1042, 4),
+('rock-formation.jpg', 'image/jpeg', 788, 1620, 1080, 5),
+('desert.jpg', 'image/jpeg', 398, 1620, 1080, 5),
+('fall-forest.jpg', 'image/jpeg', 1229, 1620, 1080, 6),
+('forest-sunset.jpg', 'image/jpeg', 459, 1620, 1080, 6),
+('beach-landscape.jpg', 'image/jpeg', 647, 1623, 1080, 7),
+('beach-sea.jpg', 'image/jpeg', 683, 1920, 1080, 7),
+('lake-house.jpg', 'image/jpeg', 745, 1680, 1080, 8),
+('sky-mountainous.jpg', 'image/jpeg', 336, 1620, 1080, 8),
+('forest-rock-waterfall.jpg', 'image/jpeg', 630, 1920, 1080, 9),
+('mountain-light.jpg', 'image/jpeg', 664, 1512, 1080, 9),
+('forest-waterfall.jpg', 'image/jpeg', 823, 1574, 1050, 10),
+('forest-dark.jpg', 'image/jpeg', 187, 1620, 1080, 10);

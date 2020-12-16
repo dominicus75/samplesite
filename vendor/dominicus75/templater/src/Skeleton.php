@@ -161,7 +161,17 @@ class Skeleton extends Template {
    *
    */
   public function isRenderable(): bool {
-    return ($this->buildedUp && $this->renderable) ? true : false;
+
+    if(!$this->buildedUp) { return false; }
+
+    foreach($this->variables as $variable) {
+      if(is_null($variable)) {
+        return false;
+      } else { continue; }
+    }
+
+    return true;
+
   }
 
 

@@ -83,11 +83,12 @@ class Response
   public function __construct(){ }
 
 
-  public function setStatusCode(int $code): void {
+  public function setStatusCode(int $code): self {
 
     if(array_key_exists($code, self::PHRASES)){
       $this->status = $code;
       $this->reason = self::PHRASES[$code];
+      return $this;
     } else {
       throw new InvalidStatusException();
     }
@@ -95,7 +96,10 @@ class Response
   }
 
 
-  public function setBody(string $content): void { $this->body = $content; }
+  public function setBody(string $content): self {
+    $this->body = $content;
+    return $this;
+  }
 
   public function getBody(): string { return $this->body; }
 
@@ -109,7 +113,7 @@ class Response
   }
 
 
-  protected function sendHeaders(){
+  protected function sendHeaders(): self {
 
     if(headers_sent()) { return $this; }
 
@@ -122,10 +126,9 @@ class Response
   }
 
 
-  protected function sendBody() {
+  protected function sendBody():self {
 
     echo $this->body;
-
     return $this;
 
   }
@@ -134,9 +137,7 @@ class Response
   public function send(){
 
     $this->sendHeaders();
-
     $this->sendBody();
-
     return $this;
 
   }

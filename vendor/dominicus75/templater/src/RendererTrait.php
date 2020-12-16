@@ -54,7 +54,7 @@ trait RendererTrait
    * @throws \InvalidArgumentException if marker has already value
    *
    */
-  private function bindValue(string $marker, string $value): self {
+  public function bindValue(string $marker, ?string $value): self {
 
     if(!isset($this->variables[$marker])) {
       $this->variables[$marker] = $value;

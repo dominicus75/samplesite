@@ -29,7 +29,10 @@ long_line_column=80
 
 [files]
 current_page=0
-FILE_NAME_0=1315;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
+FILE_NAME_0=259;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fmodel%2FArticle.php;0;2
+FILE_NAME_1=799;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
+FILE_NAME_2=253;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fmodel%2FPage.php;0;2
+FILE_NAME_3=252;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fmodel%2FAbstractContent.php;0;2
 
 [VTE]
-last_dir=/opt/lampp/htdocs/samplesite/app
+last_dir=/opt/lampp/htdocs/samplesite/app/model

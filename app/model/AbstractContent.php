@@ -1,20 +1,20 @@
 <?php
 /*
- * @file AbstractModel.php
+ * @file AbstractContent.php
  * @package MVC
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\MVC;
+namespace Application\Model;
 
-abstract class AbstractModel
+abstract class AbstractContent
 {
 
   protected PDO $pdo;
   protected string $table;
   protected string $primaryKey;
-  protected $contentID;
+  protected ?string $url;
   protected array $content = [];
   protected array $columns = [];
   protected array $updated = [];
@@ -22,13 +22,33 @@ abstract class AbstractModel
 
   public function __construct(
     \ArrayAccess $pdoConfig,
-    $contentID = ''
+    ?string $url = null
   ){
 
     try {
 
       $this->pdo = PDO::getInstance($pdoConfig);
-      $this->contentID = $contentID;
+      $this->url = $url;
+
+      $this->table      = "contents";
+      $this->primaryKey = "id";
+      $this->columns = [
+        $this->primaryKey => [":".$this->primaryKey, \PDO::PARAM_INT],
+        "type" => [":type", \PDO::PARAM_INT],
+        "category" => [":category", \PDO::PARAM_INT],
+        "url" => [":url", \PDO::PARAM_STR],
+        "author" => [":author", \PDO::PARAM_INT],
+        "title" => [":title", \PDO::PARAM_STR],
+        "description" => [":description", \PDO::PARAM_STR],
+        "body" => [":body", \PDO::PARAM_STR],
+        "created" => [":created", \PDO::PARAM_INT],
+        "updated" => [":updated", \PDO::PARAM_INT]
+      ];
+
+      if(!is_null($url)) {
+        $this->setContent($this->select());
+      }
+
 
     } catch(\PDOException $pdoe) { throw $pdoe; }
 
@@ -47,21 +67,12 @@ abstract class AbstractModel
   }
 
 
-  public function setContent(array $content = []): void {
+  public function setContent(array $content): void {
 
-    if(!empty($content)) {
-      foreach($content as $fieldName => $value) {
-        try {
-          $this->setField($fieldName, $value);
-        } catch(InvalidFieldNameException $e) { throw $e; }
-      }
-    } else if(!empty($this->contentID)) {
-      $result = $this->select();
-      if(!is_null($result)) {
-        try {
-         $this->setContent($result);
-        } catch(InvalidFieldNameException $e) { throw $e; }
-      } else { $this->content = []; }
+    foreach($content as $fieldName => $value) {
+      try {
+        $this->setField($fieldName, $value);
+      } catch(InvalidFieldNameException $e) { throw $e; }
     }
 
   }
@@ -103,8 +114,8 @@ abstract class AbstractModel
 
     if(array_key_exists($field, $this->content)) {
 
-      if($field === $this->primaryKey) {
-        throw new InvalidFieldNameException("The primary key is immutable!");;
+      if($field === $this->primaryKey || $field === 'url') {
+        throw new InvalidFieldNameException("The primary and unique keys are immutable!");;
       }
 
       $this->updated[$field] = $value;
@@ -123,19 +134,19 @@ abstract class AbstractModel
 
     foreach($this->columns as $name => $properties) {
       //If there is no contentID, in that case AUTO INCREMENT
-      if(empty($this->contentID) && $name == $this->primaryKey) { continue; }
-      $fields .= $name.', ';
+      if($name == $this->primaryKey) { continue; }
+      $fields .= '`'.$name.'`, ';
       $variables .= $properties[0].', ';
     }
     $fields = rtrim($fields, ', ');
     $variables = rtrim($variables, ', ');
 
-    $sql= "INSERT INTO ".$this->table." ($fields) VALUES ($variables)";
+    $sql= "INSERT INTO `".$this->table."` ($fields) VALUES ($variables)";
 
     $statement = $this->pdo->prepare($sql);
 
     foreach($this->columns as $name => $properties) {
-      if(empty($this->contentID) && $name == $this->primaryKey) { continue; }
+      if($name == $this->primaryKey) { continue; }
       $statement->bindParam($properties[0], $this->content[$name], $properties[1]);
     }
 
@@ -144,20 +155,20 @@ abstract class AbstractModel
   }
 
 
-  public function select(array $params = []): ?array {
+  public function select(array $params = []): array {
 
     if(empty($params)){
       $sql  = "SELECT * FROM `".$this->table;
-      $sql .= "` WHERE ".$this->primaryKey."=".$this->columns[$this->primaryKey][0];
+      $sql .= "` WHERE `url` = ".$this->columns['url'][0];
       $statement = $this->pdo->prepare($sql);
-      $statement->bindParam($this->columns[$this->primaryKey][0],
-                            $this->contentID,
-                            $this->columns[$this->primaryKey][1]);
+      $statement->bindParam($this->columns['url'][0],
+                            $this->url,
+                            $this->columns['url'][1]);
       $statement->execute();
       $result = $statement->fetch(PDO::FETCH_ASSOC);
       if($result) {
         return $result;
-      } else { return null; }
+      } else { return []; }
     }
 
   }
@@ -173,17 +184,13 @@ abstract class AbstractModel
     }
 
     $sql = rtrim($sql, ', ');
-    $sql .= " WHERE ".$this->primaryKey." = ".$this->columns[$this->primaryKey][0];
+    $sql .= " WHERE `url` = ".$this->columns['url'][0];
 
     $statement = $this->pdo->prepare($sql);
 
     foreach($this->updated as $name => $value) {
       $statement->bindParam($this->columns[$name][0], $value, $this->columns[$name][1]);
     }
-
-    $statement->bindParam($this->columns[$this->primaryKey][0],
-                          $this->content[$this->primaryKey],
-                          $this->columns[$this->primaryKey][1]);
 
     return $statement->execute();
 
@@ -194,11 +201,11 @@ abstract class AbstractModel
     if(empty($this->contentID)) { return false; }
 
     $sql  = "DELETE FROM `".$this->table;
-    $sql .= "` WHERE ".$this->primaryKey."=".$this->columns[$this->primaryKey][0];
+    $sql .= "` WHERE `url` = ".$this->columns['url'][0];
     $statement = $this->pdo->prepare($sql);
-    $statement->bindParam($this->columns[$this->primaryKey][0],
-                          $this->content[$this->primaryKey],
-                          $this->columns[$this->primaryKey][1]);
+    $statement->bindParam($this->columns['url'][0],
+                          $this->content['url'],
+                          $this->columns['url'][1]);
 
     return $statement->execute();
 

@@ -9,7 +9,7 @@
 
 
 return [
-  'datasource' => 'mysql:dbname=samplesite;host=localhost',
+  'datasource' => 'mysql:dbname=amdg;host=localhost',
 //  'datasource' => 'mysql:dbname=amdg;host=mysql.nethely.hu',
   'username' => 'amdg',
   'password' => 'TYQKOmYpVIDlgDvF',
