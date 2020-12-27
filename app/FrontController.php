@@ -8,10 +8,6 @@
 
 namespace Application;
 
-use \Dominicus75\Http\{Request, Response, Uri};
-use \Dominicus75\Router\Router as Router;
-use \Dominicus75\VariousTools\Config;
-
 class FrontController
 {
 
@@ -24,16 +20,25 @@ class FrontController
 
     try{
 
-      $request = new Request($get, $post, $files);
-      $router  = new Router($request);
-      $params  = $router->dispatch();
-      $cName   = "\\Application\\Controller\\{$params['controller']}";
-      $action  = $params['action'];
-      $controller = new $cName($params['url'], $params['action'], $request);
-      $controller->{$params['action']}();
+      $request  = new \Dominicus75\Http\Request($get, $post, $files);
+      $response = new \Dominicus75\Http\Response();
+      $router   = new \Dominicus75\Core\Router($request->getUri());
+      $route    = $router->dispatch();
+      switch($route->controller) {
+        case '\Application\Controller\Fault':
+          $controller = new $route->controller($route->cid);
+        break;
+        default:
+          $controller = new $route->controller($route, $request, $response);
+          $controller->{$route->action}();
+        break;
+      }
 
-    } catch(\Dominicus75\Router\InvalidUriException | \Dominicus75\Router\ControllerNotFoundException $e) {
-      $response->redirect("/error/404.html");
+    } catch(\Dominicus75\Core\Router\ControllerNotFoundException
+            | \Dominicus75\Core\Router\MethodNotFoundException
+            | \Dominicus75\Core\Router\RouteNotFoundException $e)
+    {
+      new Controller\Fault(404, $e->getMessage());
     }
 
   }

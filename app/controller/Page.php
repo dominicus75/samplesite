@@ -8,35 +8,32 @@
 
 namespace Application\Controller;
 
-use \Dominicus75\Http\{Request, Response, Uri};
-use \Dominicus75\VariousTools\Config;
+use \Dominicus75\Http\{Request, Response};
+use \Dominicus75\Core\{
+  AbstractController,
+  Config as Config,
+  Router\Route as Route,
+  Model\ContentNotFoundException as ContentNotFoundException,
+  Model\InvalidFieldNameException as InvalidFieldNameException,
+  Model\InvalidStatementException as InvalidStatementException
+};
 
 class Page extends AbstractController
 {
 
   public function __construct(
-    string $url,
-    string $action,
-    Request $request
+    Route $route,
+    Request $request,
+    Response $response
   ){
 
-    parent::__construct($action, $request);
+    parent::__construct($route, $request, $response);
 
-    $this->name  = 'Page';
-    $this->model = new \Application\Model\Page(new Config('pdo'), $url);
-    $this->view  = new \Dominicus75\Templater\Skeleton(
-      dirname(__DIR__).DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'templates',
-      'skeleton.html'
-    );
-
-
-    $this->view->assignTemplateSource('@@head@@', 'head.tpl');
-    $this->view->assignTemplateSource('@@header@@', 'header.tpl');
-    $this->view->assignTemplateSource('@@nav@@', 'nav.tpl');
-    $this->view->assignTemplateSource('@@aside@@', 'aside.tpl');
-    $this->view->assignTemplateSource('@@main@@', 'page'.DSR.$this->action.'.tpl');
-    $this->view->assignTemplateSource('@@footer@@', 'footer.tpl');
-    $this->view->buildLayout();
+    try {
+      $this->model = new \Application\Model\Page(new Config('mysql'), 'contents');
+    } catch(\PDOException | InvalidFieldNameException $e) {
+      new Fault(500, $e->getMessage());
+    }
 
   }
 
@@ -51,38 +48,19 @@ class Page extends AbstractController
 
   public function read(): void {
 
-    $content = $this->model->getContent();
-    $aside = new \Application\Element\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
-
-    $this->view->assignTemplateIterator(
-      'navItem.tpl',
-      '{{nav}}',
-      [
-        ['{{url}}' => '/', '{{target}}' => 'Kezdőlap'],
-        ['{{url}}' => '/rolunk.html', '{{target}}' => 'Rólunk'],
-        ['{{url}}' => '/kapcsolat.html', '{{target}}' => 'Kapcsolat']
-      ]
-    );
-
-    $this->view->setVariables([
-      '{{title}}' => $content['title'],
-      '{{description}}' => $content['description'],
-      '{{url}}' => $content['url'],
-      '{{site_name}}' => 'Globetrotter',
-      '{{locale}}' => 'hu_HU',
-      '{{type}}' => $content['type'],
-      '{{image_url}}' => 'image',
-      '{{row}}' => $aside->renderView(),
-      '{{body}}' => $content['body']
-    ]);
-
-    $this->response->setBody($this->getView());
-    $this->response->send();
+    try {
+      $content = $this->model->read(['cid' => $this->route->cid]);
+      $this->view = new \Application\View\Page($content, $this->route->action);
+      $this->response->setBody($this->view->render());
+      $this->response->send();
+    } catch(InvalidFieldNameException $e) {
+      new Fault(500, $e->getMessage());
+    }
 
   }
 
 
-  public function update(): void {
+  public function edit(): void {
 
 
   }

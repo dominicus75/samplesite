@@ -8,17 +8,49 @@
 
 namespace Application\Model;
 
+use \Dominicus75\Core\Config;
+use \Dominicus75\Core\Model\AbstractModel;
+use \Application\Controller\Fault as Failure;
 
-class Page extends AbstractContent
+class Page extends AbstractModel
 {
 
 
-  public function __construct(
-    \ArrayAccess $pdoConfig,
-    ?string $url = null
-  ){
+  public function __construct(Config $pdoConfig, string $table){
 
-    parent::__construct($pdoConfig, $url);
+    try {
+      parent::__construct($pdoConfig, 'contents');
+    } catch(\PDOException $e) { throw $e; }
+
+  }
+
+
+  public function create(): bool {
+
+
+  }
+
+  public function read(array $url): array {
+
+    $content = $this->select(['url', $url['cid']], [], [['AND', 'type', '=', 'page']]);
+    if(empty($content)) { new Failure(404); }
+    $nav = new \Application\Element\Nav();
+    $menu = new Nav();
+    $content['nav'] = $menu->getPages();
+    $aside = new \Application\Element\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
+    $content['aside'] = $aside->renderView();
+    $content['url'] = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+    $content['site_name'] = 'Globetrotter';
+    $content['locale'] = 'hu_HU';
+    return $content;
+
+  }
+
+  public function edit(array $url): bool {
+
+  }
+
+  public function delete(array $url): bool {
 
   }
 

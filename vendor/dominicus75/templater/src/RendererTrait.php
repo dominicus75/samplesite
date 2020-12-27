@@ -13,6 +13,15 @@ trait RendererTrait
 
   /**
    *
+   * @var array The sources belongs to this skeleton
+   * in string @@marker@@ => bool false|true form
+   * It is true, if source was assigned, false otherwise
+   *
+   */
+  protected array $sources = [];
+
+  /**
+   *
    * @var array The string variables belongs to this Renderable Template
    * in string $marker => string $value form
    *
@@ -29,22 +38,50 @@ trait RendererTrait
 
   /**
    *
-   * This method extracts markers from source
+   * This method extracts source markers from source
+   * and update sources array
    *
    * @param void
    * @return void
    *
    */
-  private function extractVariableMarkers(): void {
+  private function updateSources(): void {
 
-    if(preg_match_all(Templater::MARKERS['variable'], $this->source, $matches)) {
-      foreach($matches[0] as $marker){ $this->variables[$marker] = null; }
-    } else {
-      throw new \RuntimeException('No variable markers found in this template file');
+    if(preg_match_all(Templater::MARKERS['source'], $this->source, $matches)) {
+      foreach($matches[0] as $marker){ $this->sources[$marker] = false; }
     }
 
   }
 
+  /**
+   *
+   * This method extracts varible markers from source
+   * and update varibles array
+   *
+   * @param void
+   * @return void
+   *
+   */
+  private function updateVariables(): void {
+
+    if(preg_match_all(Templater::MARKERS['variable'], $this->source, $matches)) {
+      foreach($matches[0] as $marker){ $this->variables[$marker] = null; }
+    }
+
+  }
+
+  /**
+   *
+   * @param string $marker what we are looking for
+   * @return bool true, if marker was found, false otherwise
+   *
+   */
+  public function hasMarker(string $marker): bool {
+    if(strpos($this->source, $marker) !== false) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    *

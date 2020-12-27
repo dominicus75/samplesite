@@ -216,7 +216,8 @@ h5 {
   margin: 1rem 1rem 1rem 0;
 }
 
-p.site_slogan, footer > p {
+p.site_slogan, footer > p,
+header.fault > p {
   color: rgb(254, 250, 159);
   font-size: 1.6rem;
   text-align: center;

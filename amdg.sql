@@ -1,3 +1,23 @@
+CREATE TABLE `faults` (
+  `url` smallint(3) UNSIGNED NOT NULL,
+  `title` tinytext CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
+  `description` tinytext CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
+  `image` tinytext CHARACTER SET ascii NOT NULL,
+  PRIMARY KEY (`url`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `faults` (`url`, `title`, `description`, `image`) VALUES
+(400, '400-as HTTP hiba', 'Hibás kérelem. A szerver képtelen volt értelmezni a kérelem szintaxisát.', '/images/400.jpg'),
+(401, '401-es HTTP hiba', 'Nincs hitelesítve. A kérelem hitelesítést igényel. A szerver bejelentkezés után megtekinthető oldalak esetén adhatja vissza ezt a választ.', '/images/401.jpg'),
+(403, '403-as HTTP hiba', 'Hozzáférés megtagadva. A szerver visszautasítja a kérelmet', '/images/403.jpg'),
+(404, '404-es HTTP hiba', 'A kért oldal nem található. Lehet, hogy a keresett lapot eltávolították, megváltoztatták a nevét, vagy átmenetileg nem érhető el', '/images/404.jpg'),
+(405, '405-ös HTTP hiba', 'Hibás metódus. A kérelemben megadott HTTP metódus nem engedélyezett.', '/images/405.jpg'),
+(408, '408-as HTTP hiba', 'Időtúllépés. Az oldal túlterhelt, illetve túl sokáig tart a kiszolgálónak megjelenítenie', '/images/408.jpg'),
+(500, '500-as HTTP hiba', 'Belső szerverhiba. A szerver hibát észlelt, így nem tudja teljesíteni a kérelmet)', '/images/500.jpg'),
+(502, '502-es HTTP hiba', 'Rossz átjáró. A szerver egy hibás HTTP-választ kapott egy másik szervertől', '/images/502.jpg'),
+(503, '503-as HTTP hiba', 'A szolgáltatás nem elérhető. A szerver nem képes kezelni a kérést, túlterhelés vagy karbantartás miatt', '/images/503.jpg'),
+(504, '504-es HTTP hiba', 'Átjáró időtúllépése. A szerver átjáróként vagy proxyként történő működése során nem kapott időben választ a felsőbb szintű szervertől.', '/images/504.jpg');
 
 
 CREATE TABLE `ranks` (
@@ -14,25 +34,23 @@ INSERT INTO `ranks` (`id`, `rank`) VALUES
 (3, 'user');
 
 
-CREATE TABLE `types` (
-  `id` tinyint(1) UNSIGNED NOT NULL,
-  `type` varchar(16) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `type` (`type`)
+CREATE TABLE `content_types` (
+  `name` varchar(16) CHARACTER SET ascii NOT NULL,
+  PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 
-INSERT INTO `types` (`id`, `type`) VALUES
-(1, 'page'),
-(2, 'article'),
-(3, 'album');
+INSERT INTO `content_types` (`name`) VALUES
+('album'),
+('article'),
+('page');
 
 
 CREATE TABLE `users` (
   `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `avatar` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci,
+  `avatar` tinytext CHARACTER SET ascii DEFAULT NULL,
   `pass` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `status` tinyint(1) UNSIGNED NOT NULL,
   `created` timestamp DEFAULT current_timestamp(),
@@ -63,48 +81,48 @@ CREATE TABLE `sessions` (
 
 
 CREATE TABLE `categories` (
-  `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `url` varchar(255) CHARACTER SET ascii NOT NULL,
-  `title` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
+  `title` varchar(64) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `parent` smallint(5) UNSIGNED DEFAULT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `url` (`url`),
-  FOREIGN KEY (`parent`) REFERENCES `categories` (`id`)
+  `image` tinytext CHARACTER SET ascii DEFAULT NULL,
+  `parent` varchar(255) CHARACTER SET ascii DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`url`),
+  FOREIGN KEY (`parent`) REFERENCES `categories` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-INSERT INTO `categories` (`url`, `title`, `description`) VALUES
-('hirek', 'Hírek', 'A Globetrotter utazási iroda hírei'),
-('utazasok', 'Utazások', 'A Globetrotter utazási iroda által kínált utak'),
-('akciok', 'Akciók', 'A Globetrotter utazási iroda legujabb kedvezményei');
+INSERT INTO `categories` (`url`, `title`, `description`, `image`) VALUES
+('hirek', 'Hírek', 'A Globetrotter utazási iroda hírei', 'news.jpg');
+
+INSERT INTO `categories` (`url`, `title`, `description`, `image`, `parent`) VALUES
+('hirek/akciok', 'Akciók', 'A Globetrotter utazási iroda legujabb kedvezményei', 'actions.jpg', 'hirek'),
+('hirek/akciok/utazasok', 'Utazások', 'A Globetrotter utazási iroda által kínált utak', 'travel.jpg', 'hirek/akciok');
 
 
 CREATE TABLE `contents` (
   `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `type` tinyint(1) UNSIGNED NOT NULL,
-  `category` smallint(5) UNSIGNED DEFAULT NULL,
+  `type` varchar(16) CHARACTER SET ascii NOT NULL,
+  `category` varchar(255) CHARACTER SET ascii DEFAULT NULL,
   `url` varchar(128) CHARACTER SET ascii NOT NULL,
   `author` tinyint(3) UNSIGNED NOT NULL,
   `title` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
+  `image` tinytext CHARACTER SET ascii  DEFAULT NULL,
   `body` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `created` timestamp DEFAULT current_timestamp(),
   `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `url` (`url`),
-  FOREIGN KEY (`type`) REFERENCES `types` (`id`),
-  FOREIGN KEY (`category`) REFERENCES `categories` (`id`),
+  FOREIGN KEY (`type`) REFERENCES `content_types` (`name`),
+  FOREIGN KEY (`category`) REFERENCES `categories` (`url`),
   FOREIGN KEY (`author`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-INSERT INTO `contents` (`type`, `url`, `author`, `title`, `description`, `body`) VALUES
-(1, 'index', 2, 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!',
-'<img src="/upload/images/road.jpg" class="landscape">
-<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
+INSERT INTO `contents` (`type`, `url`, `author`, `title`, `description`, `image`, `body`) VALUES
+('page', '/', 2, 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!', 'road.jpg',
+'<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
 feddő, fulan úgynevezett jermeteken, valamint a svuták csapinusain dakarsodik át, és az
@@ -156,9 +174,8 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-(1, 'rolunk', 2, 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes',
-'<img src="/upload/images/travel-meeting.jpg" class="landscape">
-<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
+('page', 'rolunk', 2, 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes', 'travel-meeting.jpg',
+'<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
 feddő, fulan úgynevezett jermeteken, valamint a svuták csapinusain dakarsodik át, és az
@@ -209,8 +226,8 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-(1, 'kapcsolat', 3, 'Kapcsolat', 'Írjon nekünk, de iziben!', '<img src="/upload/images/postbox.jpg" class="landscape">
-<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
+('page', 'kapcsolat', 3, 'Kapcsolat', 'Írjon nekünk, de iziben!', 'postbox.jpg',
+'<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
 feddő, fulan úgynevezett jermeteken, valamint a svuták csapinusain dakarsodik át, és az
@@ -238,10 +255,9 @@ amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint 
 részére 12 kítőn belül be kell sánulniuk.</p>');
 
 
-INSERT INTO `contents` (`type`, `category`, `url`, `author`, `title`, `description`, `body`)
+INSERT INTO `contents` (`type`, `category`, `url`, `author`, `title`, `description`, `image`, `body`)
 VALUES
-(2, 2, 'dubai', 3, 'Dubai', 'Szinte ingyen Dubaiba',
-'<img src="/upload/images/dubai.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek/akciok/utazasok', 'dubai', 3, 'Dubai', 'Szinte ingyen Dubaiba', 'dubai-city.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -270,8 +286,8 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-(2, 2, 'napfeny-tura', 1, 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
-'<img src="/upload/images/rock-formation.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek/akciok/utazasok', 'napfeny-tura', 1, 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
+'rock-formation.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -300,8 +316,8 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-(2, 2, 'oszi-erdo', 2, 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
-'<img src="/upload/images/fall-forest.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek', 'oszi-erdo', 2, 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
+'fall-forest.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -330,9 +346,8 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-(2, 2, 'tengerparti-oromok', 3, 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
-jermeteken, valamint a svuták csapinusain dakarsodik át',
-'<img src="/upload/images/beach-landscape.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek', 'tengerparti-oromok', 3, 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
+jermeteken, valamint a svuták csapinusain dakarsodik át', 'beach-landscape.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -361,8 +376,8 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-(2, 3, 'hegyvideki-kirandulas', 1, 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
-'<img src="/upload/images/lake-house.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek/akciok', 'hegyvideki-kirandulas', 1, 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
+'lake-house.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -391,9 +406,8 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-(2, 3, 'extra-szilkas-hegyek', 2, 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
-készletéből pótoljuk!',
-'<img src="/upload/images/forest-rock-waterfall.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek/akciok', 'extra-szilkas-hegyek', 2, 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
+készletéből pótoljuk!', 'forest-rock-waterfall.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -422,9 +436,8 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-(2, 3, 'garantaltan-suru-sotet-erdo', 2, 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
-távol a világ zajától, most akciós jetivel!',
-'<img src="/upload/images/forest-waterfall.jpg" class="landscape"><p>Lórum ipse mint buggyos izgatlan
+('article', 'hirek/akciok', 'garantaltan-suru-sotet-erdo', 2, 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
+távol a világ zajától, most akciós jetivel!', 'forest-waterfall.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -454,7 +467,7 @@ amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint 
 részére 12 kítőn belül be kell sánulniuk.</p>');
 
 
-CREATE TABLE `images` (
+CREATE TABLE `content_images` (
   `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `url` varchar(128) NOT NULL,
   `mime` varchar(64) NOT NULL,
@@ -469,22 +482,12 @@ CREATE TABLE `images` (
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 
-INSERT INTO `images` (`url`, `mime`, `size`, `width`, `height`, `content`) VALUES
-('road.jpg', 'image/jpeg', 472, 1617, 1080, 1),
+INSERT INTO `content_images` (`url`, `mime`, `size`, `width`, `height`, `content`) VALUES
 ('beach-sunshine-car.jpg', 'image/jpeg', 697, 1812, 1200, 1),
-('travel-meeting.jpg', 'image/jpeg', 262, 1920, 750, 2),
-('postbox.jpg', 'image/jpeg', 815, 1512, 1080, 3),
-('dubai.jpg', 'image/jpeg', 450, 1623, 1080, 4),
 ('dubai-hotel.jpg', 'image/jpeg', 454, 1920, 1042, 4),
-('rock-formation.jpg', 'image/jpeg', 788, 1620, 1080, 5),
 ('desert.jpg', 'image/jpeg', 398, 1620, 1080, 5),
-('fall-forest.jpg', 'image/jpeg', 1229, 1620, 1080, 6),
 ('forest-sunset.jpg', 'image/jpeg', 459, 1620, 1080, 6),
-('beach-landscape.jpg', 'image/jpeg', 647, 1623, 1080, 7),
 ('beach-sea.jpg', 'image/jpeg', 683, 1920, 1080, 7),
-('lake-house.jpg', 'image/jpeg', 745, 1680, 1080, 8),
 ('sky-mountainous.jpg', 'image/jpeg', 336, 1620, 1080, 8),
-('forest-rock-waterfall.jpg', 'image/jpeg', 630, 1920, 1080, 9),
 ('mountain-light.jpg', 'image/jpeg', 664, 1512, 1080, 9),
-('forest-waterfall.jpg', 'image/jpeg', 823, 1574, 1050, 10),
 ('forest-dark.jpg', 'image/jpeg', 187, 1620, 1080, 10);

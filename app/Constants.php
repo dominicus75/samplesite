@@ -8,8 +8,10 @@
  */
 
 
-define("DSR", DIRECTORY_SEPARATOR);
-define("PRD", dirname(__DIR__).DSR);  // Projekt Root Directory
-define("APP", PRD."app".DSR);         // APPlication root directory
-define("VEN", PRD."vendor".DSR);      // VENdor root directory
-define("TPL", APP."view".DSR."templates".DSR);
+define('THM', 'default');
+define('DSR', DIRECTORY_SEPARATOR);
+define('PRD', dirname(__DIR__).DSR);
+define('APP', PRD.'app'.DSR);
+define('VEN', PRD.'vendor'.DSR);
+define('TPL', APP.'view'.DSR.'themes'.DSR.THM.DSR.'template'.DSR);
+define('CSS', APP.'view'.DSR.'themes'.DSR.THM.DSR.'css'.DSR);

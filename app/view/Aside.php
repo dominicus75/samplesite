@@ -19,7 +19,7 @@ class Aside
    * @var string Fully qualified path name of template directory
    *
    */
-  private string $templateDirectory = TPL.DSR;
+  private string $templateDirectory = TPL;
 
   /**
    *
@@ -34,13 +34,6 @@ class Aside
    *
    */
   private string $rowTemplateUrl = 'row.tpl';
-
-  /**
-   *
-   * @var string in form '&&marker&&'
-   *
-   */
-  private string $marker = '&&row&&';
 
   /**
    *

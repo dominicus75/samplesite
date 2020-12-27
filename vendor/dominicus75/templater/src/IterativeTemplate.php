@@ -9,7 +9,7 @@
 namespace Dominicus75\Templater;
 
 
-class IterativeTemplate extends Template
+class IterativeTemplate extends Source
 {
 
   use RendererTrait;
@@ -26,7 +26,7 @@ class IterativeTemplate extends Template
 
     try {
       parent::__construct($iterativeTemplateUrl);
-      $this->extractVariableMarkers();
+      $this->updateVariables();
     } catch(FileNotFoundException $e) { throw $e; }
 
   }

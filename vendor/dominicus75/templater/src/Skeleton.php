@@ -9,7 +9,7 @@
 namespace Dominicus75\Templater;
 
 
-class Skeleton extends Template {
+class Skeleton extends Source {
 
   use RendererTrait;
 
@@ -22,15 +22,14 @@ class Skeleton extends Template {
 
   /**
    *
-   * @var array The templates belongs to this skeleton
-   * in string @@marker@@ => Template $template form
+   * @var string Fully qualified path name of css directory
    *
    */
-  protected array $templates = [];
+  private string $cssDirectory;
 
   /**
    *
-   * @var bool if $this->skeleton includes all template sources, value of
+   * @var bool if $this->skeleton includes all sources, value of
    * this property true, false otherwise
    *
    */
@@ -40,7 +39,8 @@ class Skeleton extends Template {
   /**
    *
    * @param string $templateDirectory Fully qualified path name
-   * @param string $skeletonFile Name of skeleton file,
+   * @param string $cssDirectory Fully qualified path name
+   * @param string $skeletonFile Name of skeleton source file,
    * for example 'skeleton.html'
    *
    * @throws \Dominicus75\Templater\DirectoryNotFoundException
@@ -48,10 +48,14 @@ class Skeleton extends Template {
    * @throws \Dominicus75\Templater\FileNotFoundException
    * if given skeleton file does not exists
    */
-  public function __construct(string $templateDirectory, string $skeletonFile){
+  public function __construct(
+    string $templateDirectory,
+    string $cssDirectory,
+    string $skeletonFile
+  ){
 
     if(is_dir($templateDirectory)) {
-      $this->templateDirectory = $templateDirectory.DIRECTORY_SEPARATOR;
+      $this->templateDirectory = $templateDirectory;
       try {
         parent::__construct($this->templateDirectory.$skeletonFile);
       } catch(FileNotFoundException $e) { throw $e; }
@@ -59,13 +63,14 @@ class Skeleton extends Template {
       throw new DirectoryNotFoundException($templateDirectory.' does not exists.');
     }
 
-    if(preg_match_all(Templater::MARKERS['template'], $this->source, $matches)) {
-      foreach($matches[0] as $marker){ $this->templates[$marker] = null; }
+    if(is_dir($cssDirectory)) {
+      $this->cssDirectory = $cssDirectory;
     } else {
-      throw new \InvalidArgumentException(
-        'No template markers found in this skeleton file'
-      );
+      throw new DirectoryNotFoundException($cssDirectory.' does not exists.');
     }
+
+    $this->updateSources();
+    $this->updateVariables();
 
   }
 
@@ -76,19 +81,62 @@ class Skeleton extends Template {
    * @param string $templateFile name of template (tpl) file, for example 'nav.tpl'
    * or 'page/read.tpl'
    * @throws \InvalidArgumentException if marker is not found
-   * @throws \InvalidArgumentException if marker already exists
+   * @throws \InvalidArgumentException if marker is already assigned
    *
    */
-  public function assignTemplateSource(string $marker, string $templateFile): self {
+  public function assignSource(string $marker, string $sourceFile = ''): self {
 
-    if(array_key_exists($marker, $this->templates)){
-      try {
-        $template = new Template($this->templateDirectory.$templateFile);
-        $this->templates[$marker] = $template->getSource();
-        return $this;
-      } catch(FileNotFoundException $e) { throw $e; }
+    if($this->hasMarker($marker)){
+
+      if(empty($sourceFile)) {
+        $this->source = str_replace($marker, '', $this->source);
+      } else {
+        try {
+          $source = new Source($this->templateDirectory.$sourceFile);
+          $this->source = str_replace($marker, $source->getSource(), $this->source);
+          $this->updateSources();
+          $this->updateVariables();
+        } catch(FileNotFoundException $e) { throw $e; }
+      }
+
+      $this->sources[$marker] = true;
+      return $this;
+
     } else {
-      throw new \InvalidArgumentException($marker.' is not found in this skeleton file');
+      throw new \InvalidArgumentException($marker.' is not found in template source');
+    }
+
+  }
+
+
+  /**
+   *
+   * @parem string $marker in form '@@marker@@'
+   * @param string $cssFile name of template (tpl) file, for example 'common.css'
+   * @throws \InvalidArgumentException if marker is not found
+   * @throws \InvalidArgumentException if marker is already assigned
+   *
+   */
+  public function assignCSS(string $marker, string $cssFile = ''): self {
+
+    if($this->hasMarker($marker)){
+
+      if(empty($cssFile)) {
+        $this->source = str_replace($marker, '', $this->source);
+      } else {
+        try {
+          $css = new Source($this->cssDirectory.$cssFile);
+          $this->source = str_replace($marker, $css->getSource(), $this->source);
+          $this->updateSources();
+          $this->updateVariables();
+        } catch(FileNotFoundException $e) { throw $e; }
+      }
+
+      $this->sources[$marker] = true;
+      return $this;
+
+    } else {
+      throw new \InvalidArgumentException($marker.' is not found in template source');
     }
 
   }
@@ -97,7 +145,7 @@ class Skeleton extends Template {
   /**
    *
    * @param string $iterativeTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
-   * @param string $marker in form '{{marker}}'
+   * @param string $marker in form '@@marker@@'
    * @param array $content
    *
    * @throws \Dominicus75\Templater\FileNotFoundException if the $iterativeTemplateFile
@@ -112,25 +160,31 @@ class Skeleton extends Template {
     array $content
   ): self {
 
-    try {
+    if($this->hasMarker($marker)){
 
-      $iterator = new TemplateIterator(
-        $this->templateDirectory.$iterativeTemplateFile,
-        $content
-      );
+      try {
 
-      $this->bindValue($marker, $iterator->render());
-      return $this;
+        $iterator = new TemplateIterator(
+          $this->templateDirectory.$iterativeTemplateFile,
+          $content
+        );
 
-    } catch(\InvalidArgumentException |
-            \RuntimeException |
-            \FileNotFoundException $e) { $e->getMessage(); }
+        $this->source = str_replace($marker, $iterator->render(), $this->source);
+        $this->sources[$marker] = true;
+        return $this;
+
+      } catch(\InvalidArgumentException |
+              \RuntimeException |
+              \FileNotFoundException $e) { throw $e; }
+
+    } else {
+      throw new \InvalidArgumentException($marker.' is not found in template source');
+    }
 
   }
 
 
   /**
-   * It change markers to template source in the skeleton
    *
    * @param void
    * @return self
@@ -139,15 +193,13 @@ class Skeleton extends Template {
    */
   public function buildLayout(): self {
 
-    foreach($this->templates as $marker => $template){
-      if(is_null($template)) { throw new \RuntimeException($marker.' template is missing'); }
-      $this->source = str_replace($marker, $template, $this->source);
+    $this->updateSources();
+
+    foreach($this->sources as $marker => $template){
+      if(!$template) { throw new \RuntimeException($marker.' template is missing'); }
     }
 
-    try {
-      $this->extractVariableMarkers();
-    } catch(\RuntimeException $e) { throw $e; }
-
+    $this->updateVariables();
     $this->buildedUp = true;
     return $this;
 
@@ -165,9 +217,7 @@ class Skeleton extends Template {
     if(!$this->buildedUp) { return false; }
 
     foreach($this->variables as $variable) {
-      if(is_null($variable)) {
-        return false;
-      } else { continue; }
+      if(is_null($variable)) { return false; }
     }
 
     return true;

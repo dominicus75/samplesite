@@ -32,7 +32,7 @@ spl_autoload_register(function ($class_name) {
     : $namespace."src".$DSR.$class.".php";
   } else {
     $namespace = strtolower(array_shift($fully_qualified_name));
-    $subNamespace = implode($DSR, $fully_qualified_name).$DSR;
+    $subNamespace = $DSR.implode($DSR, $fully_qualified_name).$DSR;
     if($vendor == 'psr' && $namespace = 'http') {
       $file .= $namespace."-".$subNamespace."src".$DSR.$class.".php";
     } else {

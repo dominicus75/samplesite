@@ -20,13 +20,6 @@ class TemplateIterator
   protected string $iterativeTemplateUrl;
 
   /**
-   *
-   * @var string in form '&&marker&&'
-   *
-   */
-  protected string $marker;
-
-  /**
    * @var string result of iteration
    *
    */

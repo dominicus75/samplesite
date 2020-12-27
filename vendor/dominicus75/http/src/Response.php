@@ -14,7 +14,7 @@ class Response
 
   use MessageTrait;
 
-  private const PHRASES = [
+  const PHRASES = [
     100 => 'Continue',
     101 => 'Switching Protocols',
     102 => 'Processing',
