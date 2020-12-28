@@ -96,8 +96,10 @@ class Nav
       if($statement->execute()) {
         if($categories = $statement->fetchAll()) {
           foreach($categories as $category) {
-            $item = ['{{url}}' => $category['url'], '{{target}}' => $category['title'], 'child' => null];
-            $result[$category['url']] = $item;
+            $result[$category['url']] = [
+              'link' => ['{{url}}' => $category['url'], '{{target}}' => $category['title']],
+              'child' => null
+            ];
             $child = $this->setCategories($category['url']);
             if(!empty($child)) { $result[$category['url']]['child'] = $child; }
           }
