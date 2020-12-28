@@ -6,6 +6,11 @@
           flex: 100%;
         }
 
+        nav ul li {
+          display: list-item;
+          border-top: 1px dashed rgb(17, 17, 17);
+        }
+
         nav a {
           padding-left: 2vw;
           font-size: 2rem;
@@ -67,5 +72,4 @@
           text-decoration: none;
           background-color: rgb(21, 29, 76);
           border-top: 1px solid rgb(254, 250, 159);
-          border-bottom: 1px solid rgb(254, 250, 159);
         }

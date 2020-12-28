@@ -1,1 +1,1 @@
-<li><a href="{{url}}">{{target}}</a></li>
+<li class="item"><a href="{{url}}">{{target}}</a></li>

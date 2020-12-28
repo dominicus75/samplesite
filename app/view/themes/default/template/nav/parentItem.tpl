@@ -1,5 +1,5 @@
     <li><a href="{{url}}">{{target}}</a>
-      <ul>
+      <ul class="dropdown">
         @@child@@
       </ul>
     </li>

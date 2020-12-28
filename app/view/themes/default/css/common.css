@@ -31,7 +31,7 @@
         display:block;
       }
 
-      nav ul {
+      nav ul, nav li {
         list-style:none;
       }
 
@@ -182,11 +182,6 @@
         color: red;
       }
 
-      nav > a:hover {
-        color: rgb(21, 29, 76);
-        background-color: rgb(254, 250, 159);
-      }
-
       h2, h3, h4, h5 {
         color: rgb(254, 250, 159);
         text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
@@ -264,24 +259,68 @@
         color: rgb(254, 250, 159);
       }
 
-      nav > ul > li {
-        display: inline;
-        border: 0;
+      nav ul {
+        padding-left: 0;
+        border: none;
       }
 
-      nav > ul > li > ul {
-        display: none;
-      }
-
-      nav > ul > li:hover > ul {
+      nav li {
         display: block;
+        float: left;
+        padding: 1vh 2vh;
+        position: relative;
+        transition-duration: 0.5s;
+      }
+
+      nav > * {
+        border: none;
       }
 
       nav a {
         color: rgb(254, 250, 159);
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: bold;
-        padding: 1vh 1vw;
+      }
+
+      nav a:hover {
+        color: rgb(21, 29, 76);
+      }
+
+      nav li:hover,
+      nav li:focus-within {
+        color: rgb(21, 29, 76);
+        background-color: rgb(254, 250, 159);
+        cursor: pointer;
+      }
+
+      nav li:focus-within a {
+        outline: none;
+      }
+
+      nav ul li ul {
+        visibility: hidden;
+        opacity: 0;
+        min-width: 5rem;
+        position: absolute;
+        transition: all 0.5s ease;
+        margin-top: 1vh;
+        left: 0;
+        display: none;
+      }
+
+      nav ul li:hover > ul,
+      nav ul li:focus-within > ul,
+      nav ul li ul:hover,
+      nav ul li ul:focus {
+        background-color: rgb(21, 29, 76);
+        visibility: visible;
+        opacity: 1;
+        display: block
+      }
+
+      nav ul li ul li {
+        clear: both;
+        width: 100%;
       }
 
       footer > p > a {
