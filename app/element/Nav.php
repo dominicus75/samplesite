@@ -28,12 +28,11 @@ class Nav
     try {
       $model = new \Application\Model\Nav();
       $this->view = new \Application\View\Nav($model->getPages(), $model->getCategories());
-      var_dump($this);
     } catch(\PDOException $e) {
       echo '<p>'.$e->getMessage().'</p>';
     }
   }
 
-  // ...
+  public function render() { return $this->view->render(); }
 
 }

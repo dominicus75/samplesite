@@ -264,6 +264,19 @@
         color: rgb(254, 250, 159);
       }
 
+      nav > ul > li {
+        display: inline;
+        border: 0;
+      }
+
+      nav > ul > li > ul {
+        display: none;
+      }
+
+      nav > ul > li:hover > ul {
+        display: block;
+      }
+
       nav a {
         color: rgb(254, 250, 159);
         font-size: 1.5rem;

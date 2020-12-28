@@ -96,6 +96,31 @@ class Component extends Source {
 
   /**
    *
+   * @parem string $marker in form '@@marker@@'
+   * @param string $template
+   * @throws \InvalidArgumentException if marker is not found
+   * @throws \InvalidArgumentException if marker is already assigned
+   *
+   */
+  public function assignTemplate(string $marker, string $template = ''): self {
+
+    if($this->hasMarker($marker)){
+
+      try {
+        $this->source = str_replace($marker, $template, $this->source);
+        $this->sources[$marker] = true;
+        return $this;
+      } catch(FileNotFoundException $e) { throw $e; }
+
+    } else {
+      throw new \InvalidArgumentException($marker.' is not found in template source');
+    }
+
+  }
+
+
+  /**
+   *
    * @param string $iterativeTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
    * @param string $marker in form '@@marker@@'
    * @param array $content
@@ -167,14 +192,26 @@ class Component extends Source {
   public function isRenderable(): bool {
 
     if(!$this->buildedUp) { return false; }
-
+    if(empty($this->variables)) { return true; }
     foreach($this->variables as $variable) {
       if(is_null($variable)) { return false; }
     }
-
     return true;
 
   }
+
+
+  public function render(): string {
+
+    if($this->isRenderable()) {
+      return $this->source;
+    } else {
+      throw new \RuntimeException('This template is not renderable yet.');
+    }
+
+  }
+
+
 
   public function __get($name) { return $this->$name; }
 

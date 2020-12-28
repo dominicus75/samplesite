@@ -144,6 +144,38 @@ class Skeleton extends Source {
 
   /**
    *
+   * @parem string $marker in form '@@marker@@'
+   * @param string $template
+   * @throws \InvalidArgumentException if marker is not found
+   * @throws \InvalidArgumentException if marker is already assigned
+   *
+   */
+  public function assignTemplate(string $marker, string $template = ''): self {
+
+    if($this->hasMarker($marker)){
+
+      if(empty($template)) {
+        $this->source = str_replace($marker, '', $this->source);
+      } else {
+        try {
+          $this->source = str_replace($marker, $template, $this->source);
+          $this->updateSources();
+          $this->updateVariables();
+        } catch(FileNotFoundException $e) { throw $e; }
+      }
+
+      $this->sources[$marker] = true;
+      return $this;
+
+    } else {
+      throw new \InvalidArgumentException($marker.' is not found in template source');
+    }
+
+  }
+
+
+  /**
+   *
    * @param string $iterativeTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
    * @param string $marker in form '@@marker@@'
    * @param array $content

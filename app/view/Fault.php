@@ -49,16 +49,8 @@ class Fault extends AbstractView
       $this->view->assignCSS('@@mobile-action@@', $action);
 
       $this->view->assignSource('@@header@@', 'header.tpl');
-      $this->view->assignSource('@@nav@@', 'nav.tpl');
-      $this->view->assignTemplateIterator(
-        'navItem.tpl',
-        '@@menu@@',
-        [
-          ['{{url}}' => '/', '{{target}}' => 'Kezdőlap'],
-          ['{{url}}' => '/rolunk.html', '{{target}}' => 'Rólunk'],
-          ['{{url}}' => '/kapcsolat.html', '{{target}}' => 'Kapcsolat']
-        ]
-      );
+      $nav = new \Application\Element\Nav();
+      $this->view->assignTemplate('@@menu@@', $nav->render());
       $this->view->assignSource('@@aside@@', '');
       $this->view->assignSource('@@main@@', 'fault'.DSR.$this->action.'.tpl');
       $this->view->assignSource('@@footer@@', 'footer.tpl');

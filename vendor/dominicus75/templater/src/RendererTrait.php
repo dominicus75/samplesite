@@ -66,7 +66,7 @@ trait RendererTrait
 
     if(preg_match_all(Templater::MARKERS['variable'], $this->source, $matches)) {
       foreach($matches[0] as $marker){ $this->variables[$marker] = null; }
-    }
+    } else { $this->renderable = true; }
 
   }
 

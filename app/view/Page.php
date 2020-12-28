@@ -50,11 +50,8 @@ class Page extends AbstractView
 
       $this->view->assignSource('@@header@@', 'header.tpl');
       $this->view->assignSource('@@nav@@', 'nav.tpl');
-      $this->view->assignTemplateIterator(
-        'navItem.tpl',
-        '@@menu@@',
-        $content['nav']
-      );
+      $nav = new \Application\Element\Nav();
+      $this->view->assignTemplate('@@menu@@', $nav->render());
       $this->view->assignSource('@@aside@@', 'aside.tpl');
       $this->view->assignSource('@@main@@', 'page'.DSR.$this->action.'.tpl');
       $this->view->assignSource('@@footer@@', 'footer.tpl');

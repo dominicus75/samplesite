@@ -2,5 +2,5 @@
   <input type="checkbox" id="show-menu">
   <nav>
     <ul>
-@@menu@@  </ul>
+      @@menu@@    </ul>
   </nav>

@@ -50,8 +50,8 @@ class Nav
       $this->view       = new Component(TPL.'nav'.DSR, 'nav.tpl');
       $this->pages      = $pages;
       $this->categories = $categories;
-var_dump($this->buildPages());
-var_dump($this->buildCategories($this->categories));
+      $this->view->assignTemplate('@@menu@@', $this->buildMenu());
+      $this->view->buildLayout();
     } catch(\Dominicus75\Templater\FileNotFoundException|
             \InvalidArgumentException $e) { echo '<p>'.$e->getMessage().'</p>'; }
   }
@@ -59,23 +59,17 @@ var_dump($this->buildCategories($this->categories));
 
   private function buildCategories(array $categories, string $result = ''): string {
 
-    foreach($categories as $category) {
-      if(is_null($category['child'])) {
-        $tpl = new IterativeTemplate($this->view->templateDirectory.'childItem.tpl');
-        $tpl->setVariables($category['link']);
-        $result .= $tpl->render().PHP_EOL;
-      } else {
+    foreach($categories as $id => $category) {
+      if(!is_null($category['child'])) {
         $tpl = new IterativeTemplate($this->view->templateDirectory.'parentItem.tpl');
         $tpl->setVariables($category['link']);
-        $result .= $tpl->render().PHP_EOL;
-        if(array_key_exists('child', $category['child'])) {
-          $tpl = new IterativeTemplate($this->view->templateDirectory.'childItem.tpl');
-          $tpl->setVariables($category['child']['link']);
-          $sub = $tpl->render().PHP_EOL;
-          $result = str_replace('@@child@@', $sub, $result);
-        } else {
-          $sub = $this->buildCategories($category['child'], $result);
-        }
+        $result .= '  '.$tpl->render().PHP_EOL;
+        $result = $this->buildCategories($category['child'], $result);
+      } else {
+        $tpl = new IterativeTemplate($this->view->templateDirectory.'childItem.tpl');
+        $tpl->setVariables($category['link']);
+        $child = "  ".$tpl->render();
+        $result = str_replace('@@child@@', $child, $result);
       }
     }
 
@@ -90,22 +84,20 @@ var_dump($this->buildCategories($this->categories));
     foreach($this->pages as $page) {
       $tpl = new IterativeTemplate($this->view->templateDirectory.'childItem.tpl');
       $tpl->setVariables($page);
-      $result .= $tpl->render().PHP_EOL;
+      $result .= '      '.$tpl->render().PHP_EOL;
     }
 
     return $result;
 
   }
 
-  private function buildMenu() {
-        $tpl = new IterativeTemplate($this->view->templateDirectory.'parentItem.tpl');
-        $tpl->setVariables($category['link']);
-        $result[$id] = $tpl->render();
-
+  private function buildMenu(): string {
+    $menu  = $this->buildPages();
+    $menu .= $this->buildCategories($this->categories);
+    return $menu;
   }
 
 
-
-  public function render(): string { return $this->view->render(); }
+  public function render(): string { return $this->view->getSource(); }
 
 }

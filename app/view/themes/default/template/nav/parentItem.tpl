@@ -1,5 +1,5 @@
-    <li>
-      <a href="{{url}}">{{target}}</a>
+    <li><a href="{{url}}">{{target}}</a>
       <ul>
-@@child@@  </ul>
+        @@child@@
+      </ul>
     </li>
