@@ -1,38 +1,15 @@
 
         html { font-size: 2.5vmax; }
 
-        nav, main, label[for=show-menu] {
-          flex-direction: column;
-          flex: 100%;
-        }
+        main, aside, article { width: 100%; }
 
-        nav ul li {
-          display: list-item;
-          border-top: 1px dashed rgb(17, 17, 17);
-        }
-
-        nav a {
-          padding-left: 2vw;
-          font-size: 2rem;
-        }
-
-        main {
-          display: flex;
-          flex-wrap: wrap;
-        }
-
-        aside, article {
-          padding: 1vh 3vw;
-          flex: 100%;
-        }
+        aside, article { padding: 1vh 2vw; }
 
         article > header {
-          padding: 30vh 1rem 1rem 1rem;
+          padding: 50vh 1rem 1rem 1rem;
         }
 
-        h1, h1 > a {
-          font-size: 2.1rem;
-        }
+        h1, h1 > a { font-size: 1.8rem; }
 
         h1, h2, h3, h4, h5, article > header > p { text-align: center; }
 
@@ -41,35 +18,60 @@
           padding: 1rem;
         }
 
-        p.site_slogan, footer > p {
-          font-size: 1.2rem;
-        }
+        p.site_slogan, footer > p { font-size: 1.2rem; }
 
-        iframe {
-          height: 54vw;
-        }
+        iframe { height: 54vw; }
 
         /* Navigation elements */
-
-        nav {
-          display: none;
-        }
-
-        input[type=checkbox]:checked ~ nav {
-          display: flex;
-          border-top: 0;
+        label[for=show-menu] {
+          text-decoration: none;
+          color: rgb(254, 250, 159);
+          background-color: rgb(21, 29, 76);
+          border-top: 1px solid rgb(254, 250, 159);
+          border-bottom: 1px solid rgb(254, 250, 159);
         }
 
         .fa-bars {
-          display: block;
           padding-left: 2vw;
           font-size: 2rem;
         }
 
-        label[for=show-menu] {
-          display: flex;
-          justify-content: center;
-          text-decoration: none;
-          background-color: rgb(21, 29, 76);
-          border-top: 1px solid rgb(254, 250, 159);
+        label[for=show-menu], .fa-bars { display: block; }
+
+        nav ul {
+          border: none;
+        }
+
+        nav ul li {
+          display: list-item;
+          position: static;
+          border-top: 1px dashed rgb(254, 250, 159);
+        }
+
+        nav ul li:first-child, nav ul li.last-child {
+          border-top: none;
+        }
+
+        nav li ul {
+          border-top: none;
+          border-bottom: none;
+        }
+
+        nav ul li:hover > ul,
+        nav ul li:focus-within > ul,
+        nav ul li ul:hover,
+        nav ul li ul:focus {
+          border-top-style: dashed;
+        }
+
+        nav a {
+          padding-left: 2vw;
+          font-size: 2rem;
+        }
+
+        nav { display: none; }
+
+        input[type=checkbox]:checked + nav {
+          display: block;
+          border-top: none;
         }

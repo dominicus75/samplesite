@@ -59,17 +59,27 @@ class Nav
 
   private function buildCategories(array $categories, string $result = ''): string {
 
-    foreach($categories as $id => $category) {
-      if(!is_null($category['child'])) {
-        $tpl = new IterativeTemplate($this->view->templateDirectory.'parentItem.tpl');
-        $tpl->setVariables($category['link']);
-        $result .= '  '.$tpl->render().PHP_EOL;
-        $result = $this->buildCategories($category['child'], $result);
-      } else {
+    $quantity = count($categories);
+
+    if($quantity == 0) {
+      return '';
+    } elseif($quantity == 1) {
+      $key = array_key_first($categories);
+      $category = $categories[$key];
+      if(is_null($category['child'])) {
         $tpl = new IterativeTemplate($this->view->templateDirectory.'childItem.tpl');
         $tpl->setVariables($category['link']);
-        $child = "  ".$tpl->render();
-        $result = str_replace('@@child@@', $child, $result);
+        $result .= $tpl->render();
+      } else {
+        $tpl = new IterativeTemplate($this->view->templateDirectory.'parentItem.tpl');
+        $tpl->setVariables($category['link']);
+        $child = $this->buildCategories($category['child'], $result);
+        $tpl->assignTemplate('@@child@@', $child);
+        $result .= $tpl->render();
+      }
+    } else {
+      foreach($categories as $id => $category) {
+        $result .= $this->buildCategories($category['child'], $result);
       }
     }
 

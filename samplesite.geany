@@ -28,7 +28,9 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=-1
+current_page=1
+FILE_NAME_0=0;None;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2F.gitigonre;0;2
+FILE_NAME_1=0;Markdown;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2FREADME.md;0;2
 
 [VTE]
 last_dir=/opt/lampp/htdocs/samplesite

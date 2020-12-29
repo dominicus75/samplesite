@@ -22,15 +22,6 @@ class Component extends Source {
 
   /**
    *
-   * @var bool if $this->component includes all sources, value of
-   * this property true, false otherwise
-   *
-   */
-  private bool $buildedUp = false;
-
-
-  /**
-   *
    * @param string $templateDirectory Fully qualified path name
    * @param string $componentFile Name of componenet source file,
    * for example 'nav.tpl' or 'aside.tpl'
@@ -60,147 +51,6 @@ class Component extends Source {
   }
 
 
-  /**
-   *
-   * @parem string $marker in form '@@marker@@'
-   * @param string $templateFile name of template (tpl) file, for example 'nav.tpl'
-   * or 'page/read.tpl'
-   * @throws \InvalidArgumentException if marker is not found
-   * @throws \InvalidArgumentException if marker is already assigned
-   *
-   */
-  public function assignSource(string $marker, string $sourceFile = ''): self {
-
-    if($this->hasMarker($marker)){
-
-      if(empty($sourceFile)) {
-        $this->source = str_replace($marker, '', $this->source);
-      } else {
-        try {
-          $source = new Source($this->templateDirectory.$sourceFile);
-          $this->source = str_replace($marker, $source->getSource(), $this->source);
-          $this->updateSources();
-          $this->updateVariables();
-        } catch(FileNotFoundException $e) { throw $e; }
-      }
-
-      $this->sources[$marker] = true;
-      return $this;
-
-    } else {
-      throw new \InvalidArgumentException($marker.' is not found in template source');
-    }
-
-  }
-
-
-  /**
-   *
-   * @parem string $marker in form '@@marker@@'
-   * @param string $template
-   * @throws \InvalidArgumentException if marker is not found
-   * @throws \InvalidArgumentException if marker is already assigned
-   *
-   */
-  public function assignTemplate(string $marker, string $template = ''): self {
-
-    if($this->hasMarker($marker)){
-
-      try {
-        $this->source = str_replace($marker, $template, $this->source);
-        $this->sources[$marker] = true;
-        return $this;
-      } catch(FileNotFoundException $e) { throw $e; }
-
-    } else {
-      throw new \InvalidArgumentException($marker.' is not found in template source');
-    }
-
-  }
-
-
-  /**
-   *
-   * @param string $iterativeTemplateFile name of iterative template file (tpl) for example 'navItem.tpl'
-   * @param string $marker in form '@@marker@@'
-   * @param array $content
-   *
-   * @throws \Dominicus75\Templater\FileNotFoundException if the $iterativeTemplateFile
-   * template file does not exists
-   * @throws \InvalidArgumentException if marker is invalid or missing
-   * @throws \InvalidArgumentException if either $content item is not an array
-   *
-   */
-  public function assignTemplateIterator(
-    string $iterativeTemplateFile,
-    string $marker,
-    array $content
-  ): self {
-
-    if($this->hasMarker($marker)){
-
-      try {
-
-        $iterator = new TemplateIterator(
-          $this->templateDirectory.$iterativeTemplateFile,
-          $content
-        );
-
-        $this->source = str_replace($marker, $iterator->render(), $this->source);
-        $this->sources[$marker] = true;
-        return $this;
-
-      } catch(\InvalidArgumentException |
-              \RuntimeException |
-              \FileNotFoundException $e) { throw $e; }
-
-    } else {
-      throw new \InvalidArgumentException($marker.' is not found in template source');
-    }
-
-  }
-
-
-  /**
-   *
-   * @param void
-   * @return self
-   * @throws \RuntimeException, if any template or variable is missing
-   *
-   */
-  public function buildLayout(): self {
-
-    $this->updateSources();
-
-    foreach($this->sources as $marker => $template){
-      if(!$template) { throw new \RuntimeException($marker.' template is missing'); }
-    }
-
-    $this->updateVariables();
-    $this->buildedUp = true;
-    return $this;
-
-  }
-
-
-  /**
-   *
-   * @param void
-   * @return bool
-   *
-   */
-  public function isRenderable(): bool {
-
-    if(!$this->buildedUp) { return false; }
-    if(empty($this->variables)) { return true; }
-    foreach($this->variables as $variable) {
-      if(is_null($variable)) { return false; }
-    }
-    return true;
-
-  }
-
-
   public function render(): string {
 
     if($this->isRenderable()) {
@@ -210,8 +60,6 @@ class Component extends Source {
     }
 
   }
-
-
 
   public function __get($name) { return $this->$name; }
 

@@ -49,9 +49,8 @@ class Page extends AbstractView
       $this->view->assignCSS('@@mobile-action@@', $action);
 
       $this->view->assignSource('@@header@@', 'header.tpl');
-      $this->view->assignSource('@@nav@@', 'nav.tpl');
       $nav = new \Application\Element\Nav();
-      $this->view->assignTemplate('@@menu@@', $nav->render());
+      $this->view->assignTemplate('@@nav@@', $nav->render());
       $this->view->assignSource('@@aside@@', 'aside.tpl');
       $this->view->assignSource('@@main@@', 'page'.DSR.$this->action.'.tpl');
       $this->view->assignSource('@@footer@@', 'footer.tpl');

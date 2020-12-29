@@ -19,7 +19,7 @@ class Page extends AbstractModel
   public function __construct(Config $pdoConfig, string $table){
 
     try {
-      parent::__construct($pdoConfig, 'contents');
+      parent::__construct($pdoConfig, $table);
     } catch(\PDOException $e) { throw $e; }
 
   }
@@ -34,11 +34,9 @@ class Page extends AbstractModel
 
     $content = $this->select(['url', $url['cid']], [], [['AND', 'type', '=', 'page']]);
     if(empty($content)) { new Failure(404); }
-    $nav = new \Application\Element\Nav();
-    $menu = new Nav();
-    $content['nav'] = $menu->getPages();
     $aside = new \Application\Element\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
     $content['aside'] = $aside->renderView();
+
     $content['url'] = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
     $content['site_name'] = 'Globetrotter';
     $content['locale'] = 'hu_HU';

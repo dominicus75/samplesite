@@ -20,7 +20,7 @@ class Article extends AbstractModel
   public function __construct(Config $pdoConfig, string $table){
 
     try {
-      parent::__construct($pdoConfig, 'contents');
+      parent::__construct($pdoConfig, $table);
     } catch(\PDOException $e) { throw $e; }
 
   }
@@ -40,6 +40,8 @@ class Article extends AbstractModel
 
     if(empty($content)) { new Failure(404); }
 
+    $menu = new Nav();
+    $content['nav'] = $menu->getPages();
     $aside = new \Application\Element\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
     $content['aside'] = $aside->renderView();
     $content['url'] = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];

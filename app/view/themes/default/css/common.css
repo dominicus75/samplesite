@@ -31,7 +31,7 @@
         display:block;
       }
 
-      nav ul, nav li {
+      ul, li {
         list-style:none;
       }
 
@@ -111,20 +111,6 @@
 
 
       /* Begin of layouts */
-      nav, label[for=show-menu] {
-        display: flex;
-        justify-content: center;
-        background-color: rgb(21, 29, 76);
-        border-top: 1px solid rgb(254, 250, 159);
-        border-bottom: 1px solid rgb(254, 250, 159);
-      }
-
-      footer {
-        background-color: rgb(21, 29, 76);
-        border-top: 1px solid rgb(254, 250, 159);
-        padding: 3rem;
-      }
-
       body {
         font-family: "Times New Roman", Times, serif;
         background-color: rgb(5, 153, 253);
@@ -164,6 +150,21 @@
       th { background-color: rgba(21, 29, 76, 0.75); }
       td { background-color: rgba(0, 0, 0, 0.4); }
       tr:hover { background-color: rgba(0, 0, 0, 0.75); }
+
+      article > header {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-image: url('{{image}}');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+
+      footer {
+        background-color: rgb(21, 29, 76);
+        border-top: 1px solid rgb(254, 250, 159);
+        padding: 3rem;
+      }
       /* End of layouts */
 
 
@@ -216,15 +217,6 @@
         text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
       }
 
-      article > header {
-        width: 100%;
-        margin-bottom: 1rem;
-        background-image: url('{{image}}');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-      }
-
       article > header > p {
         color: rgb(254, 250, 159);
         font-weight: bold;
@@ -256,24 +248,20 @@
       /* Begin of navigation elements */
       input[type=checkbox]#show-menu, label[for=show-menu], .fa-bars {
         display: none;
-        color: rgb(254, 250, 159);
       }
 
-      nav ul {
-        padding-left: 0;
-        border: none;
+      nav {
+        background-color: rgb(21, 29, 76);
+        border-top: 1px solid rgb(254, 250, 159);
+        border-bottom: 1px solid rgb(254, 250, 159);
       }
 
-      nav li {
-        display: block;
-        float: left;
-        padding: 1vh 2vh;
+      nav > * { border: none; }
+
+      nav ul li {
+        padding: 1vh 2vw;
         position: relative;
         transition-duration: 0.5s;
-      }
-
-      nav > * {
-        border: none;
       }
 
       nav a {
@@ -282,14 +270,10 @@
         font-weight: bold;
       }
 
-      nav a:hover {
-        color: rgb(21, 29, 76);
-      }
-
       nav li:hover,
       nav li:focus-within {
         color: rgb(21, 29, 76);
-        background-color: rgb(254, 250, 159);
+        background-color: red;
         cursor: pointer;
       }
 
@@ -300,7 +284,6 @@
       nav ul li ul {
         visibility: hidden;
         opacity: 0;
-        min-width: 5rem;
         position: absolute;
         transition: all 0.5s ease;
         margin-top: 1vh;
@@ -313,14 +296,10 @@
       nav ul li ul:hover,
       nav ul li ul:focus {
         background-color: rgb(21, 29, 76);
+        border: 1px solid rgb(254, 250, 159);
         visibility: visible;
         opacity: 1;
-        display: block
-      }
-
-      nav ul li ul li {
-        clear: both;
-        width: 100%;
+        display: list-item;
       }
 
       footer > p > a {

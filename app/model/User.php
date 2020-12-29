@@ -10,6 +10,7 @@ namespace Application\Model;
 
 use \Dominicus75\Core\Config;
 use \Dominicus75\Core\Model\AbstractModel;
+use \Application\Controller\Fault as Failure;
 
 class User extends AbstractModel
 {
@@ -17,7 +18,7 @@ class User extends AbstractModel
   public function __construct(Config $pdoConfig, string $table){
 
     try {
-      parent::__construct($pdoConfig, 'users');
+      parent::__construct($pdoConfig, $table);
     } catch(\PDOException $e) { throw $e; }
 
   }
