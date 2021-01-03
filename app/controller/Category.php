@@ -22,53 +22,22 @@ class Category extends AbstractController
 
   public function __construct(
     Route $route,
-    Request $request,
-    Response $response
+    Request $request
   ){
 
-    parent::__construct($route, $request, $response);
-
     try {
-      $this->model = new \Application\Model\Category(new Config('mysql'), 'categories');
+      parent::__construct($route, $request);
     } catch(\PDOException | InvalidFieldNameException $e) {
-      $e->getMessage();//$this->response->redirect('/fault/404.html');
+      new Fault(500, $e->getMessage());
     }
 
   }
 
 
-  public function create(): void {
-
-
-
-
-  }
-
-
-  public function read(): void {
-
-    try {
-      $content = $this->model->read(['category' => $this->route->category, 'cid' => $this->route->cid]);
-      $this->view = new \Application\View\Page($content);
-      $this->response->setBody($this->view->render());
-      $this->response->send();
-    } catch(ContentNotFoundException $e) {
-      $this->response->redirect('/fault/404.html');
-    }
-
-  }
-
-
-  public function edit(): void {
-
-
-  }
-
-
-  public function delete(): void {
-
-
-  }
+  public function create(): string {}
+  public function view(): string {}
+  public function edit(): string {}
+  public function delete(): string {}
 
 
 }

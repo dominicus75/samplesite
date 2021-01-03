@@ -11,29 +11,40 @@
 
 namespace Dominicus75\Core;
 
-use \Dominicus75\Http\{Request, Response};
-
 class Router
 {
 
-  const DEFAULT_CONTROLLER  = 'page';
-  const DEFAULT_ACTION      = 'read';
-  const DEFAULT_CONTENT     = '/';
+  /**
+   *
+   * An array, what contains the roles, what belong to this site
+   * @var array in form [0 => 'role0', 1 => 'role1', ... N => 'roleN']
+   *
+   */
+  private array $roles;
 
   /**
    *
-   * Associative array of controllers
+   * Associative array, what contains the controllers
+   * @var array in form (string)'controllerName' => (string)'\Fully\Qualified\ClassName'
+   *
+   */
+  private array $controllers;
+
+  /**
+   *
+   * Associative array, what contains the allowed methods of roles
+   * @var array ['role_name' => 'controllerName' => [0 => 'method0', 1 => 'method1', ... N => 'methodN']]
+   *
+   */
+  private array $methods;
+
+  /**
+   *
+   * Associative array, what contains the default values
    * @var array
    *
    */
-  private $controllers = [
-    'album'    => '\Application\Controller\Album',
-    'article'  => '\Application\Controller\Article',
-    'category' => '\Application\Controller\Category',
-    'fault'    => '\Application\Controller\Fault',
-    'index'    => '\Application\Controller\Index',
-    'page'     => '\Application\Controller\Page'
-  ];
+  private array $defaults;
 
   /**
    *
@@ -43,105 +54,218 @@ class Router
   private Router\Route $route;
 
 
-  public function __construct(string $requestUri){
+  /**
+   *
+   * @param string $requestUri the requested URI
+   * @param \ArrayAccess|null Config object
+   * @see Router/config.php for defaults
+   * @return self
+   *
+   */
+  public function __construct(string $requestUri, ?\ArrayAccess $config = null){
 
-    $action = "\/(?P<action>edit|delete|create)";
-    $edidel = "\/(?P<action>edit|delete)";
-    $create = "\/(?P<action>create)";
-    $type   = "\/(?P<type>".implode('|', array_keys($this->controllers)).")";
-    $slug   = "\/(?P<slug>[a-zA-Z0-9_\-\/]{1,255}(\.html)?)";
+    if(is_null($config) || (!($config instanceof \ArrayAccess) || !($config instanceof Config))) {
+      $config = new Config('config', __DIR__.DIRECTORY_SEPARATOR.'Router');
+    }
+
+    $this->roles       = $config->offsetGet('roles');
+    $this->controllers = $config->offsetGet('controllers');
+    $this->methods     = $config->offsetGet('methods');
+    $this->defaults    = $config->offsetGet('defaults');
 
     if(preg_match("/^\/?$/i", $requestUri)) {
       $this->route = new Router\Route(
-        $this->controllers[self::DEFAULT_CONTROLLER],
-        self::DEFAULT_ACTION,
-        self::DEFAULT_CONTENT,
-        null
+        $this->defaults['role'],
+        $this->controllers[$this->defaults['controller']],
+        $this->defaults['method'],
+        $this->defaults['content'],
+        $this->defaults['category']
       );
       return $this;
-    } elseif(!preg_match("/^".$action."/i", $requestUri)) {
-      $action = self::DEFAULT_ACTION;
-      if(!preg_match("/^".$type."/i", $requestUri)) {
-        $requestUri = ltrim($requestUri, '/');
-        $path = explode('/', $requestUri);
-        if(count($path) > 1){
-          $controller = preg_match("/\.html$/i", end($path)) ? 'article' : 'category';
-        } else {
-          $controller = preg_match("/\.html$/i", $path[0]) ? 'page' : 'category';
-        }
-        $slug = $requestUri;
-      } elseif(preg_match("/^".$type.$slug."$/i", $requestUri, $matches)) {
-        $controller = $matches['type'];
-        $slug       = $matches['slug'];
-      } else {
-        $controller = $this->controllers['fault'];
-        $slug       = '404';
+    }
+
+    $roles = "\/(?P<role>".implode('|', array_values($this->roles)).")";
+
+    if(preg_match("/^".$roles."/i", $requestUri, $matches)) {
+      $role    = $matches['role'];
+      $pattern = "\/".$role;
+      $actn    = "\/(?P<action>".implode('|', array_values($this->methods[$role][$role])).")(?P<extension>\.[a-z]{2,4})?";
+      if(preg_match("/^".$pattern.$actn."$/i", $requestUri, $matches)) {
+        $this->route = new Router\Route(
+          $role,
+          $this->controllers[$role],
+          $matches['action'],
+          null,
+          null
+        );
+        return $this;
+      } elseif(preg_match("/^".$pattern."\/[a-zA-Z0-9_-]+(\.[a-z]{2,4})?$/i", $requestUri, $matches)) {
+        $this->route = new Router\Route(
+          $this->defaults['role'],
+          $this->controllers['message'],
+          $this->defaults['method'],
+          '403',
+          $this->defaults['category']
+        );
+        return $this;
       }
-    } elseif(preg_match("/^".$edidel.$type.$slug."$/i", $requestUri, $matches)) {
-      $controller = $matches['type'];
-      $action     = $matches['action'];
-      $slug       = $matches['slug'];
-    } elseif(preg_match("/^".$create.$type."$/i", $requestUri, $matches)) {
-      $controller = $matches['type'];
-      $action     = $matches['action'];
-      $slug       = null;
+    } else {
+      $role    = $this->defaults['role'];
+      $pattern = "";
+    }
+
+    $type = "\/(?P<controller>".implode('|', array_keys($this->methods[$role])).")";
+
+    if(preg_match("/^".$pattern.$type."/i", $requestUri, $matches)) {
+      $controller = $matches['controller'];
+      $pattern   .= "\/".$controller;
+      $actn = "\/(?P<action>".implode('|', array_values($this->methods[$role][$controller])).")(?P<extension>\.[a-z]{2,4})?";
+      if(preg_match("/^".$pattern.$actn."/i", $requestUri, $matches)) {
+        if(isset($matches['extension'])) {
+          $this->route = new Router\Route(
+            $role,
+            $this->controllers[$controller],
+            $matches['action'],
+            null,
+            null
+          );
+          return $this;
+        } else {
+          $action   = $matches['action'];
+          $pattern .= "\/".$action;
+        }
+      } else {
+        $this->route = new Router\Route(
+          $this->defaults['role'],
+          $this->controllers['message'],
+          $this->defaults['method'],
+          '403',
+          $this->defaults['category']
+        );
+        return $this;
+      }
+    }
+
+    $path = "\/(?P<slug>[a-zA-Z0-9_\-\/]{1,255}(?P<extension>\.[a-z]{2,4})?)";
+
+    if(preg_match("/^".$pattern.$path."/i", $requestUri, $matches)) {
+
+      $uri = explode('/', $matches['slug']);
+      $ext = isset($matches['extension']) ? $matches['extension'] : '';
+
+      if(count($uri) > 1){
+        if(!isset($controller)) {
+          $controller = preg_match("/\.html$/i", end($uri)) ? 'article' : 'category';
+        }
+        $slug       = array_pop($uri);
+        $content    = str_replace($ext, "", $slug);
+        $category   = implode('/', $uri);
+      } else {
+        if(!isset($controller)) {
+          $controller = preg_match("/\.html$/i", $uri[0]) ? 'page' : 'category';
+        }
+        $content    = str_replace(".html", "", $uri[0]);
+        $category   = null;
+      }
+
+      $action = isset($action) ? $action : $this->defaults['method'];
+
     }
 
     if($this->hasController($controller)) {
       $controller = $this->controllers[$controller];
-      try {
-        $reflection = new \ReflectionClass($controller);
-        if(!$reflection->hasMethod($action)) {
-          $controller = $this->controllers['fault'];
-          $action     = self::DEFAULT_ACTION;
-          $slug       = '404';
-        }
-      } catch(\ReflectionException $e) {
-        $controller = $this->controllers['fault'];
-        $action     = self::DEFAULT_ACTION;
-        $slug       = '404';
+      if($this->hasMethod($controller, $action)) {
+        $method     = $action;
+      } else {
+        $controller = $this->controllers['message'];
+        $method     = $this->defaults['method'];
+        $content    = '404';
+        $category   = $this->defaults['category'];
       }
+      $content    = isset($content) ? $content : null;
+      $category   = isset($category) ? $category : $this->defaults['category'];
     } else {
-      $controller = $this->controllers['fault'];
-      $action     = self::DEFAULT_ACTION;
-      $slug       = '404';
+      $role       = $this->defaults['role'];
+      $controller = $this->controllers['message'];
+      $method     = $this->defaults['method'];
+      $content    = '404';
+      $category   = $this->defaults['category'];
     }
 
-    $slug = str_replace(".html", "", $slug);
-    $url  = explode('/', $slug);
-
-    if(count($url) > 1) {
-      $content  = array_pop($url);
-      $category = implode('/', $url);
-    } else {
-      $content  = $slug;
-      $category = null;
-    }
-
-    $this->route = new Router\Route($controller, $action, $content, $category);
+    $this->route = new Router\Route($role, $controller, $method, $content, $category);
 
   }
 
 
+  /**
+   * Checks whether a specific type has a controller
+   *
+   * @param string $type content type (e. g. 'article' or 'page')
+   * @return bool
+   *
+   */
+  public function hasController(string $type): bool {
+    if(array_key_exists($type, $this->controllers)) {
+      $controller = $this->controllers[$type];
+      try {
+        $reflection = new \ReflectionClass($controller);
+        return true;
+      } catch(\ReflectionException $e) { return false; }
+    }
+    return false;
+  }
+
+
+  /**
+   * Checks whether a specific $method is defined in the given $type
+   *
+   * @param string $controller '\Fully\Qualified\ClassName'
+   * @param string $method method name (e. g. 'view', 'create', 'login')
+   * @return bool
+   *
+   */
+  public function hasMethod(string $controller, string $method): bool {
+    try {
+      $reflection = new \ReflectionClass($controller);
+      return $reflection->hasMethod($method);
+    } catch(\ReflectionException $e) { return false; }
+  }
+
+
+  /**
+   *
+   * @param string $type content type (e. g. 'article' or 'page')
+   * @param string $controller '\Fully\Qualified\ClassName'
+   * @return self
+   *
+   */
   public function addController(string $type, string $controller): self {
     if(!$this->hasController($type)) {
       $this->controllers[$type] = $controller;
-      return $this;
     }
+    return $this;
   }
 
 
+  /**
+   *
+   * @param string $type content type (e. g. 'article' or 'page')
+   * @return self
+   *
+   */
   public function deleteController(string $type): self {
     if($this->hasController($type)) { unset($this->controllers[$type]); }
     return $this;
   }
 
 
-  public function hasController(string $type): bool {
-    return array_key_exists($type, $this->controllers);
-  }
-
-
+  /**
+   *
+   * @param void
+   * @return Router\Route a Route instance
+   * @throws Router\RouteNotFoundException if Route not exists
+   *
+   */
   public function dispatch(): Router\Route {
     if(isset($this->route)) {
       return $this->route;

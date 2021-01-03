@@ -27,7 +27,7 @@ class PDO extends \PDO
    * @var array list of pdo drivers what compatibile this implementation
    *
    */
-  protected static $drivers = ['mysql'];
+  const DRIVERS = ['mysql'];
 
   /**
    *
@@ -125,7 +125,7 @@ class PDO extends \PDO
 
     $driver = parent::getAttribute(PDO::ATTR_DRIVER_NAME);
 
-    if(in_array($driver, self::$drivers)) {
+    if(in_array($driver, self::DRIVERS)) {
       $this->driver = $driver;
       return $this;
     } else {

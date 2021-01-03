@@ -1,0 +1,21 @@
+
+        html { font-size: 2vmax; }
+
+        h1, h3, h4, h5 { text-align: center; }
+
+        main, aside, article { width: 100%; }
+
+        aside, article { padding: 1vh 2vw; }
+
+        article > header {
+          padding: 40vh 0 1rem 1rem;
+        }
+
+        nav {
+          display: flex;
+          justify-content: center;
+        }
+
+        nav ul li {
+          float: left;
+        }

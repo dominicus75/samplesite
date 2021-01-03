@@ -1,0 +1,32 @@
+
+        html { font-size: 1.5vmax; }
+
+        h1, h3, h4, h5 { text-align: center; }
+
+        main {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        article {
+          flex: 60%;
+          padding: 2vh 2vw 2vh 1vw;
+        }
+
+        aside {
+          flex: 40%;
+          padding: 2vh 1vw 2vh 2vw;
+        }
+
+        article > header {
+          padding: 45vh 0 2rem 2rem;
+        }
+
+        nav {
+          display: flex;
+          justify-content: center;
+        }
+
+        nav ul li {
+          float: left;
+        }

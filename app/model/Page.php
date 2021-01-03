@@ -32,8 +32,8 @@ class Page extends AbstractModel
 
   public function read(array $url): array {
 
-    $content = $this->select(['url', $url['cid']], [], [['AND', 'type', '=', 'page']]);
-    if(empty($content)) { new Failure(404); }
+    $content = $this->table->select(['url', $url['cid']], [], [['AND', 'type', '=', 'page']]);
+    if(empty($content)) { return []; }
     $aside = new \Application\Element\Aside('http://www.mnb.hu/arfolyamok.asmx?wsdl');
     $content['aside'] = $aside->renderView();
 

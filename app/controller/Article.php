@@ -23,14 +23,11 @@ class Article extends AbstractController
 
   public function __construct(
     Route $route,
-    Request $request,
-    Response $response
+    Request $request
   ){
 
-    parent::__construct($route, $request, $response);
-
     try {
-      $this->model = new \Application\Model\Article(new Config('mysql'), 'contents');
+      parent::__construct($route, $request);
     } catch(\PDOException | InvalidFieldNameException $e) {
       new Fault(500, $e->getMessage());
     }
@@ -38,38 +35,10 @@ class Article extends AbstractController
   }
 
 
-  public function create(): void {
-
-
-
-
-  }
-
-
-  public function read(): void {
-
-    try {
-      $content = $this->model->read(['category' => $this->route->category, 'cid' => $this->route->cid]);
-      $this->view = new \Application\View\Article($content, $this->route->action);
-      $this->response->setBody($this->view->render());
-      $this->response->send();
-    } catch(InvalidFieldNameException $e) {
-      new Fault(500, $e->getMessage());
-    }
-
-  }
-
-
-  public function edit(): void {
-
-
-  }
-
-
-  public function delete(): void {
-
-
-  }
+  public function create(): string {}
+  public function view(): string {}
+  public function edit(): string {}
+  public function delete(): string {}
 
 
 }

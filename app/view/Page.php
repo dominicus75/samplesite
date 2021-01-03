@@ -15,7 +15,7 @@ use \Dominicus75\Templater\{
   FileNotFoundException
 };
 
-class Page extends AbstractView
+class Page extends Site
 {
 
   /**
@@ -23,30 +23,18 @@ class Page extends AbstractView
    *
    * @return void
    */
-  public function __construct(array $content, string $action)
+  public function __construct(string $action, array $content)
   {
 
     try {
 
-      $view = new Skeleton(TPL, CSS, 'skeleton.html');
-      parent::__construct($content, $action, $view);
-      $action = ($action == 'read') ? '' : $action.'.css';
+      $view = new Skeleton(CSS);
+      parent::__construct($action, $view, $content);
+      $this->view->insertHead($action);
+      $this->view->assignComponent('%%header%%', TPL, 'header.tpl');
+      $model = new \Application\Model\Nav();
+      $this->view->insertNav($model->getPages(), $model->getCategories(), TPL.'nav'.DSR);
 
-      $this->view->assignSource('@@head@@', 'head.tpl');
-      $this->view->assignSource('@@meta@@', 'meta.tpl');
-      $this->view->assignCSS('@@common@@', 'common.css');
-      $this->view->assignCSS('@@desktop-common@@', 'desktop'.DSR.'common.css');
-      $this->view->assignCSS('@@desktop-typified@@', 'desktop'.DSR.'page.css');
-      $this->view->assignCSS('@@desktop-action@@', $action);
-      $this->view->assignCSS('@@laptop-common@@', 'laptop'.DSR.'common.css');
-      $this->view->assignCSS('@@laptop-typified@@', 'laptop'.DSR.'page.css');
-      $this->view->assignCSS('@@laptop-action@@', $action);
-      $this->view->assignCSS('@@tablet-common@@', 'tablet'.DSR.'common.css');
-      $this->view->assignCSS('@@tablet-typified@@', 'tablet'.DSR.'page.css');
-      $this->view->assignCSS('@@tablet-action@@', $action);
-      $this->view->assignCSS('@@mobile-common@@', 'mobile'.DSR.'common.css');
-      $this->view->assignCSS('@@mobile-typified@@', 'mobile'.DSR.'page.css');
-      $this->view->assignCSS('@@mobile-action@@', $action);
 
       $this->view->assignSource('@@header@@', 'header.tpl');
       $nav = new \Application\Element\Nav();

@@ -13,17 +13,27 @@ class Route
 
   /**
    *
+   * @var string name of role (visitor|user|admin)
+   * - visitor: an unregistered user, visitor
+   * - user: a registered user without admin permissions
+   * - admin: a registered user with admin permissions
+   *
+   */
+  private ?string $role;
+
+  /**
+   *
    * @var string name of called controller (e. g. 'Application\Controller\Page')
    *
    */
-  private string $controller;
+  private ?string $controller;
 
   /**
    *
    * @var string name of called action (e. g. 'read', 'update', etc.)
    *
    */
-  private string $action;
+  private ?string $method;
 
   /**
    *
@@ -37,7 +47,7 @@ class Route
    * @var string content identifier (e. g. 'index' or 'aboutus', etc)
    *
    */
-  private string $cid;
+  private ?string $cid;
 
   /**
    * Constructor of class Route.
@@ -45,14 +55,16 @@ class Route
    * @return void
    */
   public function __construct(
-    string $controller,
-    string $action,
-    string $cid,
+    ?string $role,
+    ?string $controller,
+    ?string $method,
+    ?string $cid,
     ?string $category = null
   ){
 
+    $this->role       = $role;
     $this->controller = $controller;
-    $this->action     = $action;
+    $this->method     = $method;
     $this->category   = $category;
     $this->cid        = $cid;
 

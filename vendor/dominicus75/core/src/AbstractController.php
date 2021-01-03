@@ -8,11 +8,13 @@
 
 namespace Dominicus75\Core;
 
-use \Dominicus75\Http\{Request, Response};
+use \Dominicus75\Http\Request;
 use \Dominicus75\Templater\Skeleton;
 
 abstract class AbstractController
 {
+
+  use ParameterizableTrait;
 
   /**
    *
@@ -30,13 +32,6 @@ abstract class AbstractController
 
   /**
    *
-   * @var \Dominicus75\Http\Response current response object
-   *
-   */
-  protected Response $response;
-
-  /**
-   *
    * @var \Dominicus75\Core\Model\AbstractModel current model object
    *
    */
@@ -44,17 +39,18 @@ abstract class AbstractController
 
   /**
    *
-   * @var Dominicus75\Core\AbstractView current view object
+   * @var \Dominicus75\Core\AbstractView current view object
    *
    */
   protected AbstractView $view;
 
   /**
    *
-   * @var array optional arguments
+   * @var \Dominicus75\Core\Config instance
    *
    */
-  protected array $arguments;
+  protected Config $config;
+
 
   /**
    *
@@ -62,24 +58,43 @@ abstract class AbstractController
    * @param Request $request
    * @param Response $response
    *
+   * @throws \Dominicus75\Core\Exceptions\DirectoryNotFoundException
+   * @throws \Dominicus75\Core\Exceptions\FileNotFoundException
+   * @throws \PDOException
+   *
    */
   protected function __construct(
     Router\Route $route,
     Request $request,
-    Response $response,
-    array $arguments = []
+    array $parameters = []
   ){
 
     $this->route     = $route;
     $this->request   = $request;
-    $this->response  = $response;
-    $this->arguments = $arguments;
+    $this->setParameters($parameters);
+
+    $controller = explode('\\', $this->route->controller);
+    $configFile = strtolower(end($controller)).'_controller';
+
+    try {
+      $this->config = new Config($configFile);
+      $model = str_replace('Controller', 'Model', $this->route->controller);
+      $table = $this->hasParameter('table') ? $this->getParameter('table') : $this->config->offsetGet('table');
+      $this->model = new $model(new Config('mysql'), $table);
+    } catch(\Throwable $e) { throw $e; }
 
   }
 
-  abstract public function create(): void;
-  abstract public function read(): void;
-  abstract public function edit(): void;
-  abstract public function delete(): void;
+/*  public function read(): ?string {
+
+    try {
+      $content = $this->model->read(['category' => $this->route->category, 'cid' => $this->route->cid]);
+      if(empty($content)) { return null; }
+      $view = str_replace('Controller', 'View', $this->route->controller);
+      $this->view = new $view($this->route->action, $content);
+      return $this->view->render();
+    } catch(\Throwable $e) { return null; }
+
+  }*/
 
 }

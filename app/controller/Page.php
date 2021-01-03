@@ -8,7 +8,7 @@
 
 namespace Application\Controller;
 
-use \Dominicus75\Http\{Request, Response};
+use \Dominicus75\Http\Request;
 use \Dominicus75\Core\{
   AbstractController,
   Config as Config,
@@ -23,14 +23,11 @@ class Page extends AbstractController
 
   public function __construct(
     Route $route,
-    Request $request,
-    Response $response
+    Request $request
   ){
 
-    parent::__construct($route, $request, $response);
-
     try {
-      $this->model = new \Application\Model\Page(new Config('mysql'), 'contents');
+      parent::__construct($route, $request);
     } catch(\PDOException | InvalidFieldNameException $e) {
       new Fault(500, $e->getMessage());
     }
@@ -38,38 +35,10 @@ class Page extends AbstractController
   }
 
 
-  public function create(): void {
-
-
-
-
-  }
-
-
-  public function read(): void {
-
-    try {
-      $content = $this->model->read(['cid' => $this->route->cid]);
-      $this->view = new \Application\View\Page($content, $this->route->action);
-      $this->response->setBody($this->view->render());
-      $this->response->send();
-    } catch(InvalidFieldNameException $e) {
-      new Fault(500, $e->getMessage());
-    }
-
-  }
-
-
-  public function edit(): void {
-
-
-  }
-
-
-  public function delete(): void {
-
-
-  }
+  public function create(): string {}
+  public function view(): string {}
+  public function edit(): string {}
+  public function delete(): string {}
 
 
 }

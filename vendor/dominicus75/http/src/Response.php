@@ -105,10 +105,9 @@ class Response
 
   public function redirect(string $url):void {
 
-    $redirectResponse = new self();
-    $redirectResponse->setStatusCode(301);
-    $redirectResponse->addHeader('Location', $url);
-    $redirectResponse->send();
+    $this->setStatusCode(301);
+    $this->addHeader('Location', $url);
+    $this->send();
 
   }
 

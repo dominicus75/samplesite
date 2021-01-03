@@ -39,15 +39,17 @@ abstract class AbstractView
    * @return void
    */
   protected function __construct(
-    array $content,
     string $action,
-    Skeleton $view
+    Skeleton $view,
+    array $content = []
   ) {
     $this->content = $content;
     $this->action  = $action;
     $this->view    = $view;
   }
 
+
+  protected function read() {}
 
   /**
    *

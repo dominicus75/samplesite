@@ -23,13 +23,13 @@ class Fault extends AbstractView
    *
    * @return void
    */
-  public function __construct(array $content, string $action = 'read')
+  public function __construct(string $action, array $content)
   {
 
     try {
 
       $view = new Skeleton(TPL, CSS, 'skeleton.html');
-      parent::__construct($content, $action, $view);
+      parent::__construct($action, $view, $content);
       $action = ($action == 'read') ? '' : $action.'.css';
 
       $this->view->assignSource('@@head@@', 'head.tpl');
@@ -50,7 +50,7 @@ class Fault extends AbstractView
 
       $this->view->assignSource('@@header@@', 'header.tpl');
       $nav = new \Application\Element\Nav();
-      $this->view->assignTemplate('@@menu@@', $nav->render());
+      $this->view->assignTemplate('@@nav@@', $nav->render());
       $this->view->assignSource('@@aside@@', '');
       $this->view->assignSource('@@main@@', 'fault'.DSR.$this->action.'.tpl');
       $this->view->assignSource('@@footer@@', 'footer.tpl');

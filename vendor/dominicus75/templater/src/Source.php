@@ -23,17 +23,18 @@ class Source
    *
    * @param string $url Fully qualified path name of template file (tpl|html)
    *
-   * @throws \Dominicus75\Templater\FileNotFoundException if the template
+   * @throws \Dominicus75\Templater\Exceptions\FileNotFoundException if the template
    * file does not exists
    *
    */
-  public function __construct(string $url) {
+  public function __construct(string $tplFile) {
 
-    if(is_file($url)) {
-      $this->source = file_get_contents($url);
-    } else { throw new FileNotFoundException($url.' does not exists.'); }
+    if(is_file($tplFile)) {
+      $this->source = file_get_contents($tplFile);
+    } else { throw new Exceptions\FileNotFoundException($tplFile.' does not exists.'); }
 
   }
+
 
   /**
    *

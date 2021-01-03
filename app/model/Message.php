@@ -19,10 +19,10 @@ class Fault extends AbstractModel
    * @return void
    */
 
-  public function __construct(Config $pdoConfig, string $table){
+  public function __construct(Config $pdoConfig, string $table, array $message = []){
 
     try {
-      parent::__construct($pdoConfig, 'faults');
+      parent::__construct($pdoConfig, $table, $message);
     } catch(\PDOException $e) { throw $e; }
 
   }
@@ -31,7 +31,9 @@ class Fault extends AbstractModel
   public function create(): bool {}
 
   public function read(array $url): array {
-    return $this->select(['url', $url['cid']]);
+    $content = $this->table->select(['url', $url['cid']]);
+    $content['message'] = $this->hasParameter('message') ? PHP_EOL."        <p>".$this->getParameter('message')."</p>" : '';
+    return $content;
   }
 
   public function edit(array $url): bool {}

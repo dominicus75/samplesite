@@ -1,0 +1,352 @@
+
+      /* Common css */
+
+
+      /* Begin of reset */
+      html, body, div, span,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      abbr, address, cite, code,
+      del, dfn, em, img, ins,
+      strong, sub, sup, var,
+      b, i, dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tr, th, td,
+      article, aside, canvas, details, figcaption, figure,
+      footer, header, hgroup, menu, nav, section, summary,
+      time, mark, audio, video {
+        margin:0;
+        padding:0;
+        border:0;
+        outline:0;
+        vertical-align:baseline;
+        background:transparent;
+        box-sizing: border-box;
+      }
+
+      body { line-height:1; }
+
+      article,aside,details,figcaption,figure,
+      footer,header,hgroup,menu,nav,section,
+      form,input,label {
+        display:block;
+      }
+
+      ul, li {
+        list-style:none;
+      }
+
+      blockquote, q {
+        quotes:none;
+      }
+
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+        content:'';
+        content:none;
+      }
+
+      a {
+        margin:0;
+        padding:0;
+        font-size:100%;
+        vertical-align:baseline;
+        background:transparent;
+        text-decoration: none;
+      }
+
+      input, select {
+        vertical-align:middle;
+      }
+      /* End of reset */
+
+
+      /*  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome */
+      @font-face {
+        font-family: 'FontAwesome';
+        src: url('/fonts/fontawesome-webfont.eot');
+        src: url('/fonts/fontawesome-webfont.eot') format('embedded-opentype'),
+             url('/fonts/fontawesome-webfont.woff2') format('woff2'),
+             url('/fonts/fontawesome-webfont.woff') format('woff'),
+             url('/fonts/fontawesome-webfont.ttf') format('truetype'),
+             url('/fonts/fontawesome-webfont.svg') format('svg');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      .fa {
+        display: inline-block;
+        text-align: center;
+        font-family: 'FontAwesome';
+        font-variant: normal;
+        font-style: normal;
+        width: 25px;
+        font-size: 1em;
+      }
+
+      .fa-envelope:before { content: "\f0e0"; }
+      .fa-lock:before { content: "\f023"; }
+      .fa-repeat:before { content: "\f01e"; }
+      .fa-user:before { content: "\f007"; }
+      .fa-users:before { content: "\f0c0"; }
+      .fa-tachometer:before { content: "\f0e4"; }
+      .fa-sign-out:before { content: "\f08b"; }
+      .fa-bars:before { content: "\f0c9"; }
+      .fa-file:before { content: "\f15b"; }
+      .fa-home:before { content: "\f015"; }
+      .fa-money:before { content: "\f0d6"; }
+      .fa-globe:before { content: "\f0ac"; }
+      .fa-globe {
+        display: inline;
+      }
+      /* End FontAwesome */
+
+
+      /* Begin of alignments */
+      .textRight { text-align: right; }
+      .textCenter { text-align: center; }
+      .textJustify { text-align: justify; }
+      .floatRight { float: right; }
+      .floatLeft { float: left; }
+      /* End of alignments */
+
+
+      /* Begin of layouts */
+      body {
+        font-family: "Times New Roman", Times, serif;
+        background-color: rgb(5, 153, 253);
+      }
+
+      aside > table {
+        border-collapse: collapse;
+        width: 100%;
+        background-image: url('/images/mnb.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        color: rgb(254, 250, 159);
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+        font-size: 1.5rem;
+      }
+
+      aside > table > caption {
+        margin: 1rem 0;
+        font-size: 2rem;
+      }
+
+      aside > table, th, td {
+        border: 1px solid rgb(254, 250, 159);
+        text-align: center;
+      }
+
+      th, td {
+        padding: 0.5rem;
+      }
+
+      td:nth-child(3) {
+        text-align: right;
+        padding-right: 2rem;
+      }
+
+      th { background-color: rgba(21, 29, 76, 0.75); }
+      td { background-color: rgba(0, 0, 0, 0.4); }
+      tr:hover { background-color: rgba(0, 0, 0, 0.75); }
+
+      article > header {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-image: url('{{image}}');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+
+      footer {
+        background-color: rgb(21, 29, 76);
+        border-top: 1px solid rgb(254, 250, 159);
+        padding: 3rem;
+      }
+      /* End of layouts */
+
+
+      /* Begin of headings and paragraphs */
+      h1, h1 > a {
+        color: rgb(254, 250, 159);
+        font-size: 5rem;
+        text-align: center;
+        vertical-align: middle;
+        text-transform: uppercase;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+      }
+
+      h1 > a:hover,
+      footer > p > a:hover {
+        color: red;
+      }
+
+      h2, h3, h4, h5 {
+        color: rgb(254, 250, 159);
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+      }
+
+      h2 {
+        font-size: 3rem;
+        margin: 1rem auto 1.5rem 0;
+      }
+
+      h3 {
+        font-size: 2.6rem;
+        margin: 1rem 1rem 1rem 0;
+      }
+
+      h4 {
+        font-size: 2.2rem;
+        margin: 1rem 1rem 1rem 0;
+      }
+
+      h5 {
+        font-size: 1.8rem;
+        margin: 1rem 1rem 1rem 0;
+      }
+
+      p.site_slogan, footer > p {
+        color: rgb(254, 250, 159);
+        font-size: 1.6rem;
+        text-align: center;
+        font-style: italic;
+        vertical-align: middle;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+      }
+
+      article > header > p {
+        color: rgb(254, 250, 159);
+        font-weight: bold;
+        font-size: 1.6rem;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+      }
+
+      p {
+        text-align: justify;
+        font-size: 1.4rem;
+      }
+
+      pre {
+        font-size: 1rem;
+      }
+
+      body > header {
+        width: 100%;
+        padding: 3rem 0;
+        background-image: url('/images/background.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        text-align: center;
+      }
+      /* End of headings and paragraphs */
+
+
+      /* Begin of navigation elements */
+      input[type=checkbox]#show-menu, label[for=show-menu], .fa-bars {
+        display: none;
+      }
+
+      nav {
+        background-color: rgb(21, 29, 76);
+        border-top: 1px solid rgb(254, 250, 159);
+        border-bottom: 1px solid rgb(254, 250, 159);
+      }
+
+      nav > * { border: none; }
+
+      nav ul li {
+        padding: 1vh 2vw;
+        position: relative;
+        transition-duration: 0.5s;
+      }
+
+      nav a {
+        color: rgb(254, 250, 159);
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      nav li:hover,
+      nav li:focus-within {
+        color: rgb(21, 29, 76);
+        background-color: red;
+        cursor: pointer;
+      }
+
+      nav li:focus-within a {
+        outline: none;
+      }
+
+      nav ul li ul {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        transition: all 0.5s ease;
+        margin-top: 1vh;
+        left: 0;
+        display: none;
+      }
+
+      nav ul li:hover > ul,
+      nav ul li:focus-within > ul,
+      nav ul li ul:hover,
+      nav ul li ul:focus {
+        background-color: rgb(21, 29, 76);
+        border: 1px solid rgb(254, 250, 159);
+        visibility: visible;
+        opacity: 1;
+        display: list-item;
+      }
+
+      footer > p > a {
+        color: rgb(254, 250, 159);
+      }
+      /* End of navigation elements */
+
+
+      /* Begin of images */
+      figure {
+        margin: 1rem 0;
+      }
+
+      figcaption {
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: rgb(254, 250, 159);
+      }
+
+      img, article > header {
+        border: 1px solid rgb(254, 250, 159);
+      }
+
+      img.left {
+        float: left;
+        margin: 0.5rem 1rem 1rem 0;
+      }
+
+      img.right {
+        float: right;
+        margin: 0.5rem 0 1rem 1rem;
+      }
+
+      img.landscape {
+        margin: 1rem 0;
+        width: 100%;
+      }
+
+      img.portrait {
+        width: 40%;
+      }
+
+      iframe {
+        width: 100%;
+        height: 39vw;
+        margin: 1rem 0;
+        border: 1px solid rgb(254, 250, 159);
+      }
+      /* End of images */
