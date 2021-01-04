@@ -32,11 +32,19 @@ class Router
 
   /**
    *
-   * Associative array, what contains the allowed methods of roles
-   * @var array ['role_name' => 'controllerName' => [0 => 'method0', 1 => 'method1', ... N => 'methodN']]
+   * Associative array, what contains all of methods what controllers have
+   * @var array ['controllerName' => [0 => 'method0', 1 => 'method1', ... N => 'methodN']]
    *
    */
   private array $methods;
+
+  /**
+   *
+   * Associative array, what contains the enabled methods of roles
+   * @var array ['role_name' => 'controllerName' => [0 => 'method0', 1 => 'method1', ... N => 'methodN']]
+   *
+   */
+  private array $enabled;
 
   /**
    *
@@ -71,6 +79,7 @@ class Router
     $this->roles       = $config->offsetGet('roles');
     $this->controllers = $config->offsetGet('controllers');
     $this->methods     = $config->offsetGet('methods');
+    $this->enabled     = $config->offsetGet('enabled');
     $this->defaults    = $config->offsetGet('defaults');
 
     if(preg_match("/^\/?$/i", $requestUri)) {
@@ -85,105 +94,84 @@ class Router
     }
 
     $roles = "\/(?P<role>".implode('|', array_values($this->roles)).")";
+    $type  = "\/(?P<controller>".implode('|', array_keys($this->controllers)).")";
+    $path  = "\/(?P<slug>[a-zA-Z0-9_\-\/]{1,255}(?P<extension>\.[a-z]{2,4})?)$";
 
     if(preg_match("/^".$roles."/i", $requestUri, $matches)) {
-      $role    = $matches['role'];
-      $pattern = "\/".$role;
-      $actn    = "\/(?P<action>".implode('|', array_values($this->methods[$role][$role])).")(?P<extension>\.[a-z]{2,4})?";
-      if(preg_match("/^".$pattern.$actn."$/i", $requestUri, $matches)) {
-        $this->route = new Router\Route(
-          $role,
-          $this->controllers[$role],
-          $matches['action'],
-          null,
-          null
-        );
-        return $this;
-      } elseif(preg_match("/^".$pattern."\/[a-zA-Z0-9_-]+(\.[a-z]{2,4})?$/i", $requestUri, $matches)) {
-        $this->route = new Router\Route(
-          $this->defaults['role'],
-          $this->controllers['message'],
-          $this->defaults['method'],
-          '403',
-          $this->defaults['category']
-        );
-        return $this;
+      $role       = $matches['role'];
+      $requestUri = str_replace('/'.$role, '', $requestUri);
+      $actn       = "\/(?P<action>[^\/.]{1,32})(?P<extension>\.[a-z]{2,4})?";
+      if(preg_match("/^".$actn."$/i", $requestUri, $matches)) {
+        $controller = $role;
+        $action     = $matches['action'];
+        $ext        = isset($matches['extension']) ? $matches['extension'] : '';
+        $requestUri = str_replace('/'.$action.$ext, '', $requestUri);
       }
-    } else {
-      $role    = $this->defaults['role'];
-      $pattern = "";
-    }
+    } else { $role  = $this->defaults['role']; }
 
-    $type = "\/(?P<controller>".implode('|', array_keys($this->methods[$role])).")";
-
-    if(preg_match("/^".$pattern.$type."/i", $requestUri, $matches)) {
+    if(!empty($requestUri) && preg_match("/^".$type."/i", $requestUri, $matches)) {
       $controller = $matches['controller'];
-      $pattern   .= "\/".$controller;
-      $actn = "\/(?P<action>".implode('|', array_values($this->methods[$role][$controller])).")(?P<extension>\.[a-z]{2,4})?";
-      if(preg_match("/^".$pattern.$actn."/i", $requestUri, $matches)) {
+      $requestUri = str_replace('/'.$controller, '', $requestUri);
+      $actn       = "\/(?P<action>".implode('|', array_values($this->methods[$controller])).")(?P<extension>\.[a-z]{2,4})?";
+      if(preg_match("/^".$actn."/i", $requestUri, $matches)) {
+        $action   = $matches['action'];
+        $ext      = isset($matches['extension']) ? $matches['extension'] : '';
         if(isset($matches['extension'])) {
-          $this->route = new Router\Route(
-            $role,
-            $this->controllers[$controller],
-            $matches['action'],
-            null,
-            null
-          );
-          return $this;
-        } else {
-          $action   = $matches['action'];
-          $pattern .= "\/".$action;
+          $category = null;
+          $content  = null;
         }
-      } else {
-        $this->route = new Router\Route(
-          $this->defaults['role'],
-          $this->controllers['message'],
-          $this->defaults['method'],
-          '403',
-          $this->defaults['category']
-        );
-        return $this;
+        $requestUri = str_replace('/'.$action.$ext, '', $requestUri);
       }
     }
 
-    $path = "\/(?P<slug>[a-zA-Z0-9_\-\/]{1,255}(?P<extension>\.[a-z]{2,4})?)";
-
-    if(preg_match("/^".$pattern.$path."/i", $requestUri, $matches)) {
-
+    if(!empty($requestUri) && preg_match("/^".$path."/i", $requestUri, $matches)) {
       $uri = explode('/', $matches['slug']);
       $ext = isset($matches['extension']) ? $matches['extension'] : '';
-
       if(count($uri) > 1){
         if(!isset($controller)) {
           $controller = preg_match("/\.html$/i", end($uri)) ? 'article' : 'category';
         }
-        $slug       = array_pop($uri);
-        $content    = str_replace($ext, "", $slug);
-        $category   = implode('/', $uri);
+        $slug     = array_pop($uri);
+        $content  = str_replace($ext, "", $slug);
+        $category = implode('/', $uri);
       } else {
         if(!isset($controller)) {
           $controller = preg_match("/\.html$/i", $uri[0]) ? 'page' : 'category';
         }
-        $content    = str_replace(".html", "", $uri[0]);
-        $category   = null;
+        $content  = str_replace(".html", "", $uri[0]);
+        $category = null;
       }
-
-      $action = isset($action) ? $action : $this->defaults['method'];
-
     }
 
+    $action = isset($action) ? $action : $this->defaults['method'];
+
     if($this->hasController($controller)) {
-      $controller = $this->controllers[$controller];
-      if($this->hasMethod($controller, $action)) {
-        $method     = $action;
+      if(array_key_exists($controller, $this->enabled[$role])) {
+        if($this->hasMethod($this->controllers[$controller], $action)) {
+          if(in_array($action, $this->enabled[$role][$controller])) {
+            $controller = $this->controllers[$controller];
+            $method = $action;
+          } else {
+            $role       = $this->defaults['role'];
+            $controller = $this->controllers['message'];
+            $method     = $this->defaults['method'];
+            $content    = '403';
+            $category   = $this->defaults['category'];
+          }
+        } else {
+          $role       = $this->defaults['role'];
+          $controller = $this->controllers['message'];
+          $method     = $this->defaults['method'];
+          $content    = '404';
+          $category   = $this->defaults['category'];
+        }
       } else {
+        $role       = $this->defaults['role'];
         $controller = $this->controllers['message'];
         $method     = $this->defaults['method'];
-        $content    = '404';
+        $content    = '403';
         $category   = $this->defaults['category'];
       }
-      $content    = isset($content) ? $content : null;
-      $category   = isset($category) ? $category : $this->defaults['category'];
     } else {
       $role       = $this->defaults['role'];
       $controller = $this->controllers['message'];
@@ -191,6 +179,9 @@ class Router
       $content    = '404';
       $category   = $this->defaults['category'];
     }
+
+    $content  = isset($content) ? $content : null;
+    $category = isset($category) ? $category : $this->defaults['category'];
 
     $this->route = new Router\Route($role, $controller, $method, $content, $category);
 

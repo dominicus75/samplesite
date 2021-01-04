@@ -1,6 +1,5 @@
 <?php
 /*
- * @file AbstractModel.php
  * @package Core
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
@@ -101,9 +100,9 @@ abstract class AbstractModel
 
   }
 
-  abstract public function create(): bool;
+  abstract public function create(array $content): bool;
   abstract public function read(array $url): array;
-  abstract public function edit(array $url): bool;
+  abstract public function edit(array $url, array $updated): bool;
   abstract public function delete(array $url): bool;
 
 }

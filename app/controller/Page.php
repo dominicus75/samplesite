@@ -22,12 +22,11 @@ class Page extends AbstractController
 {
 
   public function __construct(
-    Route $route,
-    Request $request
+    Route $route
   ){
 
     try {
-      parent::__construct($route, $request);
+      parent::__construct($route);
     } catch(\PDOException | InvalidFieldNameException $e) {
       new Fault(500, $e->getMessage());
     }

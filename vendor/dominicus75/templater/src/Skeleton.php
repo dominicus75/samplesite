@@ -57,7 +57,7 @@ class Skeleton extends Component {
       } catch(Exceptions\DirectoryNotFoundException | Exceptions\FileNotFoundException $e) { throw $e; }
 
     } else {
-      throw new \Exceptions\DirectoryNotFoundException($cssDir.' does not exists.');
+      throw new Exceptions\DirectoryNotFoundException($cssDir.' does not exists.');
     }
 
   }

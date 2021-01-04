@@ -27,7 +27,7 @@ class Stream implements \Psr\HttpMessage\StreamInterface
     } else if(is_resource($input)) {
       $stream = $input;
     } else {
-      throw new \InvalidArgumentException(
+      throw new InvalidArgumentException(
         'First argument to Stream::__construct() must be a string or resource.'
       );
     }
@@ -102,11 +102,11 @@ class Stream implements \Psr\HttpMessage\StreamInterface
     if (!isset($this->stream)) { throw new \RuntimeException('Stream is detached'); }
 
     if (!$this->isSeekable()) {
-      throw new \RuntimeException('Stream is not seekable');
+      throw new RuntimeException('Stream is not seekable');
     }
 
     if (-1 === fseek($this->stream, $offset, $whence)) {
-      throw new \RuntimeException('Unable to seek to stream position '.$offset.' with whence '.$whence);
+      throw new RuntimeException('Unable to seek to stream position '.$offset.' with whence '.$whence);
     }
 
   }
@@ -114,7 +114,7 @@ class Stream implements \Psr\HttpMessage\StreamInterface
 
   public function rewind(): void {
 
-    if (!isset($this->stream)) { throw new \RuntimeException('Stream is detached'); }
+    if (!isset($this->stream)) { throw new RuntimeException('Stream is detached'); }
     $this->seek(0);
 
   }
@@ -128,14 +128,14 @@ class Stream implements \Psr\HttpMessage\StreamInterface
 
   public function write(string $string): int {
 
-    if (!isset($this->stream)) { throw new \RuntimeException('Stream is detached'); }
+    if (!isset($this->stream)) { throw new RuntimeException('Stream is detached'); }
 
     if (!$this->isWritable()) {
-      throw new \RuntimeException('Cannot write to a non-writable stream');
+      throw new RuntimeException('Cannot write to a non-writable stream');
     }
 
     if (false === $result = fwrite($this->stream, $string)) {
-      throw new \RuntimeException('Unable to write to stream');
+      throw new RuntimeException('Unable to write to stream');
     }
 
     return $result;
@@ -151,13 +151,13 @@ class Stream implements \Psr\HttpMessage\StreamInterface
 
   public function read(int $length): string {
 
-    if (!isset($this->stream)) { throw new \RuntimeException('Stream is detached'); }
-    if (!$this->readable) { throw new \RuntimeException('Cannot read from non-readable stream'); }
-    if ($length < 0) { throw new \RuntimeException('Length parameter cannot be negative'); }
+    if (!isset($this->stream)) { throw new RuntimeException('Stream is detached'); }
+    if (!$this->readable) { throw new RuntimeException('Cannot read from non-readable stream'); }
+    if ($length < 0) { throw new RuntimeException('Length parameter cannot be negative'); }
     if (0 === $length) { return ''; }
 
     if (false === $result = fread($this->stream, $length)) {
-      throw new \RuntimeException('Unable to read from stream');
+      throw new RuntimeException('Unable to read from stream');
     }
 
     return $result;
@@ -168,11 +168,11 @@ class Stream implements \Psr\HttpMessage\StreamInterface
   public function getContents(): string {
 
     if (!isset($this->stream)) {
-      throw new \RuntimeException('Stream is detached');
+      throw new RuntimeException('Stream is detached');
     }
 
     if (false === $result = stream_get_contents($this->stream)) {
-      throw new \RuntimeException('Unable to read stream contents');
+      throw new RuntimeException('Unable to read stream contents');
     }
 
     return $result;

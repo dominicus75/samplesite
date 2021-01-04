@@ -23,7 +23,7 @@ trait MessageTrait
 
     foreach($headers as $key => $value){
       if(!$this->addHeader($key, $value)){
-        throw new \InvalidArgumentException("The $key header is already exists.");
+        throw new InvalidArgumentException("The $key header is already exists.");
       }
     }
 

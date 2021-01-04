@@ -25,13 +25,6 @@ abstract class AbstractController
 
   /**
    *
-   * @var \Dominicus75\Http\Request current request object
-   *
-   */
-  protected Request $request;
-
-  /**
-   *
    * @var \Dominicus75\Core\Model\AbstractModel current model object
    *
    */
@@ -55,8 +48,7 @@ abstract class AbstractController
   /**
    *
    * @param Router\Route $route current route instance
-   * @param Request $request
-   * @param Response $response
+   * @param array $parameters optional parameters of this controller
    *
    * @throws \Dominicus75\Core\Exceptions\DirectoryNotFoundException
    * @throws \Dominicus75\Core\Exceptions\FileNotFoundException
@@ -65,12 +57,10 @@ abstract class AbstractController
    */
   protected function __construct(
     Router\Route $route,
-    Request $request,
     array $parameters = []
   ){
 
     $this->route     = $route;
-    $this->request   = $request;
     $this->setParameters($parameters);
 
     $controller = explode('\\', $this->route->controller);
@@ -78,23 +68,11 @@ abstract class AbstractController
 
     try {
       $this->config = new Config($configFile);
-      $model = str_replace('Controller', 'Model', $this->route->controller);
+      $model = $this->hasParameter('model') ? $this->getParameter('model') : $this->config->offsetGet('model');
       $table = $this->hasParameter('table') ? $this->getParameter('table') : $this->config->offsetGet('table');
-      $this->model = new $model(new Config('mysql'), $table);
+      $this->model  = new $model(new Config('mysql'), $table);
     } catch(\Throwable $e) { throw $e; }
 
   }
-
-/*  public function read(): ?string {
-
-    try {
-      $content = $this->model->read(['category' => $this->route->category, 'cid' => $this->route->cid]);
-      if(empty($content)) { return null; }
-      $view = str_replace('Controller', 'View', $this->route->controller);
-      $this->view = new $view($this->route->action, $content);
-      return $this->view->render();
-    } catch(\Throwable $e) { return null; }
-
-  }*/
 
 }

@@ -12,19 +12,7 @@ use \Dominicus75\Templater\Skeleton;
 abstract class AbstractView
 {
 
-  /**
-   *
-   * @var array The renderable contents
-   *
-   */
-  protected array $content;
-
-  /**
-   *
-   * @var string action (e. g. 'create', 'delete', default: 'read')
-   *
-   */
-  protected string $action;
+  use ParameterizableTrait;
 
   /**
    *
@@ -34,22 +22,27 @@ abstract class AbstractView
   protected Skeleton $view;
 
   /**
+   *
+   * @var array The renderable contents
+   *
+   */
+  protected array $content;
+
+  /**
    * Constructor of class AbstractView.
    *
    * @return void
    */
   protected function __construct(
-    string $action,
+    array $contentParameters,
     Skeleton $view,
     array $content = []
   ) {
-    $this->content = $content;
-    $this->action  = $action;
+    $this->setParameters($contentParameters);
     $this->view    = $view;
+    $this->content = $content;
   }
 
-
-  protected function read() {}
 
   /**
    *
@@ -60,7 +53,8 @@ abstract class AbstractView
    */
   public function render(): string {
     try {
-      return $this->view->render();
+      $this->view->render();
+      return $this->view->getSource();
     } catch(\RuntimeException $e) { throw $e; }
   }
 

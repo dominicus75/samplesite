@@ -61,11 +61,11 @@ class Request
       if(!is_null($files)) {
         try {
           $this->files = UploadedFileFactory::createFromGlobals($files);
-        } catch(\InvalidArgumentException $e){ throw $e; }
+        } catch(InvalidArgumentException $e){ throw $e; }
       }
 
 
-    } catch(\InvalidArgumentException $e) { throw $e; }
+    } catch(InvalidArgumentException $e) { throw $e; }
 
   }
 

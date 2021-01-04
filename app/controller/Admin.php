@@ -18,12 +18,11 @@ use \Dominicus75\Core\{
   Model\InvalidStatementException as InvalidStatementException
 };
 
-class User extends AbstractController
+class Admin extends AbstractController
 {
 
   public function __construct(
-    Route $route,
-    Request $request
+    Route $route
   ){
 
     try {

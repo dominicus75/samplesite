@@ -22,8 +22,7 @@ class Article extends AbstractController
 {
 
   public function __construct(
-    Route $route,
-    Request $request
+    Route $route
   ){
 
     try {

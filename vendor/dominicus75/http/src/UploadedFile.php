@@ -46,7 +46,7 @@ class UploadedFile implements \Psr\Http\Message\UploadedFileInterface
       $this->size = $file['size'];
 
     } else {
-      throw new \InvalidArgumentException(self::ERROR_MESSAGES[$file['error']]);
+      throw new InvalidArgumentException(self::ERROR_MESSAGES[$file['error']]);
     }
 
   }
@@ -65,7 +65,7 @@ class UploadedFile implements \Psr\Http\Message\UploadedFileInterface
                     : move_uploaded_file($this->tmp_name, $target);
 
     if (false === $this->moved) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         sprintf('Uploaded file could not be moved to %s', $target)
       );
     }

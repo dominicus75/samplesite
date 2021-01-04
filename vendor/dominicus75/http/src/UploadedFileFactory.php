@@ -24,9 +24,7 @@ class UploadedFileFactory
       if (!is_array($file['error'])) {
         try {
           $parsed[$field] = new UploadedFile($file);
-        } catch(\InvalidArgumentException $e) {
-          throw $e;
-        }
+        } catch(InvalidArgumentException $e) { throw $e; }
       } else {
         $subArray = [];
         foreach ($file['error'] as $fileIndex => $error) {
@@ -37,9 +35,7 @@ class UploadedFileFactory
           $subArray[$fileIndex]['size']     = $file['size'][$fileIndex];
           try {
             $parsed[$field] = static::createFromGlobals($subArray);
-          } catch(\InvalidArgumentException $e) {
-            throw $e;
-          }
+          } catch(InvalidArgumentException $e) { throw $e; }
         }
       }
     }

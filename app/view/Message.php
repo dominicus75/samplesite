@@ -15,7 +15,7 @@ use \Dominicus75\Templater\{
 };
 use \Dominicus75\Core\AbstractView;
 
-class Fault extends AbstractView
+class Message extends AbstractView
 {
 
   /**
@@ -28,39 +28,21 @@ class Fault extends AbstractView
 
     try {
 
-      $view = new Skeleton(TPL, CSS, 'skeleton.html');
+      $view = new Skeleton(CSS);
       parent::__construct($action, $view, $content);
-      $action = ($action == 'read') ? '' : $action.'.css';
+      $this->view->insertHead('message');
+      $this->view->assignComponent('%%header%%', TPL, 'header.tpl');
+//      $model = new \Application\Model\Nav();
+//      $this->view->insertNav($model->getPages(), $model->getCategories(), TPL.'nav'.DSR);
 
-      $this->view->assignSource('@@head@@', 'head.tpl');
-      $this->view->assignSource('@@meta@@', '');
-      $this->view->assignCSS('@@common@@', 'common.css');
-      $this->view->assignCSS('@@desktop-common@@', 'desktop'.DSR.'common.css');
-      $this->view->assignCSS('@@desktop-typified@@', 'desktop'.DSR.'fault.css');
-      $this->view->assignCSS('@@desktop-action@@', $action);
-      $this->view->assignCSS('@@laptop-common@@', 'laptop'.DSR.'common.css');
-      $this->view->assignCSS('@@laptop-typified@@', 'laptop'.DSR.'fault.css');
-      $this->view->assignCSS('@@laptop-action@@', $action);
-      $this->view->assignCSS('@@tablet-common@@', 'tablet'.DSR.'common.css');
-      $this->view->assignCSS('@@tablet-typified@@', 'tablet'.DSR.'fault.css');
-      $this->view->assignCSS('@@tablet-action@@', $action);
-      $this->view->assignCSS('@@mobile-common@@', 'mobile'.DSR.'common.css');
-      $this->view->assignCSS('@@mobile-typified@@', 'mobile'.DSR.'fault.css');
-      $this->view->assignCSS('@@mobile-action@@', $action);
-
-      $this->view->assignSource('@@header@@', 'header.tpl');
-      $nav = new \Application\Element\Nav();
-      $this->view->assignTemplate('@@nav@@', $nav->render());
-      $this->view->assignSource('@@aside@@', '');
-      $this->view->assignSource('@@main@@', 'fault'.DSR.$this->action.'.tpl');
-      $this->view->assignSource('@@footer@@', 'footer.tpl');
-      $this->view->buildLayout();
+      $this->view->assignComponent('%%aside%%', '');
+      $this->view->assignComponent('%%main%%', 'message'.DSR.$this->action.'.tpl');
+      $this->view->assignComponent('%%footer%%', 'footer.tpl');
 
       $this->view->setVariables([
         '{{title}}' => $content['title'],
         '{{description}}' => $content['description'],
-        '{{image}}' => $content['image'],
-        '{{error}}' => $content['message']
+        '{{image}}' => $content['image']
       ]);
 
     } catch(DirectoryNotFoundException | FileNotFoundException $e) { throw $e; }

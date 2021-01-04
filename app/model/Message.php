@@ -1,6 +1,5 @@
 <?php
 /*
- * @file Fault.php
  * @package samplesite
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
@@ -10,7 +9,7 @@ namespace Application\Model;
 
 use \Dominicus75\Core\{Config as Config, Model\AbstractModel as AbstractModel};
 
-class Fault extends AbstractModel
+class Message extends AbstractModel
 {
 
   /**
@@ -22,13 +21,13 @@ class Fault extends AbstractModel
   public function __construct(Config $pdoConfig, string $table, array $message = []){
 
     try {
-      parent::__construct($pdoConfig, $table, $message);
+      parent::__construct($pdoConfig, $table);
     } catch(\PDOException $e) { throw $e; }
 
   }
 
 
-  public function create(): bool {}
+  public function create(array $content): bool {}
 
   public function read(array $url): array {
     $content = $this->table->select(['url', $url['cid']]);
@@ -36,7 +35,7 @@ class Fault extends AbstractModel
     return $content;
   }
 
-  public function edit(array $url): bool {}
+  public function edit(array $url, array $updated): bool {}
   public function delete(array $url): bool {}
 
 }

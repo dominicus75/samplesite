@@ -26,8 +26,8 @@ class Nav extends Component {
 
   /**
    *
-   * @param array list of pages
-   * @param array recursive list of categories (with subcategories)
+   * @param array $menu list of pages and recursive list of categories (with subcategories)
+   * in form ['pages' => [], 'categories' => []]
    * @param string $templateDirectory Fully qualified path name of tpl root e. g. '/theme/default/'
    *
    * @throws \Dominicus75\Templater\Exceptions\DirectoryNotFoundException
@@ -37,16 +37,16 @@ class Nav extends Component {
    *
    */
   public function __construct(
-    array $pages,
-    array $categories,
+    array $menu,
     string $templateDirectory = ''
   ){
 
     try {
       parent::__construct('nav.tpl', $templateDirectory);
-      $this->pages      = $pages;
-      $this->categories = $categories;
-      $this->assignText('@@menu@@', $this->buildMenu());
+      $this->pages      = $menu['pages'];
+      $this->categories = $menu['categories'];
+      $this->source     = empty($menu['categories']) ? $this->buildPages() : $this->buildMenu();
+      $this->assignText('@@menu@@', $this->getSource());
     } catch(Exceptions\DirectoryNotFoundException | Exceptions\FileNotFoundException $e) { throw $e; }
 
   }

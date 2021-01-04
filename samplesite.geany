@@ -28,11 +28,8 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=3
-FILE_NAME_0=3551;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fcore%2Fsrc%2FRouter.php;0;2
-FILE_NAME_1=835;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FFrontController.php;0;2
-FILE_NAME_2=1719;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Fcore%2Fsrc%2FRouter%2Fconfig.php;0;2
-FILE_NAME_3=1591;SQL;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Famdg.sql;0;2
+current_page=0
+FILE_NAME_0=0;SQL;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Famdg.sql;0;2
 
 [VTE]
 last_dir=/opt/lampp/htdocs/samplesite

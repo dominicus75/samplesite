@@ -20,6 +20,17 @@ return [
     'page'      => '\Application\Controller\Page'
   ],
   'methods' => [
+    'ajax'      => ['get', 'post'],
+    'article'   => ['create', 'view', 'edit', 'delete'],
+    'category'  => ['create', 'view', 'edit', 'delete'],
+    'message'   => ['create', 'view', 'edit', 'delete'],
+    'user'      => ['create', 'view', 'edit', 'delete', 'login', 'logout', 'register'],
+    'admin'     => ['login', 'logout'],
+    'profile'   => ['create', 'view', 'edit', 'delete'],
+    'dashboard' => ['view'],
+    'page'      => ['create', 'view', 'edit', 'delete']
+  ],
+  'enabled' => [
     'visitor' => [
       'ajax'      => ['get', 'post'],
       'article'   => ['view'],
