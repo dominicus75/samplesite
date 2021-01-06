@@ -43,9 +43,9 @@ class Nav extends Component {
 
     try {
       parent::__construct('nav.tpl', $templateDirectory);
-      $this->pages      = $menu['pages'];
-      $this->categories = $menu['categories'];
-      $this->source     = empty($menu['categories']) ? $this->buildPages() : $this->buildMenu();
+      $this->pages      = $menu[0];
+      $this->categories = $menu[1];
+      $this->source     = empty($menu[1]) ? $this->buildPages() : $this->buildMenu();
       $this->assignText('@@menu@@', $this->getSource());
     } catch(Exceptions\DirectoryNotFoundException | Exceptions\FileNotFoundException $e) { throw $e; }
 

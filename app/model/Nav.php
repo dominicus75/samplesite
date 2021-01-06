@@ -7,16 +7,8 @@
 
 namespace Application\Model;
 
-use \Dominicus75\Core\{
-  Config,
-  Model\AbstractModel,
-  Model\PDO
-};
-use \Dominicus75\Templater\{
-  TemplateIterator,
-  IterativeTemplate,
-  FileNotFoundException
-};
+use \Dominicus75\Config\Config;
+use \Dominicus75\Model\{AbstractModel, PDO};
 
 class Nav
 {
@@ -25,7 +17,7 @@ class Nav
 
   /**
    *
-   * @var \Dominicus75\Core\Model\PDO
+   * @var \Dominicus75\Model\PDO
    *
    */
   private PDO $pdo;
@@ -60,9 +52,9 @@ class Nav
 
   private function setPages(): self {
 
-    if($this->pdo->hasTable('contents')) {
+    if($this->pdo->hasTable('pages')) {
 
-      $statement = $this->pdo->query("SELECT `url`, `title` FROM `contents` WHERE `type` = 'page' ");
+      $statement = $this->pdo->query("SELECT `url`, `title` FROM `pages`");
 
       if($statement->execute()) {
         if($pages = $statement->fetchAll()) {
@@ -78,6 +70,8 @@ class Nav
         throw new \PDOException('PDOStatement::execute() function returned with false');
       }
 
+    } else {
+      throw new \PDOExpection('the specified pages table not found');
     }
 
   }

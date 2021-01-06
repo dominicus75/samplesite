@@ -7,17 +7,16 @@
 
 namespace Application\Controller;
 
-use \Dominicus75\Http\{Request, Response};
-use \Dominicus75\Core\{
-  AbstractController,
-  Config as Config,
-  Router\Route as Route,
-  Model\ContentNotFoundException as ContentNotFoundException,
-  Model\InvalidFieldNameException as InvalidFieldNameException,
-  Model\InvalidStatementException as InvalidStatementException
+use \Dominicus75\Http\Request;
+use \Dominicus75\Config\Config;
+use \Dominicus75\Router\Route;
+use \Dominicus75\Model\{
+  ContentNotFoundException,
+  InvalidFieldNameException,
+  InvalidStatementException
 };
 
-class Category extends AbstractController
+class Category
 {
 
   public function __construct(

@@ -1,11 +1,11 @@
 <?php
 /*
- * @file DirectoryNotFoundException.php
+ * @file InvalidStatementException.php
  * @package Core
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core\Exceptions;
+namespace Dominicus75\Model;
 
-class DirectoryNotFoundException extends \RuntimeException { }
+class InvalidStatementException extends \InvalidArgumentException { }

@@ -7,13 +7,14 @@
  */
 
 namespace Application\View;
+
+use \Application\Core\AbstractView;
 use \Dominicus75\Templater\{
   Skeleton,
   DirectoryNotFoundException,
   FileNotFoundException
 };
 
-use \Dominicus75\Core\AbstractView;
 
 class Article extends AbstractView
 {

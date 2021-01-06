@@ -7,7 +7,7 @@
 
 namespace Application\View;
 
-use \Dominicus75\Core\AbstractView;
+use \Application\Core\AbstractView;
 use \Dominicus75\Templater\{
   Skeleton,
   DirectoryNotFoundException,

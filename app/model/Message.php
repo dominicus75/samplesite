@@ -7,7 +7,8 @@
 
 namespace Application\Model;
 
-use \Dominicus75\Core\{Config as Config, Model\AbstractModel as AbstractModel};
+use \Dominicus75\Config\Config;
+use \Dominicus75\Model\AbstractModel;
 
 class Message extends AbstractModel
 {
@@ -22,6 +23,7 @@ class Message extends AbstractModel
 
     try {
       parent::__construct($pdoConfig, $table);
+      if(!empty($message)) { $this->content = $message; }
     } catch(\PDOException $e) { throw $e; }
 
   }
@@ -30,9 +32,10 @@ class Message extends AbstractModel
   public function create(array $content): bool {}
 
   public function read(array $url): array {
-    $content = $this->table->select(['url', $url['cid']]);
-    $content['message'] = $this->hasParameter('message') ? PHP_EOL."        <p>".$this->getParameter('message')."</p>" : '';
-    return $content;
+    if(empty($this->content)) {
+      $this->content = $this->table->select(['url', $url['cid']]);
+    }
+    return $this->content;
   }
 
   public function edit(array $url, array $updated): bool {}

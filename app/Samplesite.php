@@ -12,7 +12,7 @@ class Samplesite
 
   private \Dominicus75\Http\Request $request;
   private \Dominicus75\Http\Response $response;
-  private \Dominicus75\Core\Router\Route $route;
+  private \Dominicus75\Router\Route $route;
   private Object $controller;
 
   public function __construct() {
@@ -25,11 +25,13 @@ class Samplesite
 
       $this->request  = new \Dominicus75\Http\Request($get, $post, $files);
       $this->response = new \Dominicus75\Http\Response();
-      $router         = new \Dominicus75\Core\Router($this->request->getUri());
+      $router         = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
       $this->route    = $router->dispatch();
-echo "<pre>";
-var_dump($this->route);
-echo "</pre>";
+      unset($router);
+//echo "<pre>";
+//var_dump($this);
+//var_dump(new \Dominicus75\Router\Mapper(new \Dominicus75\Config\Config('mapper')));
+//echo "</pre>";
 
       /*switch($this->route->controller) {
         case '\Application\Controller\Message':
@@ -69,59 +71,20 @@ echo "</pre>";
 
   public function run() {
 
-?>
 
-<ul>
-  <li><a href="/">/</a></li>
-  <li><a href="/oldal.html">/oldal.html</a></li>
-  <li><a href="/kategoria">/kategoria</a></li>
-  <li><a href="/kategoria/alkategoria">/kategoria/alkategoria</a></li>
-  <li><a href="/kategoria/oldal.html">/kategoria/oldal.html</a></li>
-  <li><a href="/kategoria/alkategoria/oldal.html">/kategoria/alkategoria/oldal.html</a></li>
-  <li><a href="/ajax/get/valami.json">/ajax/get/valami.json</a></li>
-  <li><a href="/ajax/get/user/profile/gipsz-jakab.json">/ajax/get/user/profile/gipsz-jakab.json</a></li>
-  <li><a href="/ajax/post/valami.json">/ajax/post/valami.json</a></li>
-  <li><a href="/message/404.html">/message/404.html</a></li>
-  <li><a href="/page/create.html">/page/create.html</a></li>
-  <li><a href="/login.html">/login.html</a></li>
-</ul>
-<br>
-<ul>
-  <li><a href="/user/register.html">/user/register.html</a></li>
-  <li><a href="/user/login.html">/user/login.html</a></li>
-  <li><a href="/user/logout.html">/user/logout.html</a></li>
-  <li><a href="/user/create.html">/user/create.html</a></li>
-  <li><a href="/admin/register.html">/admin/register.html</a></li>
-  <li><a href="/admin/login.html">/admin/login.html</a></li>
-  <li><a href="/admin/logout.html">/admin/logout.html</a></li>
-  <li><a href="/user/profile/view/gipsz-jakab.html">/user/profile/view/gipsz-jakab.html</a></li>
-  <li><a href="/user/profile/edit/gipsz-jakab.html">/user/profile/edit/gipsz-jakab.html</a></li>
-  <li><a href="/user/profile/delete/gipsz-jakab.html">/user/profile/delete/gipsz-jakab.html</a></li>
-  <li><a href="/user/article/create.html">/user/article/create.html</a></li>
-  <li><a href="/user/page/create.html">/user/page/create.html</a></li>
-  <li><a href="/user/page/edit/valami-cikk.html">/user/page/edit/valami-cikk.html</a></li>
-  <li><a href="/user/page/delete/valami-cikk.html">/user/page/delete/valami-cikk.html</a></li>
-  <li><a href="/admin/article/create.html">/admin/article/create.html</a></li>
-  <li><a href="/admin/article/edit/kategoria/alkategoria/valami-cikk.html">/admin/article/edit/kategoria/alkategoria/valami-cikk.html</a></li>
-  <li><a href="/admin/article/delete/kategoria/alkategoria/valami-cikk.html">/admin/article/delete/kategoria/alkategoria/valami-cikk.html</a></li>
-  <li><a href="/admin/article/view/kategoria/alkategoria/valami-cikk.html">/admin/article/view/kategoria/alkategoria/valami-cikk.html</a></li>
-  <li><a href="/">/</a></li>
-  <li><a href="/">/</a></li>
-</ul>
+$skeleton = new \Dominicus75\Templater\Skeleton(CSS);
+//$skeleton->insertHead('page');
+//$skeleton->assignComponent('%%header%%', TPL, 'header.tpl');
+//$model = new \Application\Model\Nav();
+//$skeleton->insertNav(['pages' => $model->getPages(), 'categories' => $model->getCategories()], TPL.'nav'.DSR);*/
 
+//$nav = new \Dominicus75\Templater\Nav([$model->getPages(), $model->getCategories()], TPL.'nav'.DSR);
 
-<?php
-
-/*$skeleton = new \Dominicus75\Templater\Skeleton(CSS);
-$skeleton->insertHead('page');
-$skeleton->assignComponent('%%header%%', TPL, 'header.tpl');
-$model = new \Application\Model\Nav();
-$skeleton->insertNav($model->getPages(), $model->getCategories(), TPL.'nav'.DSR);
-
-//$nav = new \Dominicus75\Templater\Nav($model->getPages(), $model->getCategories(), TPL.'nav'.DSR);
-
-//var_dump($skeleton->getSource());
-echo $skeleton->getSource();*/
+//echo $skeleton->getSource();
+echo "<pre>";
+var_dump($skeleton);
+//var_dump(new \Dominicus75\Router\Mapper(new \Dominicus75\Config\Config('mapper')));
+echo "</pre>";
 
     //$this->response->setBody($responseBody);
     //$this->response->send();

@@ -5,9 +5,12 @@
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core;
+namespace Application\Core;
 
-use \Dominicus75\Templater\Skeleton;
+use \Dominicus75\Templater\{
+  Skeleton,
+  Exceptions\NotRenderableException as NotRenderableException
+};
 
 abstract class AbstractView
 {
@@ -29,6 +32,13 @@ abstract class AbstractView
   protected array $content;
 
   /**
+   *
+   * @var array optional parameters
+   *
+   */
+  protected array $parameters = [];
+
+  /**
    * Constructor of class AbstractView.
    *
    * @return void
@@ -48,14 +58,14 @@ abstract class AbstractView
    *
    * @param void
    * @return string
-   * @throws \RuntimeException if this view is not renderable
+   * @throws \Dominicus75\Templater\Exceptions\NotRenderableException if this view is not renderable
    *
    */
   public function render(): string {
     try {
       $this->view->render();
       return $this->view->getSource();
-    } catch(\RuntimeException $e) { throw $e; }
+    } catch(NotRenderableException $e) { throw $e; }
   }
 
 }

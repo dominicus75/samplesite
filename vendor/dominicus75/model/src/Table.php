@@ -1,18 +1,20 @@
 <?php
 /*
- * @package Core
+ * @package Model
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core\Model;
+namespace Dominicus75\Model;
+
+use \Dominicus75\Config\Config;
 
 class Table
 {
 
   /**
    *
-   * @var \Dominicus75\Core\Model\PDO a singleton instance of PDO
+   * @var \Dominicus75\Model\PDO a singleton instance of PDO
    *
    */
   private PDO $database;
@@ -41,8 +43,8 @@ class Table
 
   /**
    *
-   * @param $confOrInstance an instance of \ArrayAccess (e. g. \Dominicus75\Core\Config)
-   * or an instance of \Dominicus75\Core\Model\PDO
+   * @param $confOrInstance an instance of \Dominicus75\Config\Config
+   * or an instance of \Dominicus75\Model\PDO
    * @param string $table name of the current table
    * @throws \PDOException if
    * - $table is not found in this database
@@ -54,9 +56,9 @@ class Table
 
     try {
 
-      if($confOrInstance instanceof \ArrayAccess) {
+      if($confOrInstance instanceof \Dominicus75\Config\Config) {
         $this->database = PDO::getInstance($confOrInstance);
-      } elseif($confOrInstance instanceof PDO) {
+      } elseif($confOrInstance instanceof \Dominicus75\Model\PDO) {
         $this->database = $confOrInstance;
       }
 
@@ -76,7 +78,7 @@ class Table
   /**
    *
    * @param void
-   * @return \Dominicus75\Core\Model\PDO a singleton instance of PDO
+   * @return \Dominicus75\Model\PDO a singleton instance of PDO
    *
    */
   public function getDatabase(): PDO { return $this->database; }

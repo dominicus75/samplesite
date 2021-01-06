@@ -28,8 +28,15 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=0
-FILE_NAME_0=0;SQL;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Famdg.sql;0;2
+current_page=7
+FILE_NAME_0=2848;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FSamplesite.php;0;2
+FILE_NAME_1=6155;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FSkeleton.php;0;2
+FILE_NAME_2=365;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2FSite.php;0;2
+FILE_NAME_3=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcore%2FAbstractView.php;0;2
+FILE_NAME_4=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2FPage.php;0;2
+FILE_NAME_5=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FComponent.php;0;2
+FILE_NAME_6=1625;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fmodel%2FNav.php;0;2
+FILE_NAME_7=1168;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fvendor%2Fdominicus75%2Ftemplater%2Fsrc%2FNav.php;0;2
 
 [VTE]
-last_dir=/opt/lampp/htdocs/samplesite
+last_dir=/opt/lampp/htdocs/samplesite/vendor/dominicus75/templater/src

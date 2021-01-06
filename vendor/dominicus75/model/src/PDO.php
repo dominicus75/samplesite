@@ -1,12 +1,14 @@
 <?php
 /*
  * @file PDO.php
- * @package Core
+ * @package Model
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core\Model;
+namespace Dominicus75\Model;
+
+use \Dominicus75\Config\Config;
 
 
 class PDO extends \PDO
@@ -31,7 +33,7 @@ class PDO extends \PDO
 
   /**
    *
-   * @var Dominicus75\Core\Model\PDO current pdo instance
+   * @var \Dominicus75\Model\PDO current pdo instance
    *
    */
   protected static ?self $instance = null;
@@ -53,14 +55,14 @@ class PDO extends \PDO
 
   /**
    *
-   * @param \ArrayAccess config object, what implements
-   * \ArrayAccess imterface
+   * @param \Dominicus75\Config\Config config object, what implements
+   * \ArrayAccess interface
    * @see https://www.php.net/manual/en/class.arrayaccess.php
    *
    * @throws \PDOException
    *
    */
-  private function __construct(\ArrayAccess $config) {
+  private function __construct(Config $config) {
 
     try {
 
@@ -76,7 +78,7 @@ class PDO extends \PDO
   }
 
   /**
-   *  Set options to PDO (parent) class constructor
+   * Set options to PDO (parent) class constructor
    *
    * @param array|null $options
    * @return array|null
@@ -88,15 +90,15 @@ class PDO extends \PDO
 
   /**
    *
-   * @param \ArrayAccess config object, what implements
-   * \ArrayAccess imterface
+   * @param \Dominicus75\Config\Config object, what implements
+   * \ArrayAccess interface
    * @see https://www.php.net/manual/en/class.arrayaccess.php
    * @return a singleton instance of this class
    *
    * @throws \PDOException
    *
    */
-  public static function getInstance(\ArrayAccess $config):self {
+  public static function getInstance(Config $config):self {
 
     if (is_null(self::$instance)) {
 

@@ -1,7 +1,6 @@
 <?php
 /*
- * @file AbstractController.php
- * @package Core
+ * @package samplesite
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
@@ -10,6 +9,14 @@ namespace Dominicus75\Core;
 
 use \Dominicus75\Http\Request;
 use \Dominicus75\Templater\Skeleton;
+use \Dominicus75\Config\{
+  Config,
+  NotFoundException,
+  NotReadableException,
+  NotWriteableException
+};
+use \Dominicus75\Router\Route;
+use \Dominicus75\Model\AbstractModel;
 
 abstract class AbstractController
 {
@@ -18,28 +25,28 @@ abstract class AbstractController
 
   /**
    *
-   * @var Dominicus75\Core\Router\Route current route instance
+   * @var Dominicus75\Router\Route current route instance
    *
    */
-  protected Router\Route $route;
+  protected Route $route;
 
   /**
    *
-   * @var \Dominicus75\Core\Model\AbstractModel current model object
+   * @var \Dominicus75\Model\AbstractModel current model object
    *
    */
-  protected Model\AbstractModel $model;
+  protected AbstractModel $model;
 
   /**
    *
-   * @var \Dominicus75\Core\AbstractView current view object
+   * @var AbstractView current view object
    *
    */
   protected AbstractView $view;
 
   /**
    *
-   * @var \Dominicus75\Core\Config instance
+   * @var \Dominicus75\Config\Config instance
    *
    */
   protected Config $config;
@@ -50,8 +57,9 @@ abstract class AbstractController
    * @param Router\Route $route current route instance
    * @param array $parameters optional parameters of this controller
    *
-   * @throws \Dominicus75\Core\Exceptions\DirectoryNotFoundException
-   * @throws \Dominicus75\Core\Exceptions\FileNotFoundException
+   * @throws \Dominicus75\Config\NotFoundException
+   * @throws \Dominicus75\Config\NotReadableException
+   * @throws \Dominicus75\Config\NotWriteableException
    * @throws \PDOException
    *
    */
@@ -60,18 +68,16 @@ abstract class AbstractController
     array $parameters = []
   ){
 
-    $this->route     = $route;
+    $this->route = $route;
     $this->setParameters($parameters);
-
-    $controller = explode('\\', $this->route->controller);
-    $configFile = strtolower(end($controller)).'_controller';
+    $configFile  = $this->getParameter('config_file').'_controller';
 
     try {
       $this->config = new Config($configFile);
       $model = $this->hasParameter('model') ? $this->getParameter('model') : $this->config->offsetGet('model');
       $table = $this->hasParameter('table') ? $this->getParameter('table') : $this->config->offsetGet('table');
       $this->model  = new $model(new Config('mysql'), $table);
-    } catch(\Throwable $e) { throw $e; }
+    } catch(\PDOException | NotFoundException | NotReadableException | NotWriteableException $e) { throw $e; }
 
   }
 

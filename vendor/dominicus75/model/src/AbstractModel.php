@@ -5,16 +5,21 @@
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core\Model;
+namespace Dominicus75\Model;
 
 abstract class AbstractModel
 {
 
-  use \Dominicus75\Core\ParameterizableTrait;
-
   protected Table $table;
   protected array $content = [];
   protected array $updated = [];
+
+  /**
+   *
+   * @var array optional parameters
+   *
+   */
+  protected array $parameters = [];
 
   protected function __construct(
     $confOrInstance,
@@ -24,7 +29,7 @@ abstract class AbstractModel
 
     try {
       $this->table = new Table($confOrInstance, $table);
-      $this->setParameters($parameters);
+      $this->parameters = $parameters;
     } catch(\PDOException $pdoe) { throw $pdoe; }
 
   }

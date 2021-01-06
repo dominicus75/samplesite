@@ -1,6 +1,5 @@
 <?php
 /*
- * @file Article.php
  * @package samplesite
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
@@ -8,14 +7,13 @@
 
 namespace Application\Controller;
 
-use \Dominicus75\Http\{Request, Response};
-use \Dominicus75\Core\{
-  AbstractController,
-  Config as Config,
-  Router\Route as Route,
-  Model\ContentNotFoundException as ContentNotFoundException,
-  Model\InvalidFieldNameException as InvalidFieldNameException,
-  Model\InvalidStatementException as InvalidStatementException
+use \Dominicus75\Http\Request;
+use \Dominicus75\Config\Config;
+use \Dominicus75\Router\Route;
+use \Dominicus75\Model\{
+  ContentNotFoundException,
+  InvalidFieldNameException,
+  InvalidStatementException
 };
 
 class Article extends AbstractController

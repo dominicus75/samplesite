@@ -9,16 +9,15 @@
 namespace Application\Controller;
 
 use \Dominicus75\Http\Request;
-use \Dominicus75\Core\{
-  AbstractController,
-  Config as Config,
-  Router\Route as Route,
-  Model\ContentNotFoundException as ContentNotFoundException,
-  Model\InvalidFieldNameException as InvalidFieldNameException,
-  Model\InvalidStatementException as InvalidStatementException
+use \Dominicus75\Config\Config;
+use \Dominicus75\Router\Route;
+use \Dominicus75\Model\{
+  ContentNotFoundException,
+  InvalidFieldNameException,
+  InvalidStatementException
 };
 
-class Page extends AbstractController
+class Page extends \Application\Core\Site
 {
 
   public function __construct(
@@ -28,7 +27,7 @@ class Page extends AbstractController
     try {
       parent::__construct($route);
     } catch(\PDOException | InvalidFieldNameException $e) {
-      new Fault(500, $e->getMessage());
+      echo $e->getMessage();
     }
 
   }

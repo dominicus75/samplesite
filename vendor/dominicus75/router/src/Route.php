@@ -1,12 +1,11 @@
 <?php
 /*
- * @file Route.php
- * @package Core
+ * @package Router
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core\Router;
+namespace Dominicus75\Router;
 
 class Route
 {
@@ -19,21 +18,21 @@ class Route
    * - admin: a registered user with admin permissions
    *
    */
-  private ?string $role;
+  private string $role;
 
   /**
    *
    * @var string name of called controller (e. g. 'Application\Controller\Page')
    *
    */
-  private ?string $controller;
+  private string $controller;
 
   /**
    *
    * @var string name of called action (e. g. 'read', 'update', etc.)
    *
    */
-  private ?string $method;
+  private string $method;
 
   /**
    *
@@ -55,9 +54,9 @@ class Route
    * @return void
    */
   public function __construct(
-    ?string $role,
-    ?string $controller,
-    ?string $method,
+    string $role,
+    string $controller,
+    string $method,
     ?string $cid,
     ?string $category = null
   ){

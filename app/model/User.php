@@ -1,6 +1,5 @@
 <?php
 /*
- * @file User.php
  * @package samplesite
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
@@ -8,9 +7,8 @@
 
 namespace Application\Model;
 
-use \Dominicus75\Core\Config;
-use \Dominicus75\Core\Model\AbstractModel;
-use \Application\Controller\Fault as Failure;
+use \Dominicus75\Config\Config;
+use \Dominicus75\Model\AbstractModel;
 
 class User extends AbstractModel
 {

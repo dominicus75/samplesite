@@ -8,12 +8,12 @@
 
 namespace Application\View;
 
+use \Application\Core\Site;
 use \Dominicus75\Templater\{
   Skeleton,
   DirectoryNotFoundException,
   FileNotFoundException
 };
-use \Dominicus75\Core\AbstractView;
 
 class Message extends AbstractView
 {

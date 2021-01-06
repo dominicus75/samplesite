@@ -42,7 +42,8 @@ class Skeleton extends Component {
    */
   public function __construct(
     string $cssDirectory,
-    string $templateDirectory = ''
+    string $templateDirectory = '',
+    string $skeletonFile = ''
   ){
 
     if(is_dir($cssDirectory)) {
@@ -199,13 +200,12 @@ class Skeleton extends Component {
    *
    */
   public function insertNav(
-    array $pages,
-    array $categories,
+    array $menu,
     string $templateDirectory
   ): self {
 
     try {
-      $nav = new Nav($pages, $categories, '');
+      $nav = new Nav($menu, '');
       $this->source = str_replace('%%nav%%', $nav->getSource(), $this->source);
       $this->updateSources();
       $this->updateVariables();

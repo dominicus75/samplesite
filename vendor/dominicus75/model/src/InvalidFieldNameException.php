@@ -1,11 +1,11 @@
 <?php
 /*
- * @file InvalidStatementException.php
+ * @file InvalidFieldNameException.php
  * @package Core
  * @copyright 2020 Domokos Endre János <domokos.endrejanos@gmail.com>
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core\Model;
+namespace Dominicus75\Model;
 
-class InvalidStatementException extends \InvalidArgumentException { }
+class InvalidFieldNameException extends \InvalidArgumentException { }

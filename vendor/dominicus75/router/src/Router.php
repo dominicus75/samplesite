@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * @package Core
+ * @package Router
  * @author Domokos Endre János <domokos.endrejanos@gmail.com>
  * @copyright 2020 Domokos Endre János
  * @license GNU General Public License v3 (https://opensource.org/licenses/GPL-3.0)
@@ -9,10 +9,19 @@
  *
  */
 
-namespace Dominicus75\Core;
+namespace Dominicus75\Router;
+
+use \Dominicus75\Config\Config;
 
 class Router
 {
+
+  /**
+   *
+   * @var string the requested URI
+   *
+   */
+  private string $requestUri;
 
   /**
    *
@@ -56,42 +65,120 @@ class Router
 
   /**
    *
-   * @var Router\Route the current route
+   * @var Mapper a Mapper instance
    *
    */
-  private Router\Route $route;
-
+  private Mapper $mapper;
 
   /**
    *
    * @param string $requestUri the requested URI
    * @param \ArrayAccess|null Config object
-   * @see Router/config.php for defaults
+   * @see Router/config_router.php for defaults
    * @return self
    *
    */
-  public function __construct(string $requestUri, ?\ArrayAccess $config = null){
-
-    if(is_null($config) || (!($config instanceof \ArrayAccess) || !($config instanceof Config))) {
-      $config = new Config('config', __DIR__.DIRECTORY_SEPARATOR.'Router');
-    }
-
+  public function __construct(string $requestUri, Config $config){
+    $this->requestUri  = $requestUri;
     $this->roles       = $config->offsetGet('roles');
     $this->controllers = $config->offsetGet('controllers');
     $this->methods     = $config->offsetGet('methods');
     $this->enabled     = $config->offsetGet('enabled');
     $this->defaults    = $config->offsetGet('defaults');
+    $this->mapper      = new Mapper('mapper');
+  }
 
-    if(preg_match("/^\/?$/i", $requestUri)) {
-      $this->route = new Router\Route(
+
+  /**
+   * Checks whether a specific type has a controller
+   *
+   * @param string $type content type (e. g. 'article' or 'page')
+   * @return bool
+   *
+   */
+  public function hasController(string $type): bool {
+    if(array_key_exists($type, $this->controllers)) {
+      $controller = $this->controllers[$type];
+      try {
+        $reflection = new \ReflectionClass($controller);
+        return true;
+      } catch(\ReflectionException $e) { return false; }
+    }
+    return false;
+  }
+
+
+  /**
+   * Checks whether a specific $method is defined in the given $type
+   *
+   * @param string $controller '\Fully\Qualified\ClassName'
+   * @param string $method method name (e. g. 'view', 'create', 'login')
+   * @return bool
+   *
+   */
+  public function hasMethod(string $controller, string $method): bool {
+    try {
+      $reflection = new \ReflectionClass($controller);
+      return $reflection->hasMethod($method);
+    } catch(\ReflectionException $e) { return false; }
+  }
+
+
+  /**
+   *
+   * @param string $type content type (e. g. 'article' or 'page')
+   * @param string $controller '\Fully\Qualified\ClassName'
+   * @return self
+   *
+   */
+  public function addController(string $type, string $controller): self {
+    if(!$this->hasController($type)) {
+      $this->controllers[$type] = $controller;
+    }
+    return $this;
+  }
+
+
+  /**
+   *
+   * @param string $type content type (e. g. 'article' or 'page')
+   * @return self
+   *
+   */
+  public function deleteController(string $type): self {
+    if($this->hasController($type)) { unset($this->controllers[$type]); }
+    return $this;
+  }
+
+
+  /**
+   *
+   * @param void
+   * @return Route a Route instance
+   *
+   */
+  public function dispatch(): Route {
+
+    if(preg_match("/^\/?$/i", $this->requestUri)) {
+      return new Route(
         $this->defaults['role'],
         $this->controllers[$this->defaults['controller']],
         $this->defaults['method'],
         $this->defaults['content'],
         $this->defaults['category']
       );
-      return $this;
     }
+
+    if($this->mapper->offsetExists($this->requestUri)) {
+      $route = $this->mapper->offsetGet($requestUri);
+      return new Route(
+        $route['role'],
+        $route['controller'],
+        $route['method'],
+        $route['content'],
+        $route['category']
+      );
+    } else { $requestUri = $this->requestUri; }
 
     $roles = "\/(?P<role>".implode('|', array_values($this->roles)).")";
     $type  = "\/(?P<controller>".implode('|', array_keys($this->controllers)).")";
@@ -183,84 +270,16 @@ class Router
     $content  = isset($content) ? $content : null;
     $category = isset($category) ? $category : $this->defaults['category'];
 
-    $this->route = new Router\Route($role, $controller, $method, $content, $category);
+    return new Route($role, $controller, $method, $content, $category);
 
   }
-
-
-  /**
-   * Checks whether a specific type has a controller
-   *
-   * @param string $type content type (e. g. 'article' or 'page')
-   * @return bool
-   *
-   */
-  public function hasController(string $type): bool {
-    if(array_key_exists($type, $this->controllers)) {
-      $controller = $this->controllers[$type];
-      try {
-        $reflection = new \ReflectionClass($controller);
-        return true;
-      } catch(\ReflectionException $e) { return false; }
-    }
-    return false;
-  }
-
-
-  /**
-   * Checks whether a specific $method is defined in the given $type
-   *
-   * @param string $controller '\Fully\Qualified\ClassName'
-   * @param string $method method name (e. g. 'view', 'create', 'login')
-   * @return bool
-   *
-   */
-  public function hasMethod(string $controller, string $method): bool {
-    try {
-      $reflection = new \ReflectionClass($controller);
-      return $reflection->hasMethod($method);
-    } catch(\ReflectionException $e) { return false; }
-  }
-
-
-  /**
-   *
-   * @param string $type content type (e. g. 'article' or 'page')
-   * @param string $controller '\Fully\Qualified\ClassName'
-   * @return self
-   *
-   */
-  public function addController(string $type, string $controller): self {
-    if(!$this->hasController($type)) {
-      $this->controllers[$type] = $controller;
-    }
-    return $this;
-  }
-
-
-  /**
-   *
-   * @param string $type content type (e. g. 'article' or 'page')
-   * @return self
-   *
-   */
-  public function deleteController(string $type): self {
-    if($this->hasController($type)) { unset($this->controllers[$type]); }
-    return $this;
-  }
-
 
   /**
    *
    * @param void
-   * @return Router\Route a Route instance
-   * @throws Router\RouteNotFoundException if Route not exists
+   * @return Mapper a current Mapper instance
    *
    */
-  public function dispatch(): Router\Route {
-    if(isset($this->route)) {
-      return $this->route;
-    } else { throw new Router\RouteNotFoundException(); }
-  }
+  public function getMapper(): Mapper { return $this->mapper; }
 
 }

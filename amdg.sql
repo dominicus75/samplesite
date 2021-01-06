@@ -1,5 +1,6 @@
+
 CREATE TABLE `ranks` (
-  `rank` varchar(16) CHARACTER SET ascii NOT NULL,
+  `rank` varchar(16) CHARACTER SET ascii NOT NULL DEFAULT 'editor',
   PRIMARY KEY (`rank`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
@@ -7,40 +8,8 @@ CREATE TABLE `ranks` (
 INSERT INTO `ranks` (`rank`) VALUES
 ('owner'),
 ('admin'),
-('editor');
-
-
-CREATE TABLE `permissions` (
-  `content_type` varchar(16) CHARACTER SET ascii NOT NULL,
-  `reading` SET('everyone', 'users', 'self', 'author', 'admins', 'editor', 'admin', 'owner', 'none') DEFAULT NULL,
-  `creating` SET('everyone', 'users', 'self', 'author', 'admins', 'editor', 'admin', 'owner', 'none') DEFAULT NULL,
-  `updating` SET('everyone', 'users', 'self', 'author', 'admins', 'editor', 'admin', 'owner', 'none') DEFAULT NULL,
-  `deleting` SET('everyone', 'users', 'self', 'author', 'admins', 'editor', 'admin', 'owner', 'none') DEFAULT NULL,
-  PRIMARY KEY (`content_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-
-
-INSERT INTO `permissions` (`content_type`, `reading`, `creating`, `updating`, `deleting`)
-VALUES
-('owner', 'admins', 'none', 'self', 'none'),
-('admin', 'admins', 'owner', 'self,owner', 'owner'),
-('editor', 'admins', 'owner,admin', 'self,owner,admin', 'owner,admin'),
-('user', 'users', 'everyone', 'self,admins', 'self,admins'),
-('message', 'everyone', 'admins', 'admins', 'admins'),
-('category', 'everyone', 'admins', 'admins', 'admins'),
-('page', 'everyone', 'admins', 'admins', 'admins'),
-('article', 'everyone', 'users,admins', 'author,admins', 'author,admins');
-
-
-CREATE TABLE `content_types` (
-  `name` varchar(16) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-
-
-INSERT INTO `content_types` (`name`) VALUES
-('article'),
-('page');
+('editor'),
+('author');
 
 
 CREATE TABLE `admins` (
@@ -63,7 +32,8 @@ CREATE TABLE `admins` (
 INSERT INTO `admins` (`name`, `email`, `avatar`, `pass`, `status`, `rank`) VALUES
 ('Szuperadmin', 'superadmin@gmail.com', 'avatar_1509037329.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'owner'),
 ('Gipsz Jakab', 'gipsz.jakab@gmail.com', 'avatar_1509021514.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'admin'),
-('Ló Jenő', 'lo.jeno@gmail.com', 'avatar_1509031358.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'editor');
+('Ló Jenő', 'lo.jeno@gmail.com', 'avatar_1509031358.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'editor'),
+('Macska János', 'macska.janos@gmail.com', 'avatar_1509036628.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'author');
 
 
 CREATE TABLE `users` (
@@ -82,7 +52,6 @@ CREATE TABLE `users` (
 
 
 INSERT INTO `users` (`name`, `email`, `avatar`, `pass`, `status`) VALUES
-('Macska János', 'macska.janos@gmail.com', 'avatar_1509036628.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1),
 ('Pendrek Mihály', 'pendrek.mihaly@gmail.com', 'avatar_1509037243.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1);
 
 
@@ -147,7 +116,7 @@ INSERT INTO `categories` (`url`, `author`, `title`, `description`, `image`, `par
 CREATE TABLE `pages` (
   `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `url` varchar(128) CHARACTER SET ascii NOT NULL,
-  `author` tinyint(3) UNSIGNED NOT NULL,
+  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `title` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `image` tinytext CHARACTER SET ascii  DEFAULT NULL,
@@ -155,12 +124,12 @@ CREATE TABLE `pages` (
   `created` timestamp DEFAULT current_timestamp(),
   `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`author`) REFERENCES `admins` (`id`)
+  FOREIGN KEY (`author`) REFERENCES `admins` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 INSERT INTO `pages` (`url`, `author`, `title`, `description`, `image`, `body`) VALUES
-('/', 2, 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!', 'road.jpg',
+('/', 'Gipsz Jakab', 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!', 'road.jpg',
 '<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -213,7 +182,7 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-('rolunk', 2, 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes', 'travel-meeting.jpg',
+('rolunk', 'Ló Jenő', 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes', 'travel-meeting.jpg',
 '<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -265,7 +234,7 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-('kapcsolat', 1, 'Kapcsolat', 'Írjon nekünk, de iziben!', 'postbox.jpg',
+('kapcsolat', 'Gipsz Jakab', 'Kapcsolat', 'Írjon nekünk, de iziben!', 'postbox.jpg',
 '<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -298,8 +267,7 @@ CREATE TABLE `articles` (
   `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `category` varchar(255) CHARACTER SET ascii DEFAULT NULL,
   `url` varchar(128) CHARACTER SET ascii NOT NULL,
-  `admin_author` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `user_author` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
   `title` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `image` tinytext CHARACTER SET ascii DEFAULT NULL,
@@ -308,14 +276,13 @@ CREATE TABLE `articles` (
   `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   FOREIGN KEY (`category`) REFERENCES `categories` (`url`),
-  FOREIGN KEY (`admin_author`) REFERENCES `admins` (`name`),
-  FOREIGN KEY (`user_author`) REFERENCES `users` (`name`)
+  FOREIGN KEY (`author`) REFERENCES `admins` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-INSERT INTO `articles` (`category`, `url`, `admin_author`, `user_author`, `title`, `description`, `image`, `body`)
+INSERT INTO `articles` (`category`, `url`, `author`, `title`, `description`, `image`, `body`)
 VALUES
-('hirek/akciok/utazasok', 'dubai', null, 'Macska János', 'Dubai', 'Szinte ingyen Dubaiba', 'dubai-city.jpg', '<p>Lórum ipse mint buggyos izgatlan
+('hirek/akciok/utazasok', 'dubai', 'Gipsz Jakab', 'Dubai', 'Szinte ingyen Dubaiba', 'dubai-city.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -344,7 +311,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok/utazasok', 'napfeny-tura', null, 'Macska János', 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
+('hirek/akciok/utazasok', 'napfeny-tura', 'Ló Jenő', 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
 'rock-formation.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
@@ -374,7 +341,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek', 'oszi-erdo', null, 'Pendrek Mihály', 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
+('hirek', 'oszi-erdo', 'Szuperadmin', 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
 'fall-forest.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -404,7 +371,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek', 'tengerparti-oromok', null, 'Macska János', 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
+('hirek', 'tengerparti-oromok', 'Macska János', 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
 jermeteken, valamint a svuták csapinusain dakarsodik át', 'beach-landscape.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -434,7 +401,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok', 'hegyvideki-kirandulas', null, 'Pendrek Mihály', 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
+('hirek/akciok', 'hegyvideki-kirandulas', 'Ló Jenő', 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
 'lake-house.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -464,7 +431,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok', 'extra-szilkas-hegyek', null, 'Pendrek Mihály', 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
+('hirek/akciok', 'extra-szilkas-hegyek', 'Gipsz Jakab', 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
 készletéből pótoljuk!', 'forest-rock-waterfall.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -494,7 +461,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok', 'garantaltan-suru-sotet-erdo', null, 'Pendrek Mihály', 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
+('hirek/akciok', 'garantaltan-suru-sotet-erdo', 'Szuperadmin', 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
 távol a világ zajától, most akciós jetivel!', 'forest-waterfall.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
