@@ -11,12 +11,6 @@ namespace Dominicus75\Templater;
 
 class Component extends RenderableSource {
 
-  /**
-   *
-   * @var string Fully qualified path name of template directory
-   *
-   */
-  protected string $templateDirectory;
 
   /**
    *
@@ -32,50 +26,34 @@ class Component extends RenderableSource {
    * @param string $templateDirectory Fully qualified path name of directory
    * @param string $componentFile Fully qualified path name of source file,
    *
-   * @throws \Dominicus75\Templater\Exceptions\DirectoryNotFoundException
-   * if given directory does not exists
    * @throws \Dominicus75\Templater\Exceptions\FileNotFoundException
    * if given source file does not exists
    *
    */
-  public function __construct(
-    string $componentFile,
-    string $templateDirectory = ''
-  ){
-
-    if(!empty($templateDirectory)) {
-      if(is_dir($templateDirectory)) {
-        $this->templateDirectory = $templateDirectory;
-      } else {
-        throw new Exceptions\DirectoryNotFoundException($templateDirectory.' does not exists.');
-      }
-    } else { $this->templateDirectory = Templater::DIR; }
-
-    $componentFile = $this->templateDirectory.$componentFile;
+  public function __construct(string $componentFile, array $sources = []){
 
     try {
       parent::__construct($componentFile);
-      $this->updateSources();
+      $this->setSources($sources);
     } catch(Exceptions\FileNotFoundException $e) { throw $e; }
 
   }
 
   /**
    *
-   * This method extracts source markers from source
-   * and update sources array
+   * This method extracts source markers from source and initialize $this->sources
    *
    * @param void
    * @return self
    *
    */
-  protected function updateSources(): self {
-
+  protected function initSources(): self {
     if(preg_match_all(Templater::MARKERS['source'], $this->source, $matches)) {
-      foreach($matches[0] as $marker){ $this->sources[$marker] = false; }
+      foreach($matches[0] as $marker) {
+        if(!array_key_exists($marker, $this->sources)) { $this->sources[$marker] = null; }
+      }
     }
     return $this;
-
   }
 
 
@@ -87,7 +65,7 @@ class Component extends RenderableSource {
    * @throws Exceptions\VariableExistsException if $this->sources[$marker] is already set
    *
    */
-  protected function assignText(string $marker, string $text = ''): void {
+  public function assignText(string $marker, string $text = ''): void {
 
     if(!$this->hasMarker($marker)){
       throw new Exceptions\MarkerNotFoundException($marker.' is not found in this source');
@@ -104,39 +82,77 @@ class Component extends RenderableSource {
   /**
    *
    * @parem string $marker in form '@@marker@@'
-   * @param string $sourceFile Fully qualified path name of template source file (tpl)
+   * @param string $sourceFile Fully qualified path name of source file
    * @throws Exceptions\MarkerNotFoundException if marker is not found
-   * @throws Exceptions\VariableExistsException if $this->sources[$marker] is already set
+   * @throws Exceptions\SourceExistsException if $this->sources[$marker] is already set
+   * @throws Exceptions\FileNotFoundException if source file is not found
    *
    */
   public function assignSource(
     string $marker,
-    string $templateDirectory,
     string $sourceFile = ''
   ): self {
 
     if(!$this->hasMarker($marker)){
       throw new Exceptions\MarkerNotFoundException($marker.' is not found in this source');
     } elseif($this->sources[$marker]) {
-      throw new Exceptions\VariableExistsException($marker.' is already set');
+      throw new Exceptions\SourceExistsException($marker.' is already set');
     } elseif(empty($sourceFile)) {
       $this->source = str_replace($marker, '', $this->source);
       $this->sources[$marker] = true;
       return $this;
     } else {
-      $sourceFile = empty($templateDirectory)
-        ? $this->templateDirectory.$sourceFile
-        : $templateDirectory.$sourceFile;
       try {
         $source = new Source($sourceFile);
         $this->source = str_replace($marker, $source->getSource(), $this->source);
-        $this->updateSources();
-        $this->updateVariables();
+        $this->initSources();
+        $this->initVariables();
         $this->sources[$marker] = true;
         return $this;
       } catch(Exceptions\FileNotFoundException $e) { throw $e; }
     }
 
+  }
+
+
+  /**
+   *
+   * @param array  $sources The sources belongs to this Component
+   * in [(string)'@@marker@@' => (string)'source'] form (source marker)
+   * 'source' is fully qualified path name of source file
+   * @return void
+   * @throws Exceptions\MarkerNotFoundException if marker is not found
+   * @throws Exceptions\SourceExistsException if $this->sources[$marker] is already set
+   * @throws Exceptions\FileNotFoundException if source file is not found
+   *
+   */
+  public function setSources(array $sources = []): void {
+    if(!empty($sources)) {
+      foreach($sources as $marker => $source) {
+        try {
+          $this->assignSource($marker, $source);
+        } catch(Exceptions\FileNotFoundException |
+                Exceptions\SourceExistsException |
+                Exceptions\MarkerNotFoundException $e) { throw $e; }
+      }
+    } else { $this->initSources(); }
+  }
+
+
+  /**
+   *
+   * This method update varibles array
+   *
+   * @param array  $sources The sources belongs to this Component
+   * in [(string)'@@marker@@' => (string)'source'] form (source marker)
+   * 'source' is fully qualified path name of source file
+   *
+   * @return self
+   *
+   */
+  public function updateSources(array $sources): self {
+    $this->sources = array_merge($this->sources, $sources);
+    return $this;
   }
 
 
@@ -155,15 +171,15 @@ class Component extends RenderableSource {
    *
    */
   public function assignRepeater(
-    string $iterativeTemplateFile,
     string $marker,
+    string $iterativeTemplateFile,
     array $content
   ): self {
 
     if($this->hasMarker($marker)){
 
       try {
-        $repeater = new Repeater($this->templateDirectory.$iterativeTemplateFile, $content);
+        $repeater = new Repeater($iterativeTemplateFile, $content);
         $this->source = str_replace($marker, $repeater->getSource(), $this->source);
         $this->sources[$marker] = true;
         return $this;
@@ -186,27 +202,11 @@ class Component extends RenderableSource {
    * @return bool
    *
    */
-  public function isComplete(): bool {
-    return !in_array(false, $this->sources, true);
-  }
-
-
-  /**
-   *
-   * @param void
-   * @return string
-   * @throws \Dominicus75\Templater\Exceptions\NotRenderableException
-   * if this Renderable Source is not renderable yet
-   *
-   */
-  public function render(): void {
-
-    if($this->isComplete()) {
-      parent::render();
-    } else {
-      throw new Exceptions\NotRenderableException('This source is not renderable yet.');
+  public function isRenderable(): bool {
+    if(parent::isRenderable()) {
+      return !in_array(false, $this->sources, true);
     }
-
+    return false;
   }
 
 }

@@ -38,7 +38,7 @@ class Currencies
    * @throws \SoapFault
    *
    */
-  public function __construct(string $wsdl)
+  public function __construct(string $wsdl = 'http://www.mnb.hu/arfolyamok.asmx?wsdl')
   {
 
     try {

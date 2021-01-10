@@ -5,10 +5,8 @@
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Dominicus75\Core;
+namespace Application\Core;
 
-use \Dominicus75\Http\Request;
-use \Dominicus75\Templater\Skeleton;
 use \Dominicus75\Config\{
   Config,
   NotFoundException,
@@ -16,12 +14,11 @@ use \Dominicus75\Config\{
   NotWriteableException
 };
 use \Dominicus75\Router\Route;
-use \Dominicus75\Model\AbstractModel;
+use \Dominicus75\Http\Request;
+use \Dominicus75\Model\{Entity, EntityInterface};
 
 abstract class AbstractController
 {
-
-  use ParameterizableTrait;
 
   /**
    *
@@ -32,30 +29,36 @@ abstract class AbstractController
 
   /**
    *
-   * @var \Dominicus75\Model\AbstractModel current model object
+   * @var \Dominicus75\Http\Request current request instance
    *
    */
-  protected AbstractModel $model;
+  protected ?Request $request;
 
   /**
    *
-   * @var AbstractView current view object
+   * @var \Dominicus75\Model\EntityInterface current model object
    *
    */
-  protected AbstractView $view;
+  protected EntityInterface $model;
 
   /**
    *
-   * @var \Dominicus75\Config\Config instance
+   * @var \Dominicus75\Templater\Layout current view object
    *
    */
-  protected Config $config;
+  protected \Dominicus75\Templater\Layout $layout;
 
+  /**
+   *
+   * @var array parameters
+   *
+   */
+  protected array $parameters = [];
 
   /**
    *
    * @param Router\Route $route current route instance
-   * @param array $parameters optional parameters of this controller
+   * @param array $parameters parameters of this controller
    *
    * @throws \Dominicus75\Config\NotFoundException
    * @throws \Dominicus75\Config\NotReadableException
@@ -63,22 +66,39 @@ abstract class AbstractController
    * @throws \PDOException
    *
    */
-  protected function __construct(
-    Router\Route $route,
-    array $parameters = []
-  ){
-
-    $this->route = $route;
-    $this->setParameters($parameters);
-    $configFile  = $this->getParameter('config_file').'_controller';
+  protected function __construct(Route $route, array $parameters, ?Request $request = null){
 
     try {
-      $this->config = new Config($configFile);
-      $model = $this->hasParameter('model') ? $this->getParameter('model') : $this->config->offsetGet('model');
-      $table = $this->hasParameter('table') ? $this->getParameter('table') : $this->config->offsetGet('table');
-      $this->model  = new $model(new Config('mysql'), $table);
-    } catch(\PDOException | NotFoundException | NotReadableException | NotWriteableException $e) { throw $e; }
+      $this->route      = $route;
+      $this->request    = $request;
+      $this->parameters = $parameters;
+      $this->model      = new Entity(
+        $this->parameters['content_type'],
+        $this->parameters['content_table'],
+        new Config('mysql')
+      );
+      call_user_func(array($this, $this->route->method));
+    } catch(\PDOException | NotFoundException | NotReadableException | NotWriteableException $e) {
+      echo '<h2>'.$e->getMessage().'</h2>';
+    }
 
+  }
+
+
+  /**
+   *
+   * @param void
+   * @return string the rendered source
+   * @throws \Dominicus75\Templater\Exceptions\NotRenderableException
+   * if this Layout is not renderable yet
+   *
+   */
+  public function display(): string {
+    try {
+      return $this->layout->display();
+    } catch(\Dominicus75\Templater\Exceptions\NotRenderableException $e) {
+      echo '<h2>'.$e->getMessage().'</h2>';
+    }
   }
 
 }

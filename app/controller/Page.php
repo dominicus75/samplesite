@@ -8,35 +8,62 @@
 
 namespace Application\Controller;
 
-use \Dominicus75\Http\Request;
-use \Dominicus75\Config\Config;
 use \Dominicus75\Router\Route;
+use \Dominicus75\Http\Request;
 use \Dominicus75\Model\{
+  Entity,
   ContentNotFoundException,
   InvalidFieldNameException,
   InvalidStatementException
 };
 
-class Page extends \Application\Core\Site
+class Page extends \Application\Core\AbstractController
 {
 
+  /**
+   *
+   * @param Router\Route $route current route instance
+   * @param array $content (optional)
+   *
+   * @throws \Dominicus75\Config\NotFoundException
+   * @throws \Dominicus75\Config\NotReadableException
+   * @throws \Dominicus75\Config\NotWriteableException
+   * @throws \PDOException
+   *
+   */
   public function __construct(
-    Route $route
+    Route $route,
+    Request $request
   ){
-
-    try {
-      parent::__construct($route);
-    } catch(\PDOException | InvalidFieldNameException $e) {
-      echo $e->getMessage();
-    }
-
+    $parameters['content_type']  = 'page';
+    $parameters['content_table'] = 'pages';
+    parent::__construct($route, $parameters, $request);
   }
 
 
-  public function create(): string {}
-  public function view(): string {}
-  public function edit(): string {}
-  public function delete(): string {}
+  public function create(): void {
 
+  }
+
+  public function view(): void {
+    $variables = $this->model->selectData(
+      ['url', $this->route->cid],
+      ['url', 'title', 'description', 'image', 'body'],
+      []
+    );
+    $variables['image'] = '/upload/images/'.$variables['image'];
+    if($this->route->role == 'admin') {
+      $this->layout = new \Application\View\Admin\View('page');
+    } else {
+      $this->layout = new \Application\View\Visitor\View('page');
+    }
+    $this->layout->updateVariables($variables);
+  }
+
+  public function edit(): void {
+
+  }
+
+  public function delete(): void {}
 
 }

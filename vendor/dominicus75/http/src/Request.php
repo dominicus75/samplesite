@@ -11,7 +11,7 @@
 
 namespace Dominicus75\Http;
 
-use \Dominicus75\Validator\{Input, Pattern};
+use \Dominicus75\Validator\{Filter, Pattern};
 
 
 class Request
@@ -40,8 +40,8 @@ class Request
 
         foreach($post as $key => $value) {
           $value = urldecode($value);
-          $key   = Input::sanitizeHtml($key, null);
-          $value = Input::sanitizeHtml($value, Pattern::ALLOWED_TAGS);
+          $key   = Filter::sanitizeHtml($key, null);
+          $value = Filter::sanitizeHtml($value, Pattern::ALLOWED_TAGS);
           $this->body[$key] = $value;
         }
 
@@ -51,8 +51,8 @@ class Request
       if(!is_null($get)) {
 
         foreach($get as $key => $value) {
-          $key   = Input::sanitizeHtml($key, null);
-          $value = Input::sanitizeHtml($value, null);
+          $key   = Filter::sanitizeHtml($key, null);
+          $value = Filter::sanitizeHtml($value, null);
           $this->query[$key] = $value;
         }
 

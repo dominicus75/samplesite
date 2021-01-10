@@ -74,7 +74,7 @@ class Config implements \ArrayAccess
     }
 
     if(empty($config)) {
-      $this->container = require_once($this->file);
+      $this->container = require($this->file);
       $this->changed   = false;
     } else {
       $this->container = $config;
@@ -156,5 +156,6 @@ class Config implements \ArrayAccess
 
   public function getDirectory(): string { return $this->dir; }
   public function getFile(): string { return $this->file; }
+  public function getConfig(): array { return $this->container; }
 
 }

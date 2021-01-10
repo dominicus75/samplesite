@@ -32,13 +32,13 @@ spl_autoload_register(function ($class_name) {
     : $namespace."src".$DSR.$class.".php";
   } else {
     $namespace = strtolower(array_shift($fully_qualified_name));
-    $subNamespace = $DSR.implode($DSR, $fully_qualified_name).$DSR;
+    $subNamespace = implode($DSR, $fully_qualified_name).$DSR;
     if($vendor == 'psr' && $namespace = 'http') {
       $file .= $namespace."-".$subNamespace."src".$DSR.$class.".php";
     } else {
       $file .= (preg_match("/^applic/i", $vendor))
       ? $namespace.$DSR.$subNamespace.$class.".php"
-      : $namespace.$DSR."src".$subNamespace.$class.".php";
+      : $namespace.$DSR."src".$DSR.$subNamespace.$class.".php";
     }
   }
 

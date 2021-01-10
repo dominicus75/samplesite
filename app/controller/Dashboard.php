@@ -16,18 +16,21 @@ use \Dominicus75\Model\{
   InvalidStatementException
 };
 
-class Dashboard
+class Dashboard extends \Application\Core\AbstractController
 {
 
-  public function __construct(
-    Route $route
-  ){
-
-    try {
-      parent::__construct($route, $request);
-    } catch(\PDOException | InvalidFieldNameException $e) {
-      new Fault(500, $e->getMessage());
-    }
+  /**
+   *
+   * @param Router\Route $route current route instance
+   * @param array $content (optional)
+   *
+   *
+   */
+  public function __construct(Route $route, Request $request){
+    $parameters['content_type']  = 'admin';
+    $parameters['content_table'] = 'admins';
+    parent::__construct($route, $parameters, $request);
+  }
 
   }
 

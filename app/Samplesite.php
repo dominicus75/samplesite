@@ -13,7 +13,8 @@ class Samplesite
   private \Dominicus75\Http\Request $request;
   private \Dominicus75\Http\Response $response;
   private \Dominicus75\Router\Route $route;
-  private Object $controller;
+  private Core\Authority $auth;
+  private Core\AbstractController $controller;
 
   public function __construct() {
 
@@ -23,32 +24,33 @@ class Samplesite
 
     try{
 
-      $this->request  = new \Dominicus75\Http\Request($get, $post, $files);
-      $this->response = new \Dominicus75\Http\Response();
-      $router         = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
-      $this->route    = $router->dispatch();
+      $this->request    = new \Dominicus75\Http\Request($get, $post, $files);
+      $this->response   = new \Dominicus75\Http\Response();
+      $router           = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
+      $this->route      = $router->dispatch();
       unset($router);
-//echo "<pre>";
-//var_dump($this);
-//var_dump(new \Dominicus75\Router\Mapper(new \Dominicus75\Config\Config('mapper')));
-//echo "</pre>";
+      $this->auth       = new Core\Authority($this->route->role);
 
-      /*switch($this->route->controller) {
+      if($this->route->role != 'visitor' && $this->route->method != 'login' && !$this->auth->authenticate()) {
+        $this->response->redirect('/admin/login.html');
+      }
+
+      switch($this->route->controller) {
         case '\Application\Controller\Message':
-          $this->controller = new Controller\Message($this->route->cid);
+          $this->controller = new Controller\Message($this->route);
           $this->response->setStatusCode($this->route->cid);
-          $responseBody = $this->controller->view();
         break;
+        /*case '\Application\Controller\Admin':
+          if($this->auth->authenticate()) {
+            //$this->response->redirect('/admin/dashboard.html');
+          }
+        break;*/
         default:
           $this->controller = new $this->route->controller($this->route, $this->request);
-          $responseBody = $this->controller->{$this->route->action}();
-          if(is_null($responseBody)) {
-            $this->controller = new Controller\Message('404');
-            $this->response->setStatusCode(404);
-            $responseBody = $this->controller->view();
-          }
+          $this->controller->{$this->route->method}();
         break;
-      }*/
+      }
+
 
     } catch(
       \Dominicus75\Http\InvalidArgumentException |
@@ -57,9 +59,9 @@ class Samplesite
       //$this->controller = new Controller\Message('Hiba', '/images/failure.jpg', $e->getMessage());
       //$responseBody = $this->controller->view();
     } catch(
-      \Dominicus75\Core\Router\ControllerNotFoundException |
-      \Dominicus75\Core\Router\MethodNotFoundException |
-      \Dominicus75\Core\Router\RouteNotFoundException $e
+      \Dominicus75\Router\ControllerNotFoundException |
+      \Dominicus75\Router\MethodNotFoundException |
+      \Dominicus75\Router\RouteNotFoundException $e
     ) {
       //$this->controller = new Controller\Message('404');
       //$this->response->setStatusCode(404);
@@ -72,23 +74,28 @@ class Samplesite
   public function run() {
 
 
-$skeleton = new \Dominicus75\Templater\Skeleton(CSS);
-//$skeleton->insertHead('page');
-//$skeleton->assignComponent('%%header%%', TPL, 'header.tpl');
-//$model = new \Application\Model\Nav();
-//$skeleton->insertNav(['pages' => $model->getPages(), 'categories' => $model->getCategories()], TPL.'nav'.DSR);*/
 
-//$nav = new \Dominicus75\Templater\Nav([$model->getPages(), $model->getCategories()], TPL.'nav'.DSR);
+//$page = new Controller\Page($this->route, $this->request);
+//echo $page->display();
+//echo $nav->getNav();
+
+//$mnb = new Controller\MNB();
+//$aside = new View\Aside(['@@mnb@@' => $mnb->display()]);
+//echo $mnb->display();
+
 
 //echo $skeleton->getSource();
-echo "<pre>";
-var_dump($skeleton);
+//echo "<pre>";
+//var_dump($admin);
+//preg_match("/^(=|>|<|<>|<=|>=)$/i", "<>", $matches);
+//var_dump($matches);
 //var_dump(new \Dominicus75\Router\Mapper(new \Dominicus75\Config\Config('mapper')));
-echo "</pre>";
+//echo "</pre>";
 
-    //$this->response->setBody($responseBody);
-    //$this->response->send();
 
+
+    $this->response->setBody($this->controller->display());
+    $this->response->send();
 
   }
 

@@ -28,41 +28,43 @@ class RenderableSource extends Source
    * file does not exists
    *
    */
-  public function __construct(string $tplFile)
+  public function __construct(string $tplFile, array $variables = [])
   {
     try {
       parent::__construct($tplFile);
-      $this->updateVariables();
+      $this->initVariables();
+      $this->setVariables($variables);
     } catch(\Exceptions\FileNotFoundException $e) { throw $e; }
   }
 
 
   /**
    *
-   * @param string $marker in form '%%marker%%' or '{{marker}}' or '@@marker@@'
-   * what we are looking for
-   * @return bool true, if marker was found in $this->source, false otherwise
-   *
-   */
-  protected function hasMarker(string $marker): bool {
-    return (bool)preg_match("/".$marker."/i", $this->source);
-  }
-
-  /**
-   *
-   * This method extracts varible markers from source
-   * and update varibles array
+   * This method extracts varible markers from source and initialize $this->varibles
    *
    * @param void
    * @return self
    *
    */
-  protected function updateVariables(): self {
-
+  protected function initVariables(): self {
     if(preg_match_all(Templater::MARKERS['variable'], $this->source, $matches)) {
-      foreach($matches[0] as $marker){ $this->variables[$marker] = null; }
+      foreach($matches[0] as $marker){
+        if(!array_key_exists($marker, $this->variables)) { $this->variables[$marker] = null; }
+      }
     }
     return $this;
+  }
+
+  /**
+   *
+   * Determines if a variable is declared and is different than null
+   *
+   * @param string $marker in form '{{marker}}' (variable marker)
+   * @return bool
+   *
+   */
+  protected function issetVariable(string $marker): bool {
+    return isset($this->variables[$marker]);
   }
 
   /**
@@ -77,7 +79,7 @@ class RenderableSource extends Source
 
     if(!$this->hasMarker($marker)) {
       throw new Exceptions\MarkerNotFoundException($marker.' is not found in this source');
-    } elseif(!$this->variables[$marker]) {
+    } elseif(!$this->issetVariable($marker)) {
       $this->variables[$marker] = $value;
       return $this;
     } else {
@@ -88,21 +90,42 @@ class RenderableSource extends Source
 
   /**
    *
-   * @param array $variables The string variables belongs to this IterativeTemplate
-   * in string $marker => string $value form
+   * @param array $variables The string variables belongs to this Renderable Source
+   * in (string)'{{marker}}' => (string)'value' form
    * @return void
    * @throws \Dominicus75\Templater\Exceptions\MarkerNotFoundException if marker is not found
    * @throws \Dominicus75\Templater\Exceptions\VariableExistsException if marker has already value
    *
    */
-  public function setVariables(array $variables): void {
-
-    foreach($variables as $marker => $value) {
-      try {
-        $this->bindValue($marker, $value);
-      } catch(Exceptions\VariableExistsException | Exceptions\MarkerNotFoundException $e) { throw $e; }
+  public function setVariables(array $variables = []): void {
+    if(!empty($variables)) {
+      foreach($variables as $marker => $value) {
+        try {
+          $this->bindValue($marker, $value);
+        } catch(Exceptions\VariableExistsException | Exceptions\MarkerNotFoundException $e) { throw $e; }
+      }
     }
+  }
 
+  /**
+   *
+   * This method update varibles array
+   *
+   * @param array $variables string variables belongs to this Renderable Source
+   * in (string)'{{marker}}' => (string)'value' form
+   *
+   * @return self
+   *
+   */
+  public function updateVariables(array $variables): void {
+    foreach($variables as $name => $value) {
+      if(!preg_match(Templater::MARKERS['variable'], $name)) {
+        $marker = '{{'.$name.'}}';
+        $variables[$marker] = $value;
+        unset($variables[$name]);
+      }
+    }
+    $this->variables = array_merge($this->variables, $variables);
   }
 
   /**
@@ -119,23 +142,37 @@ class RenderableSource extends Source
    *
    * @param void
    * @return void
-   * @throws \Dominicus75\Templater\Exceptions\NotRenderableException if this Renderable Source is not renderable
+   * @throws \Dominicus75\Templater\Exceptions\NotRenderableException
+   * if this Renderable Source is not renderable yet
    *
    */
   public function render(): void {
 
     if($this->isRenderable()) {
-
       $this->source = str_replace(
         array_keys($this->variables),
         array_values($this->variables),
         $this->source
       );
-
     } else {
       throw new Exceptions\NotRenderableException('This source is not renderable yet.');
     }
 
+  }
+
+  /**
+   *
+   * @param void
+   * @return string the rendered source
+   * @throws \Dominicus75\Templater\Exceptions\NotRenderableException
+   * if this Layout is not renderable yet
+   *
+   */
+  public function display(): string {
+    try {
+      $this->render();
+      return $this->getSource();
+    } catch(NotRenderableException $e) { throw $e; }
   }
 
 }

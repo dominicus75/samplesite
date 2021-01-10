@@ -232,13 +232,15 @@ class PDO extends \PDO
   /**
    *
    * @param string $table Name of the searched table
-   * @return string Name of the PRIMARY KEY (e. g. 'id' or 'cid')
+   * @return array what contains the name of the primary key column (e. g. 'id')
+   * and this column has auto_increment attribute or not in form
+   * $primaryKey = ['name' => string, 'auto_increment' => bool]
    * @throws \PDOException
    * if given table is not found in this database
    * if PDOStatement::fetchAll() or execute() returns with false
    *
    */
-  public function getPrimaryKey(string $table): string {
+  public function getPrimaryKey(string $table): array {
 
     if($this->hasTable($table)) {
 
@@ -253,8 +255,13 @@ class PDO extends \PDO
       if($statement->execute()) {
         if($columns = $statement->fetchAll()) {
           $index = 0;
+          $result = [];
           while($index < count($columns)) {
-            if($columns[$index]['Key'] == 'PRI') { return $columns[$index]['Field']; }
+            if($columns[$index]['Key'] == 'PRI') {
+              $result['name'] = $columns[$index]['Field'];
+              $result['auto_increment'] = ($columns[$index]['Extra'] == 'auto_increment');
+              return $result;
+            }
             $index++;
           }
         } else {

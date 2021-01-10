@@ -7,44 +7,42 @@
 
 namespace Application\Controller;
 
+use \Dominicus75\Router\Route;
 use \Dominicus75\Http\Request;
-use \Dominicus75\Config\Config;
 use \Dominicus75\Model\{
+  Entity,
   ContentNotFoundException,
   InvalidFieldNameException,
   InvalidStatementException
 };
 
-class Message
+class Message extends \Application\Core\AbstractController
 {
 
-  private string $title;
-  private \Application\Model\Message $model;
-  private \Application\View\Message $view;
-
-  public function __construct(string $title,  string $image = '', string $message = ''){
-
-    try {
-      $this->title  = $title;
-      if(!empty($message) && !empty($image)) {
-        $content['title']       = $title;
-        $content['description'] = $message;
-        $content['image']       = $image;
-      } else {
-        $this->model  = new \Application\Model\Message(new Config('mysql'), 'messages');
-        $content = $this->model->read(['category' => null, 'cid' => $this->title]);
-      }
-      $this->view = new \Application\View\Message('view', $content);
-    } catch(\Throwable $e) { echo '<p>'.$e->getMessage().'</p>'; }
-
+  public function __construct(Route $route, array $parameters = []) {
+    $parameters['content_type']  = 'message';
+    $parameters['content_table'] = 'messages';
+    parent::__construct($route, $parameters, null);
   }
 
-  public function view(): string {
-
-    try {
-      return $this->view->render();
-    } catch(ContentNotFoundException $e) { return '<p>'.$e->getMessage().'</p>'; }
-
+  public function view(): void {
+    if(isset($this->parameters['title']) && isset($this->parameters['message']) && isset($this->parameters['image'])) {
+      $variables['title']       = $this->parameters['title'];
+      $variables['description'] = $this->parameters['message'];
+      $variables['image']       = $this->parameters['image'];
+    } else {
+      $variables = $this->model->selectData(
+        ['url', $this->route->cid],
+        ['title', 'description', 'image'],
+        []
+      );
+    }
+    if($this->route->role == 'admin') {
+      $this->layout = new \Application\View\Admin\View('message');
+    } else {
+      $this->layout = new \Application\View\Visitor\View('message');
+    }
+    $this->layout->updateVariables($variables);
   }
 
   public function create(): string {}

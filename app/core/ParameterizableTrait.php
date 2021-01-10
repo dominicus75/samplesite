@@ -19,23 +19,23 @@ trait ParameterizableTrait
 
 
   protected function setParameters(array $parameters): void {
-
     if(!empty($parameters)) {
-      foreach($parameters as $name => $value) {
-        if(!is_null($value)) { $this->parameters[$name] = $value; }
-      }
+      foreach($parameters as $name => $value) { $this->setParameter($name, $value); }
     }
-
   }
 
-  protected function hasParameter($name): bool {
+  protected function hasParameter(string $name): bool {
     return array_key_exists($name, $this->parameters);
   }
 
-  protected function getParameter($name) {
+  protected function setParameter(string $name, $value): void {
+    if(!$this->hasParameter($name)) { $this->parameters[$name] = $value; }
+  }
+
+  protected function getParameter(string $name) {
     if($this->hasParameter($name)) {
       return $this->parameters[$name];
-    } else { return false; }
+    } else { return null; }
   }
 
 }

@@ -24,6 +24,6 @@ class Pattern
   const ALLOWED_TAGS = '<span><h2><h3><h4><h5><h6><p><blockquote><cite><br>'
     .'<strong><b><em><i><underline><u><strike><s><del>'
     .'<sub><sup><ol><ul><li><dl><dt><dd><figure><figcaption><img>'
-    .'<meta><embed><iframe><a><table><thead><caption><tr><td>';
+    .'<iframe><video><a><table><thead><caption><tbody><tfoot><tr><td>';
 
 }

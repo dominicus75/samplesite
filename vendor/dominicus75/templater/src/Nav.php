@@ -12,6 +12,13 @@ class Nav extends Component {
 
   /**
    *
+   * @var string Fully qualified path name of template directory
+   *
+   */
+  protected string $templateDirectory;
+
+  /**
+   *
    * @var array list of pages
    *
    */
@@ -37,16 +44,24 @@ class Nav extends Component {
    *
    */
   public function __construct(
-    array $menu,
-    string $templateDirectory = ''
+    string $templateDirectory,
+    array $menu
   ){
 
+    if(!empty($templateDirectory)) {
+      if(is_dir($templateDirectory)) {
+        $this->templateDirectory = $templateDirectory;
+      } else {
+        throw new Exceptions\DirectoryNotFoundException($templateDirectory.' does not exists.');
+      }
+    } else { $this->templateDirectory = Templater::DIR; }
+
     try {
-      parent::__construct('nav.tpl', $templateDirectory);
-      $this->pages      = $menu[0];
-      $this->categories = $menu[1];
-      $this->source     = empty($menu[1]) ? $this->buildPages() : $this->buildMenu();
-      $this->assignText('@@menu@@', $this->getSource());
+      parent::__construct($this->templateDirectory.'nav.tpl');
+      $this->pages      = $menu['pages'];
+      $this->categories = $menu['categories'];
+      $navMenu = empty($menu['categories']) ? $this->buildPages() : $this->buildMenu();
+      $this->assignText('@@menu@@', $navMenu);
     } catch(Exceptions\DirectoryNotFoundException | Exceptions\FileNotFoundException $e) { throw $e; }
 
   }
@@ -83,7 +98,7 @@ class Nav extends Component {
         $tpl->render();
         $result .= $tpl->getSource();
       } else {
-        $tpl = new Component('navParentItem.tpl', $this->templateDirectory);
+        $tpl = new Component($this->templateDirectory.'navParentItem.tpl');
         $tpl->setVariables($category['link']);
         $child = $this->buildCategories($category['child'], $result, $indent);
         $tpl->assignText('@@child@@', $child);

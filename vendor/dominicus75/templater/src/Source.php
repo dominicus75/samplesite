@@ -21,18 +21,30 @@ class Source
 
   /**
    *
-   * @param string $url Fully qualified path name of template file (tpl|html)
+   * @param string $tplFile Fully qualified path name of template file (tpl|html)
    *
    * @throws \Dominicus75\Templater\Exceptions\FileNotFoundException if the template
    * file does not exists
    *
    */
-  public function __construct(string $tplFile) {
+  public function __construct(string $tplFile = '') {
+    if(!empty($tplFile)) {
+      if(is_file($tplFile)) {
+        $this->source = file_get_contents($tplFile);
+      } else { throw new Exceptions\FileNotFoundException($tplFile.' does not exists.'); }
+    } else { $this->source = ''; }
+  }
 
-    if(is_file($tplFile)) {
-      $this->source = file_get_contents($tplFile);
-    } else { throw new Exceptions\FileNotFoundException($tplFile.' does not exists.'); }
 
+  /**
+   *
+   * @param string $marker in form '%%marker%%' or '{{marker}}' or '@@marker@@'
+   * what we are looking for
+   * @return bool true, if marker was found in $this->source, false otherwise
+   *
+   */
+  protected function hasMarker(string $marker): bool {
+    return (bool)preg_match("/".$marker."/i", $this->source);
   }
 
 

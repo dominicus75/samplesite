@@ -1,66 +1,36 @@
 
-      /* Common css */
+      /* Reset css */
 
-
-      /* Begin of reset */
-      html, body, div, span,
-      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-      abbr, address, cite, code,
-      del, dfn, em, img, ins,
-      strong, sub, sup, var,
-      b, i, dl, dt, dd, ol, ul, li,
-      fieldset, form, label, legend,
-      table, caption, tr, th, td,
-      article, aside, canvas, details, figcaption, figure,
-      footer, header, hgroup, menu, nav, section, summary,
-      time, mark, audio, video {
-        margin:0;
-        padding:0;
-        border:0;
-        outline:0;
-        vertical-align:baseline;
-        background:transparent;
+      html, body, div, span, object, iframe,
+      h1, h2, h3, p, blockquote, pre, a, img, q, s, sub, sup,
+      b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, legend,
+      form, label, table, tr, th, td, article, aside,
+      figure, figcaption, footer, header, menu, nav,
+      section, .fa, input {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        vertical-align: middle;
         box-sizing: border-box;
       }
 
-      body { line-height:1; }
+      article, aside, figcaption, figure, footer, form, header,
+      hgroup, menu, nav, section { display: block; }
 
-      article,aside,details,figcaption,figure,
-      footer,header,hgroup,menu,nav,section,
-      form,input,label {
-        display:block;
+      body { line-height: 1.2; }
+      ol, ul { list-style: none; }
+      blockquote, q { quotes: none; }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
       }
 
-      ul, li {
-        list-style:none;
-      }
-
-      blockquote, q {
-        quotes:none;
-      }
-
-      blockquote:before, blockquote:after,
-      q:before, q:after {
-        content:'';
-        content:none;
-      }
-
-      a {
-        margin:0;
-        padding:0;
-        font-size:100%;
-        vertical-align:baseline;
-        background:transparent;
-        text-decoration: none;
-      }
-
-      input, select {
-        vertical-align:middle;
-      }
-      /* End of reset */
-
+      a { text-decoration: none; }
 
       /*  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome */
+
       @font-face {
         font-family: 'FontAwesome';
         src: url('/fonts/fontawesome-webfont.eot');
@@ -94,259 +64,269 @@
       .fa-file:before { content: "\f15b"; }
       .fa-home:before { content: "\f015"; }
       .fa-money:before { content: "\f0d6"; }
-      .fa-globe:before { content: "\f0ac"; }
-      .fa-globe {
-        display: inline;
+
+
+      /* Google webfonts */
+
+      /* Ubuntu latin-ext */
+      @font-face {
+        font-family: 'Ubuntu';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Ubuntu Regular'),
+             local('Ubuntu-Regular'),
+             url(https://fonts.gstatic.com/s/ubuntu/v10/4iCs6KVjbNBYlgoKcQ72j00.woff2) format('woff2');
+        unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
       }
-      /* End FontAwesome */
 
+      /* Ubuntu latin */
+      @font-face {
+        font-family: 'Ubuntu';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Ubuntu Regular'),
+             local('Ubuntu-Regular'),
+             url(https://fonts.gstatic.com/s/ubuntu/v10/4iCs6KVjbNBYlgoKfw72.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+      }
 
-      /* Begin of alignments */
-      .textRight { text-align: right; }
-      .textCenter { text-align: center; }
-      .textJustify { text-align: justify; }
-      .floatRight { float: right; }
-      .floatLeft { float: left; }
-      /* End of alignments */
+      /* Ubuntu bold latin-ext */
+      @font-face {
+        font-family: 'Ubuntu';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Ubuntu Bold'),
+             local('Ubuntu-Bold'),
+             url(https://fonts.gstatic.com/s/ubuntu/v10/4iCv6KVjbNBYlgoCxCvjvmyNL4U.woff2) format('woff2');
+        unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+      }
 
+      /* Ubuntu bold latin */
+      @font-face {
+        font-family: 'Ubuntu';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Ubuntu Bold'),
+             local('Ubuntu-Bold'),
+             url(https://fonts.gstatic.com/s/ubuntu/v10/4iCv6KVjbNBYlgoCxCvjsGyN.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+      }
 
-      /* Begin of layouts */
+      /* Source Sans Pro latin-ext */
+      @font-face {
+        font-family: 'Source Sans Pro';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Source Sans Pro Regular'),
+             local('SourceSansPro-Regular'),
+             url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlC2Q8seG17bfDXYR_jUsrzg.woff2) format('woff2');
+        unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+      }
+
+      /* Source Sans Pro latin */
+      @font-face {
+        font-family: 'Source Sans Pro';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Source Sans Pro Regular'),
+             local('SourceSansPro-Regular'),
+             url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlNV_2ngZ8dMf8fLgjYEouxg.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+      }
+
+      /* Common styleseet */
+
       body {
-        font-family: "Times New Roman", Times, serif;
-        background-color: rgb(5, 153, 253);
-      }
-
-      aside > table {
-        border-collapse: collapse;
-        width: 100%;
-        background-image: url('/images/mnb.jpg');
-        background-repeat: no-repeat;
-        background-position: center;
+        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+        font-size: 12pt;
+        background-image: url('{{background}}');
         background-size: cover;
-        color: rgb(254, 250, 159);
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
-        font-size: 1.5rem;
-      }
-
-      aside > table > caption {
-        margin: 1rem 0;
-        font-size: 2rem;
-      }
-
-      aside > table, th, td {
-        border: 1px solid rgb(254, 250, 159);
-        text-align: center;
-      }
-
-      th, td {
-        padding: 0.5rem;
-      }
-
-      td:nth-child(3) {
-        text-align: right;
-        padding-right: 2rem;
-      }
-
-      th { background-color: rgba(21, 29, 76, 0.75); }
-      td { background-color: rgba(0, 0, 0, 0.4); }
-      tr:hover { background-color: rgba(0, 0, 0, 0.75); }
-
-      article > header {
-        width: 100%;
-        margin-bottom: 1rem;
-        background-image: url('{{image}}');
         background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-      }
-
-      footer {
-        background-color: rgb(21, 29, 76);
-        border-top: 1px solid rgb(254, 250, 159);
-        padding: 3rem;
-      }
-      /* End of layouts */
-
-
-      /* Begin of headings and paragraphs */
-      h1, h1 > a {
-        color: rgb(254, 250, 159);
-        font-size: 5rem;
-        text-align: center;
-        vertical-align: middle;
-        text-transform: uppercase;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
-      }
-
-      h1 > a:hover,
-      footer > p > a:hover {
-        color: red;
-      }
-
-      h2, h3, h4, h5 {
-        color: rgb(254, 250, 159);
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
-      }
-
-      h2 {
-        font-size: 3rem;
-        margin: 1rem auto 1.5rem 0;
-      }
-
-      h3 {
-        font-size: 2.6rem;
-        margin: 1rem 1rem 1rem 0;
-      }
-
-      h4 {
-        font-size: 2.2rem;
-        margin: 1rem 1rem 1rem 0;
-      }
-
-      h5 {
-        font-size: 1.8rem;
-        margin: 1rem 1rem 1rem 0;
-      }
-
-      p.site_slogan, footer > p {
-        color: rgb(254, 250, 159);
-        font-size: 1.6rem;
-        text-align: center;
-        font-style: italic;
-        vertical-align: middle;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
-      }
-
-      article > header > p {
-        color: rgb(254, 250, 159);
-        font-weight: bold;
-        font-size: 1.6rem;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
-      }
-
-      p {
-        text-align: justify;
-        font-size: 1.4rem;
-      }
-
-      pre {
-        font-size: 1rem;
-      }
-
-      body > header {
+        background-attachment: fixed;
         width: 100%;
-        padding: 3rem 0;
-        background-image: url('/images/background.jpg');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-        text-align: center;
-      }
-      /* End of headings and paragraphs */
-
-
-      /* Begin of navigation elements */
-      input[type=checkbox]#show-menu, label[for=show-menu], .fa-bars {
-        display: none;
       }
 
       nav {
-        background-color: rgb(21, 29, 76);
-        border-top: 1px solid rgb(254, 250, 159);
-        border-bottom: 1px solid rgb(254, 250, 159);
+        position: fixed;
+        height: 100%;
+        width: 220px;
+        border-right: 1px solid black;
+        color: white;
+        text-shadow: 0.25em 0.25em 0.5em rgb(0, 0, 0);
       }
 
-      nav > * { border: none; }
-
-      nav ul li {
-        padding: 1vh 2vw;
-        position: relative;
-        transition-duration: 0.5s;
+      nav ul {
+        height: 100%;
+        background: linear-gradient(rgba(64,64,64,0.8), rgba(255,255,255,0.7), rgba(0,0,0,1));
       }
 
       nav a {
-        color: rgb(254, 250, 159);
-        font-size: 1.4rem;
+        color: white;
+        margin-left: 10px;
+      }
+
+      nav a:hover { color: yellow; }
+
+      nav ul li:first-child {
+        text-align: center;
+        padding-left: 0;
+      }
+
+      nav ul li {
+        padding: 5px 18px;
+      }
+
+      .online i {
+        color: lightgreen;
+      }
+
+      .admin-img {
+        display: inline-block;
+        width: 180px;
+        height: 180px;
+        border: 1px solid black;
+        border-radius: 100px;
+        margin: 20px;
+        box-shadow: 0.25em 0.25em 1em rgb(0, 0, 0);
+      }
+
+      article {
+        margin-left: 221px;
+        padding: 3vw;
+      }
+
+      h1, h2, h3, form, nav, header { font-family: 'Ubuntu', sans-serif; }
+
+      header {
+        margin-bottom: 3%;
+        padding: 1em;
+        background-color: rgba(0,0,128,0.8);
+        border: 1px solid darkblue;
+        color: white;
+        text-shadow: 0.25em 0.25em 0.5em rgb(0, 0, 0);
+      }
+
+      header h1 {
+        display: inline-block;
+        font-size: 1.5em;
+      }
+
+      nav, header, table { box-shadow:  0.5em 0.5em 1em rgb(0, 0, 0); }
+
+      /* Alerts */
+
+      .alert {
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 0.5em;
+        padding: 1em;
+        text-align: center;
+        vertical-align: middle;
+        background-color: white;
+      }
+
+      .alert a { vertical-align: top; }
+
+      .success {
+        background-image: linear-gradient(to bottom right, rgba(223, 240, 216, 0.5), rgba(81, 141, 22, 1));
+        border-color: green;
+        color: darkgreen;
+      }
+
+      .info {
+        background-image: linear-gradient(to bottom right, rgba(217, 237, 247, 0.5), rgba(44, 152, 206, 1));
+        border-color: blue;
+        color: darkblue;
+      }
+
+      .danger {
+        background-image: linear-gradient(to bottom right, rgba(255,204,204, 0.5), rgba(255,102,102, 1));
+        border-color: red;
+        color: darkred;
+      }
+
+      input[type="submit"], .button {
         font-weight: bold;
-      }
-
-      nav li:hover,
-      nav li:focus-within {
-        color: rgb(21, 29, 76);
-        background-color: red;
         cursor: pointer;
+        color: whitesmoke;
+        border: 1px solid blue;
+        border-right-color: darkblue;
+        border-bottom-color: darkblue;
+        background: linear-gradient(lightblue, blue);
+        padding: 0.5em 1em;
       }
 
-      nav li:focus-within a {
+      input[type="submit"]:active, .button:active {
+        color: yellow;
+        background: linear-gradient(darkblue, blue);
+        border-color: blue;
+        border-top-color: darkblue;
+        border-left-color: darkblue;
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.25);
         outline: none;
       }
 
-      nav ul li ul {
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        transition: all 0.5s ease;
-        margin-top: 1vh;
-        left: 0;
-        display: none;
-      }
 
-      nav ul li:hover > ul,
-      nav ul li:focus-within > ul,
-      nav ul li ul:hover,
-      nav ul li ul:focus {
-        background-color: rgb(21, 29, 76);
-        border: 1px solid rgb(254, 250, 159);
-        visibility: visible;
-        opacity: 1;
-        display: list-item;
-      }
+      /* Styleseet for login */
 
-      footer > p > a {
-        color: rgb(254, 250, 159);
-      }
-      /* End of navigation elements */
-
-
-      /* Begin of images */
-      figure {
-        margin: 1rem 0;
-      }
-
-      figcaption {
+      form {
+        width: 100%;
+        height: 100vh;
         text-align: center;
-        font-size: 1.2rem;
+        vertical-align: middle;
+      }
+
+      fieldset {
+        display: inline-block;
+        margin: 12% auto 1em auto;
+        padding: 10px 20px;
+        text-align: right;
+        background: linear-gradient(rgba(255,255,255,0.8),rgba(128,128,128,0.7));
+        box-shadow:  0.25em 0.25em 1em rgb(0, 0, 0);
+      }
+
+      legend {
+        padding: 0.3em 0.5em;
+        background: linear-gradient(lightgrey, grey);
         font-weight: bold;
-        color: rgb(254, 250, 159);
       }
 
-      img, article > header {
-        border: 1px solid rgb(254, 250, 159);
+      fieldset, legend {
+        border: 1px solid rgba(192,192,192,0.6);
+        border-radius: 0.5em;
+        border-right-color: rgba(128,128,128,0.9);
+        border-bottom-color: rgba(128,128,128,0.9);
       }
 
-      img.left {
-        float: left;
-        margin: 0.5rem 1rem 1rem 0;
+      fieldset ul li {
+        margin: 20px 0;
+        height: 38px;
+        border: 1px solid darkgrey;
+        border-top-left-radius: 0.5em;
+        border-bottom-left-radius: 0.5em;
+        background-color: lightgrey;
       }
 
-      img.right {
-        float: right;
-        margin: 0.5rem 0 1rem 1rem;
+      fieldset ul li:last-child {
+        margin-top: 20px;
+        border: 0;
+        background-color: transparent;
       }
 
-      img.landscape {
-        margin: 1rem 0;
-        width: 100%;
+      .fa { margin-left: 6px; }
+
+      input[type="text"], input[type="email"], input[type="password"] {
+        width: 300px;
+        height: 36px;
+        padding-left: 0.5em;
+        border-left: 1px solid darkgrey;
+        outline: none;
       }
 
-      img.portrait {
-        width: 40%;
+      input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+        outline: blue solid 1px;
+        background-color: yellow;
       }
 
-      iframe {
-        width: 100%;
-        height: 39vw;
-        margin: 1rem 0;
-        border: 1px solid rgb(254, 250, 159);
-      }
-      /* End of images */
+      a.reg { display: block; }
+

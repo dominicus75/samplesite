@@ -8,7 +8,7 @@
 namespace Application\Model;
 
 use \Dominicus75\Config\Config;
-use \Dominicus75\Model\{AbstractModel, PDO};
+use \Dominicus75\Model\PDO;
 
 class Nav
 {
@@ -107,5 +107,11 @@ class Nav
 
   public function getPages(): array { return $this->pages; }
   public function getCategories(): array { return $this->categories; }
+  public function getMenu(): array {
+    return [
+      'pages'      => $this->pages,
+      'categories' => $this->categories
+    ];
+  }
 
 }

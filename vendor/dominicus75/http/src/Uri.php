@@ -39,7 +39,7 @@ class Uri
 
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    return  preg_match("/^\/([\/a-zA-Z0-9_\-\.~]{1,128})?$/i", $path) ? $path : '/';
+    return  preg_match("/^\/([\/a-zA-Z0-9_\-\.~]{1,255})?$/i", $path) ? $path : '/';
 
   }
 

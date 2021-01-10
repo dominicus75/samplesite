@@ -19,7 +19,7 @@ return [
     'category'  => ['create', 'view', 'edit', 'delete'],
     'message'   => ['create', 'view', 'edit', 'delete'],
     'user'      => ['create', 'view', 'edit', 'delete', 'login', 'logout', 'register'],
-    'admin'     => ['login', 'logout'],
+    'admin'     => ['login', 'logout', 'dashboard'],
     'profile'   => ['create', 'view', 'edit', 'delete'],
     'dashboard' => ['view'],
     'page'      => ['create', 'view', 'edit', 'delete']
@@ -43,7 +43,7 @@ return [
       'user'      => ['login', 'logout', 'register']
     ],
     'admin'   => [
-      'admin'     => ['login', 'logout'],
+      'admin'     => ['login', 'logout', 'dashboard'],
       'ajax'      => ['get', 'post'],
       'article'   => ['create', 'view', 'edit', 'delete'],
       'category'  => ['create', 'view', 'edit', 'delete'],

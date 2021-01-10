@@ -28,10 +28,12 @@ class Table
 
   /**
    *
-   * @var string name of the primary key column (e. g. 'id')
+   * @var array what contains the name of the primary key column (e. g. 'id')
+   * and this column has auto_increment attribute or not in form
+   * $primaryKey = ['name' => string, 'auto_increment' => bool]
    *
    */
-  private string $primaryKey;
+  private array $primaryKey;
 
   /**
    *
@@ -130,7 +132,15 @@ class Table
    * @return string name of the primary key column (e. g. 'id')
    *
    */
-  public function getPrimaryKey(): string { return $this->primaryKey; }
+  public function getPrimaryKey(): string { return $this->primaryKey['name']; }
+
+  /**
+   * Check if a PRIMARY KEY is auto increment or not
+   * @param void
+   * @return bool
+   *
+   */
+  public function isPrimaryAutoIncrement(): bool { return $this->primaryKey['auto_increment']; }
 
   /**
    * It is used to insert a new record in this table
@@ -148,7 +158,7 @@ class Table
     $variables = '';
 
     foreach($this->columns as $name => $properties) {
-      if($name == $this->primaryKey && is_null($content[$this->primaryKey])) {
+      if($name == $this->primaryKey['name'] && $this->primaryKey['auto_increment']) {
         continue;
       } else {
         $fields .= '`'.$name.'`, ';
@@ -163,7 +173,7 @@ class Table
     $statement = $this->database->prepare($sql);
 
     foreach($this->columns as $name => $properties) {
-      if($name == $this->primaryKey && is_null($content[$this->primaryKey])) {
+      if($name == $this->primaryKey['name'] && $this->primaryKey['auto_increment']) {
         continue;
       } else {
         $statement->bindParam($properties[0], $content[$name], $properties[1]);
@@ -214,7 +224,11 @@ class Table
         } else {
           throw new InvalidStatementException($statement[2]." comparison operator is not allowed");
         }
-        $result[$index]['value'] = $statement[3];
+        if(preg_match("/^([\p{L}\p{N}\,\.\s\/]{1,128})$/iu", $statement[3])) {
+          $result[$index]['value'] = preg_replace("/(\s?.*\s?=\s?.*\s?|\s?drop\s?|;|\s?--\s?)/iu", '', $statement[3]);
+        } else {
+          throw new InvalidStatementException("Invalid characters!");
+        }
         $index++;
       } else {
         throw new InvalidStatementException("The statement array must be contains 4 items");
@@ -231,21 +245,28 @@ class Table
    * It is used to select data from this table
    *
    * @param array $key
-   * $key[0] is key name (e. g. 'id')
-   * $key[1] is value belongs to key (e. g. '1234' or 'contact')
+   * $key[0] is key name (e. g. 'id') or null
+   * $key[1] is value belongs to key (e. g. '1234' or 'contact') or null
+   * @param array $fields list of selected columns, if it is empty, then select all columns (*)
    * @param array $furtherConditions
    * values are arrays what contain further conditions to WHERE clause
    * (e. g. 0 => ['AND', 'type', '=', 'page'], 1 => ['AND NOT', 'type', '=', 'article'])
+   * if it is empty, there are not conditions
+   * @param bool $fetchAll if it is true, the PDOStatement::fetchAll() will run,
+   * if false PDOStatement::fetch()
    *
    * @return array the result of the SELECT statement or empty array
    * @throws InvalidFieldNameException if field not exists
    *
    */
-  public function select(array $key, array $fields = [], array $furtherConditions = []): array {
+  public function select(array $key, array $fields, array $furtherConditions, bool $fetchAll = false): array {
 
-    if($this->hasColumn($key[0])) {
+    if(is_null($key[0]) && is_null($key[1])) {
+      $where      = '';
+    } elseif($this->hasColumn($key[0])) {
       $fieldName  = $key[0];
       $fieldValue = $key[1];
+      $where      = " WHERE ".$fieldName." = ".$this->columns[$fieldName][0];
     } else {
       throw new InvalidFieldNameException("The {$key[0]} not exists in the {$this->table} table");
     }
@@ -263,19 +284,24 @@ class Table
     } else { $columns = '*'; }
 
     $sql  = "SELECT ".$columns." FROM ".$this->table;
-    $sql .= " WHERE ".$fieldName." = ".$this->columns[$fieldName][0];
+    $sql .= $where;
 
     if(!empty($furtherConditions)) {
-      foreach($this->sanitizeWhereStatements($furtherConditions) as $condition) {
+      $conditions = $this->sanitizeWhereStatements($furtherConditions);
+      if(empty($where)) { $conditions[0]['logical'] = " WHERE "; }
+      foreach($conditions as $condition) {
         $sql .= " ".$condition['logical']." ".$condition['column'];
         $sql .= " ".$condition['comparison']." ".$this->columns[$condition['column']][0];
       }
     }
 
     $statement = $this->database->prepare($sql);
-    $statement->bindParam($this->columns[$fieldName][0],
-                          $fieldValue,
-                          $this->columns[$fieldName][1]);
+
+    if($this->hasColumn($key[0])) {
+      $statement->bindParam($this->columns[$fieldName][0],
+                            $fieldValue,
+                            $this->columns[$fieldName][1]);
+    }
 
     if(!empty($furtherConditions)) {
       foreach($this->sanitizeWhereStatements($furtherConditions) as $condition) {
@@ -286,7 +312,7 @@ class Table
     }
 
     $statement->execute();
-    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    $result = $fetchAll ? $statement->fetchAll() : $statement->fetch(PDO::FETCH_ASSOC);
 
     if($result) {
       return $result;
@@ -309,7 +335,7 @@ class Table
     if(empty($content)) { return false; }
 
     if(empty($key)){
-      $fieldName = $this->primaryKey;
+      $fieldName = $this->primaryKey['name'];
     } elseif($this->hasColumn($key)) {
       $fieldName = $key;
     } else { return false; }
