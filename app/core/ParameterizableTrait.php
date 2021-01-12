@@ -32,6 +32,10 @@ trait ParameterizableTrait
     if(!$this->hasParameter($name)) { $this->parameters[$name] = $value; }
   }
 
+  protected function updateParameter(string $name, $value): void {
+    if($this->hasParameter($name)) { $this->parameters[$name] = $value; }
+  }
+
   protected function getParameter(string $name) {
     if($this->hasParameter($name)) {
       return $this->parameters[$name];

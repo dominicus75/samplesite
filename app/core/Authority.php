@@ -9,6 +9,7 @@ namespace Application\Core;
 
 use \Dominicus75\Model\PDO;
 use \Dominicus75\Config\Config;
+use \Dominicus75\Router\Route;
 
 class Authority
 {
@@ -37,49 +38,63 @@ class Authority
   private int $expired;
 
   /**
+   *
+   * @var Route
+   *
+   */
+  private Route $route;
+
+  /**
    * Constructor of class Authority.
    *
    * @param string $role user's role (admin|visitor)
    *
    * @return void
    */
-  public function __construct(string $role)
+  public function __construct(Route $route)
   {
-    try {
-      $this->pdo = PDO::getInstance(new Config('mysql'));
-      Session::init();
-      Session::set('role', $role);
-    } catch(\PDOException $e) { throw $e; }
+    $this->route = $route;
+    if($this->route->role != 'visitor') {
+      try {
+        $this->pdo   = PDO::getInstance(new Config('mysql'));
+        Session::init();
+        Session::set('role', $this->route->role);
+      } catch(\PDOException $e) { throw $e; }
+    }
   }
 
 
   public function authenticate(): bool {
-    $this->now     = time();
-    $this->expired = $this->now - 600;
-    if(!isset($_SESSION[$_SESSION['role']]['spass']) && !isset($_SESSION[$_SESSION['role']]['sid'])) {
-      return false;
+    if($this->route->role == 'visitor' && preg_match("/(Article|Category|Message|Page)$/", $this->route->controller) && $this->route->method == 'view') {
+      return true;
     } else {
-      $sql = "SELECT stime FROM sessions WHERE sid = :sid AND spass = :spass LIMIT 1";
-      $statement = $this->pdo->prepare($sql);
-      $statement->bindParam(':sid', $_SESSION[$_SESSION['role']]['sid'], PDO::PARAM_STR);
-      $statement->bindParam(':spass', $_SESSION[$_SESSION['role']]['spass'], PDO::PARAM_STR);
-      $statement->execute();
-      $session = $statement->fetch(PDO::FETCH_ASSOC);
-      if(!$session || $session['stime'] < $this->expired) {
-        $sql = "DELETE FROM sessions WHERE sid = :sid AND spass = :spass LIMIT 1";
+      $this->now     = time();
+      $this->expired = $this->now - 600;
+      if(!isset($_SESSION[$_SESSION['role']]['spass']) && !isset($_SESSION[$_SESSION['role']]['sid'])) {
+        return false;
+      } else {
+        $sql = "SELECT stime FROM sessions WHERE sid = :sid AND spass = :spass LIMIT 1";
         $statement = $this->pdo->prepare($sql);
         $statement->bindParam(':sid', $_SESSION[$_SESSION['role']]['sid'], PDO::PARAM_STR);
         $statement->bindParam(':spass', $_SESSION[$_SESSION['role']]['spass'], PDO::PARAM_STR);
         $statement->execute();
-        Session::destroy();
-        return false;
-      } else {
-        $sql = "UPDATE sessions SET stime = :now WHERE sid = :sid AND spass = :spass LIMIT 1";
-        $statement = $this->pdo->prepare($sql);
-        $statement->bindParam(':now', $this->now, PDO::PARAM_INT);
-        $statement->bindParam(':sid', $_SESSION[$_SESSION['role']]['sid'], PDO::PARAM_STR);
-        $statement->bindParam(':spass', $_SESSION[$_SESSION['role']]['spass'], PDO::PARAM_STR);
-        return $statement->execute();
+        $session = $statement->fetch(PDO::FETCH_ASSOC);
+        if(!$session || $session['stime'] < $this->expired) {
+          $sql = "DELETE FROM sessions WHERE sid = :sid AND spass = :spass LIMIT 1";
+          $statement = $this->pdo->prepare($sql);
+          $statement->bindParam(':sid', $_SESSION[$_SESSION['role']]['sid'], PDO::PARAM_STR);
+          $statement->bindParam(':spass', $_SESSION[$_SESSION['role']]['spass'], PDO::PARAM_STR);
+          $statement->execute();
+          Session::destroy();
+          return false;
+        } else {
+          $sql = "UPDATE sessions SET stime = :now WHERE sid = :sid AND spass = :spass LIMIT 1";
+          $statement = $this->pdo->prepare($sql);
+          $statement->bindParam(':now', $this->now, PDO::PARAM_INT);
+          $statement->bindParam(':sid', $_SESSION[$_SESSION['role']]['sid'], PDO::PARAM_STR);
+          $statement->bindParam(':spass', $_SESSION[$_SESSION['role']]['spass'], PDO::PARAM_STR);
+          return $statement->execute();
+        }
       }
     }
   }

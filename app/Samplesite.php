@@ -29,25 +29,15 @@ class Samplesite
       $router           = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
       $this->route      = $router->dispatch();
       unset($router);
-      $this->auth       = new Core\Authority($this->route->role);
-
-      if($this->route->role != 'visitor' && $this->route->method != 'login' && !$this->auth->authenticate()) {
-        $this->response->redirect('/admin/login.html');
-      }
+      $this->auth       = new Core\Authority($this->route);
 
       switch($this->route->controller) {
         case '\Application\Controller\Message':
           $this->controller = new Controller\Message($this->route);
           $this->response->setStatusCode($this->route->cid);
         break;
-        /*case '\Application\Controller\Admin':
-          if($this->auth->authenticate()) {
-            //$this->response->redirect('/admin/dashboard.html');
-          }
-        break;*/
         default:
           $this->controller = new $this->route->controller($this->route, $this->request);
-          $this->controller->{$this->route->method}();
         break;
       }
 
@@ -56,16 +46,21 @@ class Samplesite
       \Dominicus75\Http\InvalidArgumentException |
       \Dominicus75\Http\RuntimeExceptionR $e
     ) {
-      //$this->controller = new Controller\Message('Hiba', '/images/failure.jpg', $e->getMessage());
-      //$responseBody = $this->controller->view();
+      $this->controller = new Controller\Message(
+        $this->route, [
+          'title'       => 'Hiba',
+          'description' => $e->getMessage(),
+          'image'       => '/images/failure.jpg'
+        ]
+      );
+      $this->response->setStatusCode(500);
+      $this->response->send();
     } catch(
       \Dominicus75\Router\ControllerNotFoundException |
       \Dominicus75\Router\MethodNotFoundException |
       \Dominicus75\Router\RouteNotFoundException $e
     ) {
-      //$this->controller = new Controller\Message('404');
-      //$this->response->setStatusCode(404);
-      //$responseBody = $this->controller->view();
+      $this->response->redirect('/message/404.html');
     }
 
   }
@@ -73,29 +68,16 @@ class Samplesite
 
   public function run() {
 
+    if(!$this->auth->authenticate() && $this->route->method != 'login') {
+      $this->response->redirect('/admin/login.html');
+    }
 
-
-//$page = new Controller\Page($this->route, $this->request);
-//echo $page->display();
-//echo $nav->getNav();
-
-//$mnb = new Controller\MNB();
-//$aside = new View\Aside(['@@mnb@@' => $mnb->display()]);
-//echo $mnb->display();
-
-
-//echo $skeleton->getSource();
-//echo "<pre>";
-//var_dump($admin);
-//preg_match("/^(=|>|<|<>|<=|>=)$/i", "<>", $matches);
-//var_dump($matches);
-//var_dump(new \Dominicus75\Router\Mapper(new \Dominicus75\Config\Config('mapper')));
-//echo "</pre>";
-
-
-
-    $this->response->setBody($this->controller->display());
-    $this->response->send();
+    if(!$this->controller->hasRedirect()) {
+      $this->response->setBody($this->controller->display());
+      $this->response->send();
+    } else {
+      $this->response->redirect($this->controller->getRedirect());
+    }
 
   }
 

@@ -73,6 +73,8 @@ class Admin extends \Application\Core\AbstractController
           'stime' => time()
         ]);
         $this->session->insertData();
+        $this->success = true;
+        $this->redirect = '/admin/dashboard.html';
       }
     }
   }
@@ -81,10 +83,13 @@ class Admin extends \Application\Core\AbstractController
     $this->session = new Entity('session', 'sessions', $this->model->getDatabase());
     $this->session->deleteData(['sid', Session::get('admin', 'sid')]);
     Session::destroy();
+    $this->success = true;
+    $this->redirect = '/admin/login.html';
   }
 
   public function dashboard() {
     $this->layout = new \Application\View\Admin\View('admin');
+    $this->success = true;
   }
 
 }

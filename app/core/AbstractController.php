@@ -20,6 +20,8 @@ use \Dominicus75\Model\{Entity, EntityInterface};
 abstract class AbstractController
 {
 
+  use ParameterizableTrait;
+
   /**
    *
    * @var Dominicus75\Router\Route current route instance
@@ -57,6 +59,20 @@ abstract class AbstractController
 
   /**
    *
+   * @var bool running of call_user_func() method was a success or not
+   *
+   */
+  protected bool $success = false;
+
+  /**
+   *
+   * @var string redirect uri or null
+   *
+   */
+  protected ?string $redirect = null;
+
+  /**
+   *
    * @param Router\Route $route current route instance
    * @param array $parameters parameters of this controller
    *
@@ -71,13 +87,13 @@ abstract class AbstractController
     try {
       $this->route      = $route;
       $this->request    = $request;
-      $this->parameters = $parameters;
+      $this->setParameters($parameters);
       $this->model      = new Entity(
         $this->parameters['content_type'],
         $this->parameters['content_table'],
         new Config('mysql')
       );
-      call_user_func(array($this, $this->route->method));
+      $this->result     = call_user_func(array($this, $this->route->method));
     } catch(\PDOException | NotFoundException | NotReadableException | NotWriteableException $e) {
       echo '<h2>'.$e->getMessage().'</h2>';
     }
@@ -100,5 +116,33 @@ abstract class AbstractController
       echo '<h2>'.$e->getMessage().'</h2>';
     }
   }
+
+
+  /**
+   *
+   * Checks, that running of call_user_func() method was a success or not
+   * @param void
+   * @return bool
+   *
+   */
+  public function isSuccess(): bool { return $this->success; }
+
+
+  /**
+   *
+   * @param void
+   * @return bool
+   *
+   */
+  public function hasRedirect(): bool { return !is_null($this->redirect); }
+
+
+  /**
+   *
+   * @param void
+   * @return string|null
+   *
+   */
+  public function getRedirect(): ?string { return $this->redirect; }
 
 }

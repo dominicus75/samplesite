@@ -51,13 +51,16 @@ class Page extends \Application\Core\AbstractController
       ['url', 'title', 'description', 'image', 'body'],
       []
     );
-    $variables['image'] = '/upload/images/'.$variables['image'];
-    if($this->route->role == 'admin') {
-      $this->layout = new \Application\View\Admin\View('page');
-    } else {
-      $this->layout = new \Application\View\Visitor\View('page');
-    }
-    $this->layout->updateVariables($variables);
+    if(!empty($variables)) {
+      $variables['image'] = '/upload/images/'.$variables['image'];
+      if($this->route->role == 'admin') {
+        $this->layout = new \Application\View\Admin\View('page');
+      } else {
+        $this->layout = new \Application\View\Visitor\View('page');
+      }
+      $this->layout->updateVariables($variables);
+      $this->success = true;
+    } else { $this->redirect = '/message/404.html'; }
   }
 
   public function edit(): void {
