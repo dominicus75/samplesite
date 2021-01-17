@@ -224,7 +224,7 @@ class Table
         } else {
           throw new InvalidStatementException($statement[2]." comparison operator is not allowed");
         }
-        if(preg_match("/^([\p{L}\p{N}\,\.\s\/]{1,128})$/iu", $statement[3])) {
+        if(preg_match("/^([\p{L}\p{N}\,\.\s\/@]{1,128})$/iu", $statement[3])) {
           $result[$index]['value'] = preg_replace("/(\s?.*\s?=\s?.*\s?|\s?drop\s?|;|\s?--\s?)/iu", '', $statement[3]);
         } else {
           throw new InvalidStatementException("Invalid characters!");
@@ -325,37 +325,36 @@ class Table
    *
    * @param array $content in 'key' => 'value' form
    * (e. g. 'url' => 'aboutus', 'title' => 'About us')
-   * @param string $key [optional, defeult is the primary key]
-   * the updatable row's key
+   * @param array $key
+   * $key[0] is key name (e. g. 'id')
+   * $key[1] is value belongs to key (e. g. '1234' or 'contact')
    * @return bool Returns true on success or false on failure
    *
    */
-  public function update(array $content, string $key = ''): bool {
+  public function update(array $content, array $key): bool {
 
     if(empty($content)) { return false; }
 
-    if(empty($key)){
-      $fieldName = $this->primaryKey['name'];
-    } elseif($this->hasColumn($key)) {
-      $fieldName = $key;
-    } else { return false; }
+    if($this->hasColumn($key[0])) {
+      $fieldName  = $key[0];
+      $fieldValue = $key[1];
+      $sql  = "UPDATE ".$this->table." SET ";
+      foreach($content as $name => $value) {
+        $sql .= $name." = ".$this->columns[$name][0].", ";
+      }
+      $sql = rtrim($sql, ', ');
+      $sql .= " WHERE ".$fieldName." = ".$this->columns[$fieldName][0];
+      $statement = $this->database->prepare($sql);
+      $statement->bindParam($this->columns[$fieldName][0], $fieldValue, $this->columns[$fieldName][1]);
 
-    $sql  = "UPDATE ".$this->table." SET ";
+      foreach($content as $name => $value) {
+        $statement->bindParam($this->columns[$name][0], $value, $this->columns[$name][1]);
+      }
 
-    foreach($content as $name => $value) {
-      $sql .= $name." = ".$this->columns[$name][0].", ";
+      return $statement->execute();
+    } else {
+      throw new InvalidFieldNameException("The {$key[0]} not exists in the {$this->table} table");
     }
-
-    $sql = rtrim($sql, ', ');
-    $sql .= " WHERE ".$fieldName." = ".$this->columns[$fieldName][0];
-
-    $statement = $this->database->prepare($sql);
-
-    foreach($content as $name => $value) {
-      $statement->bindParam($this->columns[$name][0], $value, $this->columns[$name][1]);
-    }
-
-    return $statement->execute();
 
   }
 

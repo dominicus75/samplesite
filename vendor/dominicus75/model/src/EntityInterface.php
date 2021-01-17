@@ -142,12 +142,13 @@ interface EntityInterface {
    * It is used to modify an existing record in table by
    * return value of EntityInterface::getUpdated() in this table
    *
-   * @param string $key [optional, defeult is the primary key]
-   * the updatable row's key
+   * @param array $key
+   * $key[0] is key name (e. g. 'id')
+   * $key[1] is value belongs to key (e. g. '1234' or 'contact')
    * @return bool Returns true on success or false on failure
    *
    */
-  public function updateData(string $key = ''): bool;
+  public function updateData(array $key): bool;
 
   /**
    * It is used to delete an existing record in table

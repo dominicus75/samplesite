@@ -53,10 +53,11 @@ class Page extends \Application\Core\AbstractController
     );
     if(!empty($variables)) {
       $variables['image'] = '/upload/images/'.$variables['image'];
+      $parameters = ['type' => 'page', 'action' => 'view'];
       if($this->route->role == 'admin') {
-        $this->layout = new \Application\View\Admin\View('page');
+        $this->layout = new \Application\View\Admin\View($parameters);
       } else {
-        $this->layout = new \Application\View\Visitor\View('page');
+        $this->layout = new \Application\View\View($parameters);
       }
       $this->layout->updateVariables($variables);
       $this->success = true;

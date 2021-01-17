@@ -19,11 +19,11 @@ class Session
    * Start new or resume existing session
    *
    * @param void
-   * @return bool returns true if the session was successfully started, otherwise false
+   * @return void
    *
    */
-  public static function init(): bool {
-    if(session_id() == '') { return session_start(); }
+  public static function init(): void {
+    if(session_id() == '') { session_start(); }
   }
 
   /**

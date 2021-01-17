@@ -8,7 +8,7 @@
 
 
 return [
-  'tpl_directory' => TPL,
+  'tpl_directory' => UTPL,
   'skeleton' => 'site.html',
   'variables' => [
     '{{site_name}}' => 'Globetrotter',
@@ -19,11 +19,11 @@ return [
     '%%head%%' => [
       'source' => ['file' => 'head.tpl'],
       'sources' => [
-        '@@common@@' => CSS.'common.css',
-        '@@desktop-common@@' => CSS.'desktop'.DSR.'common.css',
-        '@@laptop-common@@' => CSS.'laptop'.DSR.'common.css',
-        '@@tablet-common@@' => CSS.'tablet'.DSR.'common.css',
-        '@@mobile-common@@' => CSS.'mobile'.DSR.'common.css'
+        '@@common@@' => UCSS.'common.css',
+        '@@desktop-common@@' => UCSS.'desktop'.DSR.'common.css',
+        '@@laptop-common@@' => UCSS.'laptop'.DSR.'common.css',
+        '@@tablet-common@@' => UCSS.'tablet'.DSR.'common.css',
+        '@@mobile-common@@' => UCSS.'mobile'.DSR.'common.css'
       ],
       'variables' => []
     ],

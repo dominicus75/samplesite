@@ -5,7 +5,7 @@
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Application\View\Visitor;
+namespace Application\View;
 
 use \Dominicus75\Config\Config;
 use \Dominicus75\Templater\Exceptions\{
@@ -31,22 +31,22 @@ class Site extends \Dominicus75\Templater\Layout
    * @throws Dominicus75\Templater\Exceptions\MarkerNotFoundException if marker is not found
    * @return void
    */
-  protected function __construct(array $parameters, array $variables = [])
+  public function __construct(array $parameters, array $variables = [])
   {
 
     try {
 
-      parent::__construct(new Config('site_view'), TPL, 'site.html');
+      parent::__construct(new Config('site_view'), UTPL, 'site.html');
 
       $head = [
-        '@@desktop-typified@@' => CSS.'desktop'.DSR.$parameters['type'].'.css',
-        '@@laptop-typified@@'  => CSS.'laptop'.DSR.$parameters['type'].'.css',
-        '@@tablet-typified@@'  => CSS.'tablet'.DSR.$parameters['type'].'.css',
-        '@@mobile-typified@@'  => CSS.'mobile'.DSR.$parameters['type'].'.css'
+        '@@desktop-typified@@' => UCSS.'desktop'.DSR.$parameters['type'].'.css',
+        '@@laptop-typified@@'  => UCSS.'laptop'.DSR.$parameters['type'].'.css',
+        '@@tablet-typified@@'  => UCSS.'tablet'.DSR.$parameters['type'].'.css',
+        '@@mobile-typified@@'  => UCSS.'mobile'.DSR.$parameters['type'].'.css'
       ];
 
       if($parameters['meta']) {
-        $head['@@meta@@'] = TPL.'social_meta.tpl';
+        $head['@@meta@@'] = UTPL.'social_meta.tpl';
       } else { $head['@@meta@@'] = ''; }
 
       $this->updateBufferedComponent('%%head%%', 'sources', $head);
@@ -58,10 +58,21 @@ class Site extends \Dominicus75\Templater\Layout
       unset($this->elements['nav']);
 
       if($parameters['aside']) {
+
         $this->elements['mnb'] = new \Application\Controller\MNB();
         $this->assignComponent('%%aside%%', ['file' => 'aside.tpl']);
         $this->assignText('@@mnb@@', $this->elements['mnb']->display());
         unset($this->elements['mnb']);
+
+        if(isset($_SESSION['user']['spass'])) {
+          $this->assignSource('@@user@@', UTPL.'user'.DSR.'user-aside.tpl');
+          $this->bindValue('{{avatar}}', $_SESSION['user']['avatar']);
+          $this->bindValue('{{id}}', $_SESSION['user']['id']);
+          $this->bindValue('{{user}}', $_SESSION['user']['name']);
+        } else {
+          $this->assignSource('@@user@@', UTPL.'user'.DSR.'visitor-aside.tpl');
+        }
+
       } else { $this->assignComponent('%%aside%%'); }
 
       $this->assignComponent('%%main%%', ['file' => $parameters['type'].DSR.'view.tpl']);

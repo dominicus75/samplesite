@@ -29,6 +29,7 @@ class Samplesite
       $router           = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
       $this->route      = $router->dispatch();
       unset($router);
+      Core\Session::init();
       $this->auth       = new Core\Authority($this->route);
 
       switch($this->route->controller) {
@@ -68,8 +69,8 @@ class Samplesite
 
   public function run() {
 
-    if(!$this->auth->authenticate() && $this->route->method != 'login') {
-      $this->response->redirect('/admin/login.html');
+    if(!$this->auth->authenticate() && !preg_match("/^(confirm|login|register)$/", $this->route->method)) {
+      $this->response->redirect('/'.$this->route->role.'/login.html');
     }
 
     if(!$this->controller->hasRedirect()) {

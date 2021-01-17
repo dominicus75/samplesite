@@ -5,7 +5,7 @@
  * @license MIT License (https://opensource.org/licenses/MIT)
  */
 
-namespace Application\View\Visitor;
+namespace Application\View\User;
 
 use \Dominicus75\MNB\Currencies;
 use \Dominicus75\Templater\Component;
@@ -29,8 +29,8 @@ class MNB extends Component
   public function __construct(array $content)
   {
     try {
-      parent::__construct(TPL.'mnb'.DSR.'mnb.tpl');
-      $this->assignRepeater('@@rows@@', TPL.'mnb'.DSR.'row.tpl', $content);
+      parent::__construct(UTPL.'mnb'.DSR.'mnb.tpl');
+      $this->assignRepeater('@@rows@@', UTPL.'mnb'.DSR.'row.tpl', $content);
     } catch(\Throwable $e) { echo $e->getMessage(); }
   }
 

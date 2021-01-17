@@ -16,22 +16,21 @@ use \Dominicus75\Templater\Exceptions\{
   NotRenderableException
 };
 
-class View extends Dashboard
+class View extends \Application\View\Dashboard
 {
 
   /**
-   * Constructor of class Admin.
+   * Constructor of class View.
    *
    * @return void
    */
-  public function __construct(string $type)
+  public function __construct(array $parameters)
   {
-
-    $parameters['type']   = $type;
-    $parameters['action'] = 'view';
-    $parameters['script'] = false;
-
     try {
+      $parameters['meta']   = $parameters['type'] == 'message' ? false : true;
+      $parameters['aside']  = $parameters['type'] == 'message' ? false : true;
+      $parameters['user']   = $parameters['type'] == 'message' ? false : true;
+      $parameters['script'] = false;
       parent::__construct($parameters);
     } catch(DirectoryNotFoundException | FileNotFoundException | MarkerNotFoundException $e) {
       echo $e->getMessage();

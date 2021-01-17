@@ -93,7 +93,7 @@ abstract class AbstractController
         $this->parameters['content_table'],
         new Config('mysql')
       );
-      $this->result     = call_user_func(array($this, $this->route->method));
+      call_user_func(array($this, $this->route->method));
     } catch(\PDOException | NotFoundException | NotReadableException | NotWriteableException $e) {
       echo '<h2>'.$e->getMessage().'</h2>';
     }

@@ -26,7 +26,7 @@ class Nav {
     try {
       $this->model = new \Application\Model\Nav();
       $this->view  = new \Dominicus75\Templater\Nav(
-        TPL.'nav'.DSR,
+        UTPL.'nav'.DSR,
         $this->model->getMenu()
       );
     } catch(\PDOException | DirectoryNotFoundException |

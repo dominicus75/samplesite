@@ -37,12 +37,11 @@ class Message extends \Application\Core\AbstractController
         []
       );
     }
-    if($this->route->role == 'admin') {
-      $this->layout = new \Application\View\Admin\View('message');
-    } else {
-      $this->layout = new \Application\View\Visitor\View('message');
-    }
+    $parameters['type']   = 'message';
+    $parameters['action'] = 'view';
+    $this->layout = new \Application\View\View($parameters);
     $this->layout->updateVariables($variables);
+    $this->success = true;
   }
 
   public function create(): string {}

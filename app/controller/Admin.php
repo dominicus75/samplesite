@@ -44,8 +44,9 @@ class Admin extends \Application\Core\AbstractController
   public function login() {
     $post = $this->request->getParsedBody();
     if(empty($post)) {
-      $this->layout = new \Application\View\Admin\Login();
+      $this->layout = new \Application\View\Entrance\Login();
       $this->layout->bindValue('{{url}}', 'http://'.$_SERVER['SERVER_NAME'].$this->request->getUri());
+      $this->layout->bindValue('{{title}}', 'Belépés');
     } else {
       $this->session = new Entity('session', 'sessions', $this->model->getDatabase());
       $salt = Authority::SALT;
@@ -88,7 +89,7 @@ class Admin extends \Application\Core\AbstractController
   }
 
   public function dashboard() {
-    $this->layout = new \Application\View\Admin\View('admin');
+    $this->layout = new \Application\View\Admin\View(['type' => 'admin']);
     $this->success = true;
   }
 

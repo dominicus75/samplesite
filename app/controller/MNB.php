@@ -23,10 +23,10 @@ class MNB
 
   /**
    *
-   * @var \Application\View\Visitor\MNB
+   * @var \Application\View\User\MNB
    *
    */
-  private \Application\View\Visitor\MNB $view;
+  private \Application\View\User\MNB $view;
 
   /**
    * Constructor of class MNB.
@@ -45,7 +45,7 @@ class MNB
         $content[] = ['{{code}}' => $code, '{{unit}}' => $currency->unit, '{{value}}' => $currency->value];
       }
 
-      $this->view = new \Application\View\Visitor\MNB($content);
+      $this->view = new \Application\View\User\MNB($content);
 
     } catch (\SoapFault $e) { echo $e->getMessage(); }
   }

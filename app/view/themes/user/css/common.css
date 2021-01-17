@@ -87,17 +87,17 @@
       .fa-lock:before { content: "\f023"; }
       .fa-repeat:before { content: "\f01e"; }
       .fa-user:before { content: "\f007"; }
+      .fa-user-plus:before { content: "\f234"; }
       .fa-users:before { content: "\f0c0"; }
       .fa-tachometer:before { content: "\f0e4"; }
+      .fa-sign-in:before { content: "\f090"; }
       .fa-sign-out:before { content: "\f08b"; }
       .fa-bars:before { content: "\f0c9"; }
       .fa-file:before { content: "\f15b"; }
       .fa-home:before { content: "\f015"; }
       .fa-money:before { content: "\f0d6"; }
       .fa-globe:before { content: "\f0ac"; }
-      .fa-globe {
-        display: inline;
-      }
+      .fa-globe { display: inline; }
       /* End FontAwesome */
 
 
@@ -133,9 +133,30 @@
         font-size: 2rem;
       }
 
-      aside > table, th, td {
+      aside > table, th, td, aside > ul {
         border: 1px solid rgb(254, 250, 159);
         text-align: center;
+      }
+
+      aside > ul {
+        padding: 1rem;
+        background-color: rgb(21, 29, 76);
+        border-radius: 1rem;
+      }
+
+      aside > ul > li > a {
+        color: rgb(254, 250, 159);
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+        font-size: 1.5rem;
+      }
+
+      aside > ul > li > a:hover {
+        color: red;
+      }
+
+      aside > ul > li {
+        text-align: center;
+        padding: 0.5rem 0;
       }
 
       th, td {
@@ -341,6 +362,15 @@
 
       img.portrait {
         width: 40%;
+      }
+
+      .user-img {
+        display: inline-block;
+        width: 15vw;
+        height: 15vw;
+        border: 1px solid rgb(254, 250, 159);
+        border-radius: 7.5vw;
+        box-shadow: 0.25em 0.25em 1em rgb(0, 0, 0);
       }
 
       iframe {

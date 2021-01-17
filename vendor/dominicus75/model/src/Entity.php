@@ -260,15 +260,14 @@ class Entity implements EntityInterface
   /**
    * It is used to modify an existing record in table
    *
-   * @param array $content in 'key' => 'value' form
-   * (e. g. 'url' => 'aboutus', 'title' => 'About us')
-   * @param string $key [optional, defeult is the primary key]
-   * the updatable row's key
+   * @param array $key
+   * $key[0] is key name (e. g. 'id')
+   * $key[1] is value belongs to key (e. g. '1234' or 'contact')
    * @return bool Returns true on success or false on failure
    *
    */
-  public function updateData(string $key = ''): bool {
-    return $this->table->insert($this->updated, $key);
+  public function updateData(array $key): bool {
+    return $this->table->update($this->updated, $key);
   }
 
 
