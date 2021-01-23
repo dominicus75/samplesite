@@ -10,7 +10,7 @@ namespace Dominicus75\Http;
 
 use \Dominicus75\Validator\Slug;
 
-class UploadedFile implements \Psr\Http\Message\UploadedFileInterface
+class UploadedFile
 {
 
   const ERROR_MESSAGES = [
@@ -26,25 +26,24 @@ class UploadedFile implements \Psr\Http\Message\UploadedFileInterface
 
 
   private string $name;
-  private string $type;
+  private string $mime;
   private string $tmp_name;
   private int $error;
   private int $size;
+  private string $extension;
   private bool $moved = false;
 
   public function __construct(array $file){
 
     if(is_uploaded_file($file['tmp_name']) && $file['error'] == UPLOAD_ERR_OK){
-
-      $info = pathinfo($file['name']);
+      $info            = pathinfo($file['name']);
       $slug = Slug::generate($info['filename']);
-
-      $this->name = $slug.'.'.$info['extension'];
-      $this->type = $file['type'];
-      $this->tmp_name = $file['tmp_name'];
-      $this->error = $file['error'];
-      $this->size = $file['size'];
-
+      $this->name      = $slug.'.'.$info['extension'];
+      $this->mime      = $file['type'];
+      $this->tmp_name  = $file['tmp_name'];
+      $this->error     = $file['error'];
+      $this->size      = $file['size'];
+      $this->extension = $info['extension'];
     } else {
       throw new InvalidArgumentException(self::ERROR_MESSAGES[$file['error']]);
     }
@@ -83,13 +82,23 @@ class UploadedFile implements \Psr\Http\Message\UploadedFileInterface
   }
 
 
+  public function getTmpName(): string {
+    return $this->tmp_name;
+  }
+
+
   public function getClientFilename(): ?string {
     return $this->name;
   }
 
 
   public function getClientMediaType(): ?string {
-    return $this->type;
+    return $this->mime;
+  }
+
+
+  public function getExtension(): string {
+    return $this->extension;
   }
 
 }

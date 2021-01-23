@@ -29,13 +29,18 @@ class Dashboard extends \Dominicus75\Templater\Layout
 
     try {
       parent::__construct(new Config('dashboard_view'), ATPL, 'admin.html');
+      $parameters['meta']  = $parameters['type'] == 'message' ? false : true;
+      $parameters['aside'] = $parameters['type'] == 'message' ? false : true;
+      $parameters['user']  = $parameters['type'] == 'message' ? false : true;
       $this->assignBufferedComponent('%%head%%');
+      if(is_file(ACSS.$parameters['type'].'_'.$parameters['action'].'.css')) {
+        $this->assignSource('@@action@@', ACSS.$parameters['type'].'_'.$parameters['action'].'.css');
+      } else { $this->assignSource('@@action@@'); }
       $this->assignComponent('%%nav%%', ['file' => 'nav.tpl']);
-      $this->assignComponent('%%article%%', ['file' => $parameters['type'].DSR.'view.tpl']);
+      $this->assignComponent('%%article%%', ['file' => $parameters['type'].DSR.$parameters['action'].'.tpl']);
       $this->bindValue('{{background}}', '/images/admin-bg.jpg');
       $this->bindValue('{{avatar}}', $_SESSION['admin']['avatar']);
       $this->bindValue('{{id}}', $_SESSION['admin']['id']);
-      $this->bindValue('{{title}}', 'Üdv!');
       $this->bindValue('{{user}}', $_SESSION['admin']['name']);
       if($parameters['script']) {
         $this->assignComponent('%%script%%', ['file' => 'script.tpl']);

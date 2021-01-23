@@ -42,7 +42,6 @@ class Samplesite
         break;
       }
 
-
     } catch(
       \Dominicus75\Http\InvalidArgumentException |
       \Dominicus75\Http\RuntimeExceptionR $e

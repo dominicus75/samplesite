@@ -45,10 +45,10 @@ abstract class AbstractController
 
   /**
    *
-   * @var \Dominicus75\Templater\Layout current view object
+   * @var \Dominicus75\Templater\RenderableSource current view object
    *
    */
-  protected \Dominicus75\Templater\Layout $layout;
+  protected \Dominicus75\Templater\RenderableSource $layout;
 
   /**
    *
@@ -88,11 +88,13 @@ abstract class AbstractController
       $this->route      = $route;
       $this->request    = $request;
       $this->setParameters($parameters);
-      $this->model      = new Entity(
-        $this->parameters['content_type'],
-        $this->parameters['content_table'],
-        new Config('mysql')
-      );
+      if($this->hasParameter('content_type') && $this->hasParameter('content_table')) {
+        $this->model    = new Entity(
+          $this->parameters['content_type'],
+          $this->parameters['content_table'],
+          new Config('mysql')
+        );
+      }
       call_user_func(array($this, $this->route->method));
     } catch(\PDOException | NotFoundException | NotReadableException | NotWriteableException $e) {
       echo '<h2>'.$e->getMessage().'</h2>';

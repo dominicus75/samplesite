@@ -75,7 +75,7 @@ class Site extends \Dominicus75\Templater\Layout
 
       } else { $this->assignComponent('%%aside%%'); }
 
-      $this->assignComponent('%%main%%', ['file' => $parameters['type'].DSR.'view.tpl']);
+      $this->assignComponent('%%main%%', ['file' => $parameters['type'].DSR.$parameters['action'].'.tpl']);
 
       if($parameters['script']) {
         $this->assignComponent('%%script%%', ['file' => 'script.tpl']);

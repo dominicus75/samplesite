@@ -28,20 +28,14 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=10
-FILE_NAME_0=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2FAdmin%2FLogin.php;0;2
-FILE_NAME_1=1966;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FUser.php;0;2
-FILE_NAME_2=2347;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FSamplesite.php;0;2
-FILE_NAME_3=1663;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FPage.php;0;2
-FILE_NAME_4=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcore%2FAbstractController.php;0;2
-FILE_NAME_5=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2FUser%2FLogin.php;0;2
-FILE_NAME_6=864;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2FCommon%2FEntrance.php;0;2
-FILE_NAME_7=748;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FConstants.php;0;2
-FILE_NAME_8=470;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fconfig%2Fentrance_view.php;0;2
-FILE_NAME_9=78;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Fthemes%2Fcommon%2Ftemplate%2Fentrance.html;0;2
-FILE_NAME_10=7104;CSS;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Fthemes%2Fcommon%2Fcss%2Fentrance.css;0;2
-FILE_NAME_11=0;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Fthemes%2Fadmin%2Ftemplate%2Fadmin%2Flogin.tpl;0;2
-FILE_NAME_12=0;CSS;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fcommon%2Ftheme%2Fcss%2Fcommon.css;0;2
+current_page=3
+FILE_NAME_0=344;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fcommon%2Fmodules%2Fmembers%2Fupdate.php;0;2
+FILE_NAME_1=1864;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Fthemes%2Fadmin%2Ftemplate%2Fprofile%2Fedit.tpl;0;2
+FILE_NAME_2=5517;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FImage.php;0;2
+FILE_NAME_3=1493;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FProfile.php;0;2
+FILE_NAME_4=507;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fcommon%2Fmodules%2Fajax_upload%2Fupload-image.php;0;2
+FILE_NAME_5=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fpublic%2Fajax_upload.php;0;2
+FILE_NAME_6=0;Javascript;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fassets%2FUpload.js;0;2
 
 [VTE]
-last_dir=/opt/lampp/htdocs/samplesite/app/view/themes/common/css
+last_dir=/opt/lampp/htdocs/samplesite/app/controller

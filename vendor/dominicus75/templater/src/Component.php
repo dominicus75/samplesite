@@ -113,6 +113,35 @@ class Component extends RenderableSource {
     }
 
   }
+  /**
+   *
+   * @parem string $marker in form '@@marker@@'
+   * @param string $sourceFile Fully qualified path name of source file
+   * @throws Exceptions\MarkerNotFoundException if marker is not found
+   * @throws Exceptions\SourceExistsException if $this->sources[$marker] is already set
+   * @throws Exceptions\FileNotFoundException if source file is not found
+   *
+   */
+  public function assignRenderableSource(
+    string $marker,
+    string $sourceFile,
+    array $variables
+  ): self {
+
+    if(!$this->hasMarker($marker)){
+      throw new Exceptions\MarkerNotFoundException($marker.' is not found in this source');
+    } elseif($this->sources[$marker]) {
+      throw new Exceptions\SourceExistsException($marker.' is already set');
+    } else {
+      try {
+        $source = new RenderableSource($sourceFile, $variables);
+        $this->source = str_replace($marker, $source->display(), $this->source);
+        $this->sources[$marker] = true;
+        return $this;
+      } catch(Exceptions\FileNotFoundException $e) { throw $e; }
+    }
+
+  }
 
 
   /**
