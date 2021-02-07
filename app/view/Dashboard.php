@@ -19,7 +19,7 @@ class Dashboard extends \Dominicus75\Templater\Layout
 {
 
   /**
-   * Constructor of class Admin.
+   * Constructor of class Dashboard.
    * @throws Dominicus75\Templater\Exceptions\FileNotFoundException if $sourceFile does not exists
    * @throws Dominicus75\Templater\Exceptions\MarkerNotFoundException if marker is not found
    * @return void

@@ -51,6 +51,8 @@
       .fa-file:before { content: "\f15b"; }
       .fa-home:before { content: "\f015"; }
       .fa-money:before { content: "\f0d6"; }
+      .fa-wrench:before { content: "\f0ad"; }
+      .fa-database:before { content: "\f1c0"; }
 
 
       /* Google webfonts */
@@ -133,9 +135,45 @@
         width: 100%;
       }
 
-      h1, h2, h3, form { font-family: 'Ubuntu', sans-serif; }
+      h1, h2, h3, form, p, a { font-family: 'Ubuntu', sans-serif; }
 
       /* Styleseet for login */
+
+      article {
+        width: 70vw;
+        margin: 3rem auto 3rem auto;
+        padding: 2vh 3vw 2vh 3vw;
+        background: linear-gradient(rgba(255,255,255,0.6),rgba(0,0,0,0.9));
+        box-shadow:  0.25em 0.25em 1em rgb(0, 0, 0);
+      }
+
+      article h1, h2, h3 {
+        color: rgb(254, 250, 159);
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+        text-align: center;
+        padding: 1rem 1rem;
+      }
+
+      article h1 { font-size: 2rem; }
+      article h2 { font-size: 1.6rem; }
+
+      article p, article p > a {
+        text-align: justify;
+        font-size: 1.4rem;
+        color: rgb(254, 250, 159);
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+      }
+
+      article a {
+        display: block;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 5px black;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 1.5rem;
+        padding: 1rem 1rem;
+      }
+
+      article a:hover { color: red; }
 
       form {
         width: 100%;

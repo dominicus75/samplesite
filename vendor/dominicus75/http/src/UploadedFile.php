@@ -51,11 +51,6 @@ class UploadedFile
   }
 
 
-  public function getStream(): \Psr\Http\Message\StreamInterface {
-    return new Stream(fopen($this->tmp_name), 'rw+');
-  }
-
-
   public function moveTo(string $target){
 
 

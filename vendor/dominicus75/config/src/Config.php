@@ -67,7 +67,10 @@ class Config implements \ArrayAccess
         if(!is_readable($this->file)) { throw new NotReadableException($this->file.' must be readable'); }
         if(!is_writeable($this->file)) { throw new NotWriteableException($this->file.' must be writeable'); }
       } else {
-        throw new NotFoundException($dir.DIRECTORY_SEPARATOR.$configFile.'.php not exists');
+        $file = fopen($this->dir.$configFile.".php", 'x');
+        fclose($file);
+        $this->file = $this->dir.$configFile.".php";
+        //throw new NotFoundException($dir.DIRECTORY_SEPARATOR.$configFile.'.php not exists');
       }
     } else {
       throw new NotFoundException($dir.' not exists or not readable/writeable');
@@ -144,7 +147,7 @@ class Config implements \ArrayAccess
     if($this->changed) {
       if(!is_writeable($this->dir)) { throw new NotWriteableException($this->dir.' is not writeable'); }
       if(is_writeable($this->file)) {
-        if(false === file_put_contents($this->file, "<?php".PHP_EOL.PHP_EOL."return ".var_export($this->container, true) . ";".PHP_EOL.PHP_EOL."?>", LOCK_EX)) {
+        if(false === file_put_contents($this->file, "<?php".PHP_EOL.PHP_EOL."return ".var_export($this->container, true) . ";".PHP_EOL, LOCK_EX)) {
           return false;
         } else { return true; }
       } else {

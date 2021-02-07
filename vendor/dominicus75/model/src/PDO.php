@@ -157,10 +157,10 @@ class PDO extends \PDO
     if($statement->execute()) {
       if($tables = $statement->fetchAll(PDO::FETCH_COLUMN)) {
         $this->tables = $tables;
-        return $this;
       } else {
-        throw new \PDOException('PDOStatement::fetchAll() function returned with false');
+        $this->tables = [];
       }
+      return $this;
     } else {
       throw new \PDOException('PDOStatement::execute() function returned with false');
     }

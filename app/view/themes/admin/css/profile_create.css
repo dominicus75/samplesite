@@ -1,0 +1,94 @@
+
+      /* Styleseet for members create and update page */
+
+      article {
+        display: flex;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+
+      div#edit {
+        width: 418px;
+        margin: 0 auto;
+        padding: 20px 40px;
+        text-align: center;
+        background: linear-gradient(rgba(0,0,255,0.8), rgba(255,255,255,0.7), rgba(0,0,128,0.8));
+        box-shadow: 0.25em 0.25em 1em rgb(0, 0, 0);
+        border: 1px solid rgba(0,0,255,0.5);
+        border-radius: 0.5em;
+        border-right-color: rgba(0,0,128,0.8);
+        border-bottom-color: rgba(0,0,128,0.8);
+      }
+
+      div#edit h1 {
+        text-align: center;
+        font-size: 1.6em;
+        margin-bottom: 20px;
+      }
+
+      input[type="file"], div.submit {
+        display: none;
+      }
+
+      label[for="avatar"] {
+        cursor: pointer;
+      }
+
+      li#addAvatar {
+        height: auto;
+        border: 0;
+        background-color: transparent;
+        margin: 1em auto 0 auto;
+      }
+
+      #avatar, #preview {
+        margin: 0.5em auto 1em auto;
+        width: 200px;
+        height: auto;
+        border: 1px solid rgba(0,0,255,0.5);
+        border-top-color: rgba(0,0,128,0.8);
+        border-left-color: rgba(0,0,128,0.8);
+      }
+
+      form ul li {
+        margin: 10px 0;
+        height: 38px;
+        border: 1px solid rgba(0,0,255,0.5);
+        border-top-color: rgba(0,0,128,0.8);
+        border-left-color: rgba(0,0,128,0.8);
+        background-color: rgba(192,192,192,0.8);
+      }
+
+      form ul li:last-child {
+        text-align: right;
+        margin-top: 20px;
+        border: 0;
+        background-color: transparent;
+      }
+
+      .fa { margin-left: 5px; }
+
+      input[type="text"], input[type="email"], input[type="password"], #rank {
+        width: 300px;
+        height: 36px;
+        padding-left: 0.5em;
+        border-left: 1px solid darkgrey;
+        outline: none;
+      }
+
+
+      input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+        background-color: yellow;
+      }
+
+      label[for="status"] {
+        margin-right: 1em;
+        float: left;
+      }
+
+      div.alert {
+        padding: 0.5em;
+        margin: 0.5em auto;
+      }
+

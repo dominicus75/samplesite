@@ -71,17 +71,73 @@ class Profile extends \Application\Core\AbstractController
     }
 
     parent::__construct($route, $parameters, $request);
-
     $this->layout->bindValue('{{url}}', 'http://'.$_SERVER['SERVER_NAME'].$this->request->getUri());
-    $this->layout->bindValue('{{title}}', 'Profil szerkesztése');
-    $this->layout->bindValue('{{email}}', Session::get($this->route->role, 'email'));
     $this->layout->bindValue('{{role}}', $this->route->role);
 
+  }
+
+
+  public function create() {
+    $this->layout->bindValue('{{title}}', 'Új '.$this->route->role.' profil létrehozása');
+    if(Session::get($this->route->role, 'rank') == 'root') {
+      $post = $this->request->getParsedBody();
+      if(empty($post)) {
+        $this->layout->assignSource('@@message@@');
+        $this->layout->assignRepeater(
+          '@@options@@',
+          ATPL.'profile'.DSR.'option.tpl',
+          [
+            ['{{value}}' => 'admin', '{{name}}' => 'Admin'],
+            ['{{value}}' => 'editor', '{{name}}' => 'Editor'],
+            ['{{value}}' => 'author', '{{name}}' => 'Author']
+          ]
+        );
+      } else {
+        $profile = $this->model->selectData(
+          [null, null],
+          ['name', 'email'],
+          [
+            ['AND', 'name', '=', $post['name']],
+            ['AND', 'email', '=', $post['email']]
+          ]
+        );
+        if($profile) {
+          $message = [
+            '{{message}}' => 'Már létezik ilyen nevű felhasználó.',
+            '{{alert_type}}' => 'danger'
+          ];
+          $this->layout->assignRenderableSource('@@message@@', CTPL.'alert.tpl', $message);
+          $this->layout->assignSource('@@options@@');
+        } else {
+          $salt = Authority::SALT;
+          $pass = hash('sha512', $salt.$post['pass'].$salt);
+          $this->model->setProperties([
+            'name'   => $post['name'],
+            'email'  => $post['email'],
+            'avatar' => $post['avatar'],
+            'rank'   => $post['rank'],
+            'pass'   => $pass,
+            'status' => 1
+          ]);
+          $this->success  = $this->model->insertData();
+          $this->redirect = '/admin/dashboard.html';
+        }
+      }
+    } else {
+      $message = [
+        '{{message}}' => 'Nincs jogosultságod ehhez a művelethez.',
+        '{{alert_type}}' => 'danger'
+      ];
+      $this->layout->assignRenderableSource('@@message@@', CTPL.'alert.tpl', $message);
+      $this->layout->assignSource('@@options@@');
+    }
   }
 
   public function edit() {
 
     $post = $this->request->getParsedBody();
+    $this->layout->bindValue('{{title}}', 'Profil szerkesztése');
+    $this->layout->bindValue('{{email}}', Session::get($this->route->role, 'email'));
     if(empty($post)) {
       $this->layout->assignSource('@@message@@');
     } else {
@@ -140,8 +196,8 @@ class Profile extends \Application\Core\AbstractController
       }
     }
 
-
   }
+
 
 
 }

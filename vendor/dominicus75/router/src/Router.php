@@ -65,13 +65,6 @@ class Router
 
   /**
    *
-   * @var Mapper a Mapper instance
-   *
-   */
-  private Mapper $mapper;
-
-  /**
-   *
    * @param string $requestUri the requested URI
    * @param \ArrayAccess|null Config object
    * @see Router/config_router.php for defaults
@@ -85,7 +78,6 @@ class Router
     $this->methods     = $config->offsetGet('methods');
     $this->enabled     = $config->offsetGet('enabled');
     $this->defaults    = $config->offsetGet('defaults');
-    $this->mapper      = new Mapper('mapper');
   }
 
 
@@ -166,17 +158,6 @@ class Router
         $this->defaults['method'],
         $this->defaults['content'],
         $this->defaults['category']
-      );
-    }
-
-    if($this->mapper->offsetExists($this->requestUri)) {
-      $route = $this->mapper->offsetGet($requestUri);
-      return new Route(
-        $route['role'],
-        $route['controller'],
-        $route['method'],
-        $route['content'],
-        $route['category']
       );
     } else { $requestUri = $this->requestUri; }
 
@@ -273,13 +254,5 @@ class Router
     return new Route($role, $controller, $method, $content, $category);
 
   }
-
-  /**
-   *
-   * @param void
-   * @return Mapper a current Mapper instance
-   *
-   */
-  public function getMapper(): Mapper { return $this->mapper; }
 
 }

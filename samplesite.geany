@@ -28,14 +28,11 @@ long_line_behaviour=1
 long_line_column=80
 
 [files]
-current_page=3
-FILE_NAME_0=344;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fcommon%2Fmodules%2Fmembers%2Fupdate.php;0;2
-FILE_NAME_1=1864;HTML;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fview%2Fthemes%2Fadmin%2Ftemplate%2Fprofile%2Fedit.tpl;0;2
-FILE_NAME_2=5517;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FImage.php;0;2
-FILE_NAME_3=1493;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FProfile.php;0;2
-FILE_NAME_4=507;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fcommon%2Fmodules%2Fajax_upload%2Fupload-image.php;0;2
-FILE_NAME_5=0;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Flotto-sql%2Fpublic%2Fajax_upload.php;0;2
-FILE_NAME_6=0;Javascript;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fassets%2FUpload.js;0;2
+current_page=0
+FILE_NAME_0=2891;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcontroller%2FInstall.php;0;2
+FILE_NAME_1=930;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2FSamplesite.php;0;2
+FILE_NAME_2=2015;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fconfig%2Frouter.php;0;2
+FILE_NAME_3=1161;PHP;0;EUTF-8;0;1;0;%2Fopt%2Flampp%2Fhtdocs%2Fsamplesite%2Fapp%2Fcore%2FAuthority.php;0;2
 
 [VTE]
 last_dir=/opt/lampp/htdocs/samplesite/app/controller

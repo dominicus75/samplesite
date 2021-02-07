@@ -24,13 +24,19 @@ class Samplesite
 
     try{
 
-      $this->request    = new \Dominicus75\Http\Request($get, $post, $files);
-      $this->response   = new \Dominicus75\Http\Response();
-      $router           = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
-      $this->route      = $router->dispatch();
+      $this->request  = new \Dominicus75\Http\Request($get, $post, $files);
+      $this->response = new \Dominicus75\Http\Response();
+      $router         = new \Dominicus75\Router\Router($this->request->getUri(), new \Dominicus75\Config\Config('router'));
+      $this->route    = $router->dispatch();
       unset($router);
+
+      if(!is_file(APP.'config'.DSR.'mysql.php') && $this->route->controller != '\Application\Controller\Install') {
+        $this->response = new \Dominicus75\Http\Response();
+        $this->response->redirect('/admin/install/start.html');
+      }
+
       Core\Session::init();
-      $this->auth       = new Core\Authority($this->route);
+      $this->auth     = new Core\Authority($this->route);
 
       switch($this->route->controller) {
         case '\Application\Controller\Message':
@@ -68,7 +74,7 @@ class Samplesite
 
   public function run() {
 
-    if(!$this->auth->authenticate() && !preg_match("/^(confirm|login|register)$/", $this->route->method)) {
+    if(!$this->auth->authenticate() && !preg_match("/^(confirm|login|register|install)$/", $this->route->method)) {
       $this->response->redirect('/'.$this->route->role.'/login.html');
     }
 

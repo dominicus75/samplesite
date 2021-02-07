@@ -224,7 +224,7 @@ class Table
         } else {
           throw new InvalidStatementException($statement[2]." comparison operator is not allowed");
         }
-        if(preg_match("/^([\p{L}\p{N}\,\.\s\/@]{1,128})$/iu", $statement[3])) {
+        if(preg_match("/^([\p{L}\p{N}\,\.\s\/@])/iu", $statement[3])) {
           $result[$index]['value'] = preg_replace("/(\s?.*\s?=\s?.*\s?|\s?drop\s?|;|\s?--\s?)/iu", '', $statement[3]);
         } else {
           throw new InvalidStatementException("Invalid characters!");

@@ -1,135 +1,15 @@
-
-CREATE TABLE `ranks` (
-  `rank` varchar(16) CHARACTER SET ascii NOT NULL DEFAULT 'editor',
-  PRIMARY KEY (`rank`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-
-
-INSERT INTO `ranks` (`rank`) VALUES
-('root'),
-('admin'),
-('editor'),
-('author');
-
-
-CREATE TABLE `admins` (
-  `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `avatar` tinytext CHARACTER SET ascii DEFAULT NULL,
-  `pass` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `status` tinyint(1) UNSIGNED NOT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `rank` varchar(16) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `email` (`email`),
-  FOREIGN KEY (`rank`) REFERENCES `ranks` (`rank`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-INSERT INTO `admins` (`name`, `email`, `avatar`, `pass`, `status`, `rank`) VALUES
-('Szuperadmin', 'superadmin@gmail.com', 'avatar_1509037329.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'root'),
-('Gipsz Jakab', 'gipsz.jakab@gmail.com', 'avatar_1509021514.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'admin'),
-('Ló Jenő', 'lo.jeno@gmail.com', 'avatar_1509031358.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'editor'),
-('Macska János', 'macska.janos@gmail.com', 'avatar_1509036628.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1, 'author');
-
-
-CREATE TABLE `users` (
-  `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `avatar` tinytext CHARACTER SET ascii DEFAULT NULL,
-  `pass` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `status` tinyint(1) UNSIGNED NOT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 INSERT INTO `users` (`name`, `email`, `avatar`, `pass`, `status`) VALUES
 ('Pendrek Mihály', 'pendrek.mihaly@gmail.com', 'avatar_1509037243.jpg', 'c2d9549c764a9680431b3b04894f5e3bb680dbb4b778b85bfb31e521de9032141daf457ea020e5365f3ed1316ece3e3d06eadbfc8df6c1447809a224fa34b71e', 1);
 
+INSERT INTO `categories` (`url`, `title`, `description`, `image`) VALUES
+('hirek', 'Hírek', 'A Globetrotter utazási iroda hírei', 'news.jpg');
 
-CREATE TABLE `sessions` (
-  `sid` varchar(64) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `aid` tinyint(3) UNSIGNED,
-  `uid` tinyint(3) UNSIGNED,
-  `spass` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `stime` int(12) UNSIGNED NOT NULL,
-  PRIMARY KEY (`sid`),
-  FOREIGN KEY (`aid`) REFERENCES `admins` (`id`),
-  FOREIGN KEY (`uid`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `messages` (
-  `url` varchar(64) CHARACTER SET ascii NOT NULL,
-  `author` tinyint(3) UNSIGNED NOT NULL,
-  `title` tinytext CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `description` tinytext CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `image` tinytext CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`url`),
-  FOREIGN KEY (`author`) REFERENCES `admins` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-INSERT INTO `messages` (`url`,`author`, `title`, `description`, `image`) VALUES
-('400', 1, '400-as HTTP hiba', 'Hibás kérelem. A szerver képtelen volt értelmezni a kérelem szintaxisát.', '/images/400.jpg'),
-('401', 1, '401-es HTTP hiba', 'Nincs hitelesítve. A kérelem hitelesítést igényel. A szerver bejelentkezés után megtekinthető oldalak esetén adhatja vissza ezt a választ.', '/images/401.jpg'),
-('403', 1, '403-as HTTP hiba', 'Hozzáférés megtagadva. A szerver visszautasítja a kérelmet', '/images/403.jpg'),
-('404', 1, '404-es HTTP hiba', 'A kért oldal nem található. Lehet, hogy a keresett lapot eltávolították, megváltoztatták a nevét, vagy átmenetileg nem érhető el', '/images/404.jpg'),
-('405', 1, '405-ös HTTP hiba', 'Hibás metódus. A kérelemben megadott HTTP metódus nem engedélyezett.', '/images/405.jpg'),
-('408', 1, '408-as HTTP hiba', 'Időtúllépés. Az oldal túlterhelt, illetve túl sokáig tart a kiszolgálónak megjelenítenie', '/images/408.jpg'),
-('500', 1, '500-as HTTP hiba', 'Belső szerverhiba. A szerver hibát észlelt, így nem tudja teljesíteni a kérelmet)', '/images/500.jpg'),
-('502', 1, '502-es HTTP hiba', 'Rossz átjáró. A szerver egy hibás HTTP-választ kapott egy másik szervertől', '/images/502.jpg'),
-('503', 1, '503-as HTTP hiba', 'A szolgáltatás nem elérhető. A szerver nem képes kezelni a kérést, túlterhelés vagy karbantartás miatt', '/images/503.jpg'),
-('504', 1, '504-es HTTP hiba', 'Átjáró időtúllépése. A szerver átjáróként vagy proxyként történő működése során nem kapott időben választ a felsőbb szintű szervertől.', '/images/504.jpg');
-
-
-CREATE TABLE `categories` (
-  `url` varchar(255) CHARACTER SET ascii NOT NULL,
-  `author` tinyint(3) UNSIGNED NOT NULL,
-  `title` varchar(64) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `image` tinytext CHARACTER SET ascii DEFAULT NULL,
-  `parent` varchar(255) CHARACTER SET ascii DEFAULT NULL,
-  `created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`url`),
-  FOREIGN KEY (`author`) REFERENCES `admins` (`id`),
-  FOREIGN KEY (`parent`) REFERENCES `categories` (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-INSERT INTO `categories` (`url`, `author`, `title`, `description`, `image`) VALUES
-('hirek', 1, 'Hírek', 'A Globetrotter utazási iroda hírei', 'news.jpg');
-
-INSERT INTO `categories` (`url`, `author`, `title`, `description`, `image`, `parent`) VALUES
-('hirek/akciok', 2, 'Akciók', 'A Globetrotter utazási iroda legujabb kedvezményei', 'actions.jpg', 'hirek'),
-('hirek/akciok/utazasok', 3, 'Utazások', 'A Globetrotter utazási iroda által kínált utak', 'travel.jpg', 'hirek/akciok');
-
-
-CREATE TABLE `pages` (
-  `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `url` varchar(128) CHARACTER SET ascii NOT NULL,
-  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `title` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `image` tinytext CHARACTER SET ascii  DEFAULT NULL,
-  `body` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`author`) REFERENCES `admins` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+INSERT INTO `categories` (`url`, `title`, `description`, `image`, `parent`) VALUES
+('hirek/akciok', 'Akciók', 'A Globetrotter utazási iroda legujabb kedvezményei', 'actions.jpg', 'hirek'),
+('hirek/akciok/utazasok', 'Utazások', 'A Globetrotter utazási iroda által kínált utak', 'travel.jpg', 'hirek/akciok');
 
 INSERT INTO `pages` (`url`, `author`, `title`, `description`, `image`, `body`) VALUES
-('/', 'Gipsz Jakab', 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!', 'road.jpg',
+('/', 1, 'Kezdőlap', 'Üdvözöljük a Globetrotter utazási iroda honlapján!', 'road.jpg',
 '<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -182,7 +62,7 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-('rolunk', 'Ló Jenő', 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes', 'travel-meeting.jpg',
+('rolunk', 1, 'Rólunk', 'Minden, amit a Globetrotter utazási irodáról tudni érdemes', 'travel-meeting.jpg',
 '<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -234,7 +114,7 @@ Fújtozják a szolkákat, miközben a szengyéjükkel téznek - így a szezásuk
 iheg többször is hajkálhat, hogy szengyét kedezjen anélkül, hogy csupolnának tőle. Nem csak az ihegek
 szezásaira keselik, hogy ajaznak a a venkéhez.</p>'),
 
-('kapcsolat', 'Gipsz Jakab', 'Kapcsolat', 'Írjon nekünk, de iziben!', 'postbox.jpg',
+('kapcsolat', 1, 'Kapcsolat', 'Írjon nekünk, de iziben!', 'postbox.jpg',
 '<p>Lórum ipse mint buggyos izgatlan térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
 a pubrozás csíros, lekelmezeges mező, hitves cserenc szörpei. A sparc a svutákon hatlan,
@@ -262,27 +142,9 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>');
 
-
-CREATE TABLE `articles` (
-  `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `category` varchar(255) CHARACTER SET ascii DEFAULT NULL,
-  `url` varchar(128) CHARACTER SET ascii NOT NULL,
-  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `title` varchar(128) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `image` tinytext CHARACTER SET ascii DEFAULT NULL,
-  `body` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`category`) REFERENCES `categories` (`url`),
-  FOREIGN KEY (`author`) REFERENCES `admins` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 INSERT INTO `articles` (`category`, `url`, `author`, `title`, `description`, `image`, `body`)
 VALUES
-('hirek/akciok/utazasok', 'dubai', 'Gipsz Jakab', 'Dubai', 'Szinte ingyen Dubaiba', 'dubai-city.jpg', '<p>Lórum ipse mint buggyos izgatlan
+('hirek/akciok/utazasok', 'dubai', 1, 'Dubai', 'Szinte ingyen Dubaiba', 'dubai-city.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
 mező, hitves cserenc szörpei. A sparc a svutákon hatlan, feddő, fulan úgynevezett
@@ -311,7 +173,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok/utazasok', 'napfeny-tura', 'Ló Jenő', 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
+('hirek/akciok/utazasok', 'napfeny-tura', 1, 'Napfény túra', 'Akciós napfény, minden mennyiségben, az UV sugárzás ajándék!',
 'rock-formation.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is
 sedheti a pubrozás: a besztenség körül gyorsan tekülő delő kesítő őszít fel, majd vitetnek
@@ -341,7 +203,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek', 'oszi-erdo', 'Szuperadmin', 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
+('hirek', 'oszi-erdo', 1, 'Őszi erdő', 'Őszi erdők felfedezése, kívánság szerint bármely évszakban',
 'fall-forest.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -371,7 +233,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek', 'tengerparti-oromok', 'Macska János', 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
+('hirek', 'tengerparti-oromok', 1, 'Tengerparti örömök', 'A sparc a svutákon hatlan, feddő, fulan úgynevezett
 jermeteken, valamint a svuták csapinusain dakarsodik át', 'beach-landscape.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -401,7 +263,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok', 'hegyvideki-kirandulas', 'Ló Jenő', 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
+('hirek/akciok', 'hegyvideki-kirandulas', 1, 'Hegyvidéki kirándulás', 'Hegy és tó nélkül most féláron!',
 'lake-house.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -431,7 +293,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok', 'extra-szilkas-hegyek', 'Gipsz Jakab', 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
+('hirek/akciok', 'extra-szilkas-hegyek', 1, 'Extra sziklás hegyek', 'Ha kevés a szikla, a Dolomit Kőbányászati Kft.
 készletéből pótoljuk!', 'forest-rock-waterfall.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -461,7 +323,7 @@ akik e egyezőnek megfelelően grómokat hólyázódtak az alanról, el kell dok
 amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint a völölő madruccot a sutokozás
 részére 12 kítőn belül be kell sánulniuk.</p>'),
 
-('hirek/akciok', 'garantaltan-suru-sotet-erdo', 'Szuperadmin', 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
+('hirek/akciok', 'garantaltan-suru-sotet-erdo', 1, 'Garantáltan sűrű, sötét erdő', 'Kellemes pihenés,
 távol a világ zajától, most akciós jetivel!', 'forest-waterfall.jpg', '<p>Lórum ipse mint buggyos izgatlan
 térő, elsősorban egy hatos fice. A szált csánszokat is sedheti a pubrozás: a besztenség körül
 gyorsan tekülő delő kesítő őszít fel, majd vitetnek a pubrozás csíros, lekelmezeges
@@ -492,38 +354,8 @@ amelyek a julkozás pirségek vordjához egesek. A völölő emlőket, valamint 
 részére 12 kítőn belül be kell sánulniuk.</p>');
 
 
-CREATE TABLE `page_images` (
-  `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `url` varchar(128) NOT NULL,
-  `mime` varchar(64) NOT NULL,
-  `size` mediumint(4) UNSIGNED NOT NULL,
-  `width` smallint(5) UNSIGNED NOT NULL,
-  `height` smallint(5) UNSIGNED NOT NULL,
-  `page` smallint(5) UNSIGNED DEFAULT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`page`) REFERENCES `pages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-
-
 INSERT INTO `page_images` (`url`, `mime`, `size`, `width`, `height`, `page`) VALUES
 ('beach-sunshine-car.jpg', 'image/jpeg', 697, 1812, 1200, 1);
-
-
-CREATE TABLE `article_images` (
-  `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `url` varchar(128) NOT NULL,
-  `mime` varchar(64) NOT NULL,
-  `size` mediumint(4) UNSIGNED NOT NULL,
-  `width` smallint(5) UNSIGNED NOT NULL,
-  `height` smallint(5) UNSIGNED NOT NULL,
-  `article` smallint(5) UNSIGNED DEFAULT NULL,
-  `created` timestamp DEFAULT current_timestamp(),
-  `updated` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`article`) REFERENCES `articles` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 
 INSERT INTO `article_images` (`url`, `mime`, `size`, `width`, `height`, `article`) VALUES
